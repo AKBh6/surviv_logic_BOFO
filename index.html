@@ -190,7 +190,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   #day-block { font-size: 16px; }
   .day-sub { display: none; }
 
-  /* Credits pill — minimal */
+  /* Credits pill - minimal */
   #credits-block {
     padding: 3px 8px;
     margin: 3px 4px;
@@ -218,7 +218,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   .ri-val   { font-size: 13px; }
   .ri-delta { font-size: 8px; }
 
-  /* Speed buttons — smaller */
+  /* Speed buttons - smaller */
   #speed-ctrl { padding: 0 6px; gap: 2px; }
   .spd { font-size: 9px; padding: 3px 5px; }
 
@@ -240,7 +240,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
     border-bottom: 1px solid var(--border);
   }
   .act-btn .ab-icon { font-size: 15px; }
-  .act-btn .ab-cost { display: none; }   /* hide cost hints — space too tight */
+  .act-btn .ab-cost { display: none; }   /* hide cost hints - space too tight */
 
   /* Log strip: now 1 line, sits in bottom row */
   #log-strip {
@@ -374,7 +374,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
         </div>
         <div id="day-block">01</div>
       </div>
-      <div id="credits-block" title="Credits — earn by surviving and completing events">
+      <div id="credits-block" title="Credits - earn by surviving and completing events">
         <div class="credits-icon">⚙</div>
         <div><div id="credits-val">0</div><div class="credits-label">CREDITS</div></div>
       </div>
@@ -407,7 +407,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
     <div id="bottom-bar">
       <button class="act-btn" onclick="doAction('farm')"><span class="ab-icon">🌱</span><span>FARM</span><span class="ab-cost">+food</span></button>
       <button class="act-btn" onclick="doAction('power')"><span class="ab-icon">🔋</span><span>RECHARGE</span><span class="ab-cost">+energy</span></button>
-      <button class="act-btn" onclick="doAction('heal')"><span class="ab-icon">💉</span><span>MEDIC</span><span class="ab-cost">−10 med</span></button>
+      <button class="act-btn" onclick="doAction('heal')"><span class="ab-icon">💉</span><span>MEDIC</span><span class="ab-cost">-10 med</span></button>
       <button class="act-btn" onclick="doAction('scout')"><span class="ab-icon">🔭</span><span>SCOUT</span><span class="ab-cost">loot chance</span></button>
       <button class="act-btn" onclick="doAction('trade')"><span class="ab-icon">🤝</span><span>TRADE</span><span class="ab-cost">50⚙→food</span></button>
       <button class="act-btn red-btn" onclick="doAction('conscript')"><span class="ab-icon">⚠</span><span>CONSCRIPT</span><span class="ab-cost">morale cost</span></button>
@@ -415,7 +415,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
       <div id="morale-panel">
         <div class="mp-label">COLONY MORALE</div>
         <div class="mp-track"><div class="mp-fill" id="mp-fill" style="width:65%"></div></div>
-        <div class="mp-val" id="mp-val">65 — Resilient</div>
+        <div class="mp-val" id="mp-val">65 - Resilient</div>
       </div>
     </div>
   </div>
@@ -511,7 +511,7 @@ const MAT={
   thatch:new THREE.MeshStandardMaterial({color:0x4a3e20,roughness:1,metalness:0}),
 };
 
-/* Building factory — creates proper village structures */
+/* Building factory - creates proper village structures */
 function makeBuilding(cfg){
   const g=new THREE.Group();
   const base=new THREE.Mesh(new THREE.BoxGeometry(cfg.w,cfg.h,cfg.d),cfg.mat||MAT.stone);
@@ -588,12 +588,12 @@ function makeBuilding(cfg){
 }
 
 /* ─── THE COLONY VILLAGE ─── */
-// Town Hall — center
+// Town Hall - center
 makeBuilding({x:0,z:0,w:5.5,h:6.5,d:5.5,mat:MAT.wall,roofMat:MAT.roof,roofH:3.5,chimney:true});
 // Bell tower adjacent
 makeBuilding({x:4,z:-4,w:2,h:10,d:2,mat:MAT.stone,roofH:2.5});
 
-// Residential houses — inner ring
+// Residential houses - inner ring
 [
   {x:-7,z:-5,w:3,h:3.5,d:3,chimney:true},
   {x:7,z:-5,w:2.8,h:4,d:2.8,chimney:true,mat:MAT.brick},
@@ -605,7 +605,7 @@ makeBuilding({x:4,z:-4,w:2,h:10,d:2,mat:MAT.stone,roofH:2.5});
   {x:10,z:0,w:2.5,h:5,d:2},
 ].forEach(b=>makeBuilding(b));
 
-// Outer ring — larger structures
+// Outer ring - larger structures
 [
   {x:-14,z:-8,w:4.5,h:5.5,d:3.5,mat:MAT.brick,chimney:true},
   {x:14,z:-8,w:4.5,h:6,d:3.5,mat:MAT.brick},
@@ -739,50 +739,50 @@ const EVENTS=[
   {id:'meteor',cat:'CRITICAL ALERT',cls:'crit',title:'Debris Field Incoming',
    body:'Scout drones detected a dense debris cloud on approach. Your people look to the sky with hollow eyes. The colony walls may not hold.',
    choices:[
-    {t:'Activate emergency barriers',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;spawnGain(0,0,0x4080ff);addLog('Barriers held. Colony intact.',0x5a8ab0);floatPop('⚡ BARRIERS ACTIVE',0x5a8ab0);g.credits+=30;}},
+    {t:'Activate emergency barriers',cost:'ENERGY -40',moral:'n',cls:'',fn:g=>{g.energy-=40;spawnGain(0,0,0x4080ff);addLog('Barriers held. Colony intact.',0x5a8ab0);floatPop('⚡ BARRIERS ACTIVE',0x5a8ab0);g.credits+=30;}},
     {t:'Rally citizens to brace together',cost:'MORALE +10',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));spawnGain(0,0,0x60c070);addLog('Community rallied.',0x6abf7a);g.credits+=20;}},
-    {t:'Do nothing — endure it',cost:'FOOD −60, ENERGY −30',moral:'b',cls:'evil',fn:g=>{g.food-=60;g.energy-=30;spawnExplosion(0,0);addLog('Debris strikes. Heavy damage.',0xc44a3a);}},
+    {t:'Do nothing and endure it',cost:'FOOD -60, ENERGY -30',moral:'b',cls:'evil',fn:g=>{g.food-=60;g.energy-=30;spawnExplosion(0,0);addLog('Debris strikes. Heavy damage.',0xc44a3a);}},
    ]},
   {id:'plague',cat:'MEDICAL ALERT',cls:'warn',title:'The Coughing Sickness',
    body:'It started in the east quarter. Fever, fatigue, hollow eyes. The healer\'s hut is overwhelmed. Children are among the first to fall ill.',
    choices:[
-    {t:'Full quarantine',cost:'PROD −30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;addLog('Quarantine in place.',0x4a9a8a);g.credits+=25;}},
-    {t:'Burn medicine to treat everyone',cost:'MEDICINE −20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=35;}},
-    {t:'Let it thin the herd',cost:'POP −2 to 5',moral:'b',cls:'evil',fn:g=>{const n=2+Math.floor(Math.random()*4);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} perished. Colony grieves.`,0xc44a3a);g.moralBad++;}},
+    {t:'Full quarantine',cost:'PROD -30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;addLog('Quarantine in place.',0x4a9a8a);g.credits+=25;}},
+    {t:'Burn medicine to treat everyone',cost:'MEDICINE -20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=35;}},
+    {t:'Let it thin the herd',cost:'POP -2 to 5',moral:'b',cls:'evil',fn:g=>{const n=2+Math.floor(Math.random()*4);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} perished. Colony grieves.`,0xc44a3a);g.moralBad++;}},
    ]},
   {id:'strangers',cat:'INCOMING SIGNAL',cls:'',title:'Strangers at the Gate',
    body:'Eight survivors, half-starved, carrying only what they could when their village burned. They beg for shelter. Your council is divided.',
    choices:[
-    {t:'Open the gates — welcome them',cost:'FOOD −40, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls found refuge.',0x6abf7a);g.credits+=40;}},
-    {t:'Let in only those who can work',cost:'FOOD −15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},
-    {t:'Close the gates',cost:'MORALE −20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);addLog('Gates shut. Guilt spreads.',0xc44a3a);g.moralBad++;}},
+    {t:'Open the gates - welcome them',cost:'FOOD -40, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls found refuge.',0x6abf7a);g.credits+=40;}},
+    {t:'Let in only those who can work',cost:'FOOD -15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},
+    {t:'Close the gates',cost:'MORALE -20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);addLog('Gates shut. Guilt spreads.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'fire',cat:'FIRE EMERGENCY',cls:'crit',title:'Grain Store is Burning',
    body:'Flames light up the night sky. The main grain store is ablaze. Thick smoke rolls through the streets. Your people are terrified.',
    choices:[
-    {t:'All hands — water chain',cost:'ENERGY −50, FOOD −30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food-=30;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most food saved.',0x5a8ab0);g.credits+=20;}},
-    {t:'Create a firebreak',cost:'FOOD −60',moral:'n',cls:'',fn:g=>{g.food-=60;spawnExplosion(0,-8,0xff6020);addLog('Firebreak held the line.',0xd4973a);}},
-    {t:'Run. Save yourselves.',cost:'FOOD −100',moral:'b',cls:'evil',fn:g=>{g.food-=100;spawnExplosion(0,-8,0xff2000,30);addLog('Fire raged. Devastating loss.',0xc44a3a);g.moralBad++;}},
+    {t:'All hands - water chain',cost:'ENERGY -50, FOOD -30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food-=30;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most food saved.',0x5a8ab0);g.credits+=20;}},
+    {t:'Create a firebreak',cost:'FOOD -60',moral:'n',cls:'',fn:g=>{g.food-=60;spawnExplosion(0,-8,0xff6020);addLog('Firebreak held the line.',0xd4973a);}},
+    {t:'Run. Save yourselves.',cost:'FOOD -100',moral:'b',cls:'evil',fn:g=>{g.food-=100;spawnExplosion(0,-8,0xff2000,30);addLog('Fire raged. Devastating loss.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'trader',cat:'OPPORTUNITY',cls:'',title:'The Wandering Merchant',
    body:'A cloaked figure arrives before dawn with a loaded cart. She offers supplies in exchange for intelligence about safe routes south.',
    choices:[
-    {t:'Trade energy for food and medicine',cost:'ENERGY −60, FOOD +80, MED +20',moral:'n',cls:'good',fn:g=>{g.energy-=60;g.food+=80;g.medicine+=20;spawnGain(0,0,0x80c050,20);addLog('Fair trade. Shelves stocked.',0x6abf7a);g.credits+=30;}},
-    {t:'Give routes freely — build goodwill',cost:'MORALE +15',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+15));addLog('Goodwill built. Morale lifted.',0x6abf7a);g.credits+=15;}},
-    {t:'Rob the merchant',cost:'FOOD +120, MORALE −30',moral:'b',cls:'evil',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xff2233,10);addLog('Merchant robbed. Shame spreads.',0xc44a3a);g.moralBad++;}},
+    {t:'Trade energy for food and medicine',cost:'ENERGY -60, FOOD +80, MED +20',moral:'n',cls:'good',fn:g=>{g.energy-=60;g.food+=80;g.medicine+=20;spawnGain(0,0,0x80c050,20);addLog('Fair trade. Shelves stocked.',0x6abf7a);g.credits+=30;}},
+    {t:'Give routes freely - build goodwill',cost:'MORALE +15',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+15));addLog('Goodwill built. Morale lifted.',0x6abf7a);g.credits+=15;}},
+    {t:'Rob the merchant',cost:'FOOD +120, MORALE -30',moral:'b',cls:'evil',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xff2233,10);addLog('Merchant robbed. Shame spreads.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'uprising',cat:'SOCIAL CRISIS',cls:'crit',title:'Uprising in the East Quarter',
    body:'The rationing has broken something. They\'ve barricaded the workshops. Chanting fills the cold air. Your enforcers look to you.',
    choices:[
-    {t:'Negotiate — grant rest and rations',cost:'FOOD −50, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food-=50;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));spawnGain(0,0,0x60c050,12);addLog('Compromise reached.',0x6abf7a);g.credits+=35;}},
-    {t:'Speak to the crowd — promise reforms',cost:'MORALE +8',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Crowd calmed by words.',0xd4973a);}},
-    {t:'Crush the uprising by force',cost:'POP −2, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,15);addLog('Dissent silenced with blood.',0xc44a3a);g.moralBad++;}},
+    {t:'Negotiate - grant rest and rations',cost:'FOOD -50, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food-=50;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));spawnGain(0,0,0x60c050,12);addLog('Compromise reached.',0x6abf7a);g.credits+=35;}},
+    {t:'Speak to the crowd - promise reforms',cost:'MORALE +8',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Crowd calmed by words.',0xd4973a);}},
+    {t:'Crush the uprising by force',cost:'POP -2, MORALE -35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,15);addLog('Dissent silenced with blood.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'winter',cat:'SEASONAL SHIFT',cls:'warn',title:'The Long Cold Approaches',
    body:'Frost killed the outer fields early. If you don\'t prepare now, the cold months will be catastrophic. Your breath fogs in the morning air.',
    choices:[
-    {t:'Emergency harvest — work through night',cost:'MORALE −10, FOOD +60',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g.food+=60;spawnGain(0,0,0x80a040,15);addLog('Night harvest done. Reserves up.',0x6abf7a);g.credits+=25;}},
-    {t:'Trade energy for insulation',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;g.diffScale-=0.05;addLog('Colony insulated. Cold blunted.',0x5a8ab0);g.credits+=20;}},
+    {t:'Emergency harvest - work through night',cost:'MORALE -10, FOOD +60',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g.food+=60;spawnGain(0,0,0x80a040,15);addLog('Night harvest done. Reserves up.',0x6abf7a);g.credits+=25;}},
+    {t:'Trade energy for insulation',cost:'ENERGY -40',moral:'n',cls:'',fn:g=>{g.energy-=40;g.diffScale-=0.05;addLog('Colony insulated. Cold blunted.',0x5a8ab0);g.credits+=20;}},
     {t:'Nothing. You\'ve survived worse.',cost:'FOOD DRAIN +30% for 10 days',moral:'b',cls:'evil',fn:g=>{g.winterPenalty=10;addLog('Winter bites. Rationing brutal.',0xc44a3a);}},
    ]},
 ];
@@ -816,7 +816,7 @@ function doAction(type){
           {icon:'⚡',name:'ENERGY CACHE',val:'+45 ENERGY',fn:g=>{g.energy+=45;}},
           {icon:'💊',name:'MEDICINE STASH',val:'+28 MEDICINE',fn:g=>{g.medicine+=28;}},
           {icon:'⚙',name:'CREDIT CHEST',val:'+90 CREDITS',fn:g=>{g.credits+=90;}},
-          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY −0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
+          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY -0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
           {icon:'🗡',name:'WEAPONS CACHE',val:'CONSCRIPT REMOVED',fn:g=>{g.moralBad=Math.max(0,g.moralBad-1);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));}},
         ];
         showLoot(lootTable[Math.floor(Math.random()*lootTable.length)]);
@@ -881,8 +881,8 @@ function tickDay(){
   G.rationMode=false;G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
   G.credits+=G.citizens.length;
   const r=Math.random();
-  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: −${l} energy`,0xc44a3a);}
-  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: −${l} food`,0xd4973a);}
+  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: -${l} energy`,0xc44a3a);}
+  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: -${l} food`,0xd4973a);}
   else if(r<0.48){G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-(2+Math.floor(Math.random()*7))));}
   const pop=G.citizens.length;
   G.citizens=G.citizens.filter(c=>c.update(G.food));
@@ -946,7 +946,7 @@ function updateHUD(){
   document.getElementById('rv-food').textContent=Math.floor(g.food);
   document.getElementById('rv-nrg').textContent=Math.floor(g.energy);
   document.getElementById('rv-med').textContent=Math.floor(g.medicine);
-  document.getElementById('mp-val').textContent=`${avg} — ${avg>70?'Resilient':avg>45?'Weary':avg>25?'Desperate':'Breaking'}`;
+  document.getElementById('mp-val').textContent=`${avg} - ${avg>70?'Resilient':avg>45?'Weary':avg>25?'Desperate':'Breaking'}`;
   document.getElementById('mp-fill').style.width=avg+'%';
   const pPD=Math.floor(pop*3*g.diffScale);
   setRI('food',g.food/400,g.food<50?'#c44a3a':g.food<100?'#d4973a':'#6abf7a',`${pPD-pop*2>=0?'+':''}${pPD-pop*2}/d`,pPD-pop*2>=0?'pos':'neg');
@@ -997,7 +997,7 @@ function endGame(win){
   G.alive=false;
   document.getElementById('end-h').textContent=win?'COLONY ENDURES':'THE SILENCE COMES';
   document.getElementById('end-h').className=`end-h ${win?'win':'lose'}`;
-  const qw=['"They said we would not last the winter. They were wrong."','"Sixty days of hunger and cold. And still — we stand."'];
+  const qw=['"They said we would not last the winter. They were wrong."','"Sixty days of hunger and cold. And still - we stand."'];
   const ql=['"The last fire went out before anyone noticed."','"History will not record them. The wind already forgot."'];
   document.getElementById('end-q').textContent=(win?qw:ql)[Math.floor(Math.random()*2)];
   const avg=G.citizens.length>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/G.citizens.length):0;
@@ -1007,11 +1007,11 @@ function endGame(win){
 
 /* ─── TUTORIAL ─── */
 const STEPS=[
-  {step:'01 / 05',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.\n\nYou are their hope — or their end.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
-  {step:'02 / 05',title:'Take Action Every Day',body:'Use the <strong>bottom buttons</strong> to keep your colony alive. Farm for food, recharge energy cells, deploy medics, or send scouts into the wilderness.',tip:'Actions have short cooldowns. Keep tapping them — every turn counts.',icons:['🌱 Farm','🔋 Recharge','💉 Medic','🔭 Scout']},
-  {step:'03 / 05',title:'Credits, Loot & Streaks',body:'<strong>Credits ⚙</strong> accumulate each day and from achievements. Trade them for emergency supplies.\n\nScouts may return with <strong>Supply Drops</strong> — glowing loot crates with RNG rewards. Chain 5 actions without stopping for a <strong>Streak Bonus</strong>.',tip:'Scouts finding loot is ~30% chance — worth the gamble when desperate.',icons:['⚙ Credits','📦 Loot Drops','🔥 Streaks','🏆 Achievements']},
+  {step:'01 / 05',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.\n\nYou are their hope - or their end.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
+  {step:'02 / 05',title:'Take Action Every Day',body:'Use the <strong>bottom buttons</strong> to keep your colony alive. Farm for food, recharge energy cells, deploy medics, or send scouts into the wilderness.',tip:'Actions have short cooldowns. Keep tapping them - every turn counts.',icons:['🌱 Farm','🔋 Recharge','💉 Medic','🔭 Scout']},
+  {step:'03 / 05',title:'Credits, Loot & Streaks',body:'<strong>Credits ⚙</strong> accumulate each day and from achievements. Trade them for emergency supplies.\n\nScouts may return with <strong>Supply Drops</strong> - glowing loot crates with RNG rewards. Chain 5 actions without stopping for a <strong>Streak Bonus</strong>.',tip:'Scouts finding loot is ~30% chance - worth the gamble when desperate.',icons:['⚙ Credits','📦 Loot Drops','🔥 Streaks','🏆 Achievements']},
   {step:'04 / 05',title:'Crisis Events',body:'Every few days a <strong>crisis event</strong> interrupts the colony. A fire. Sickness. Strangers at the gate.\n\nThree choices. One compassionate, one pragmatic, one dark. <strong>Your choices define your colony\'s soul.</strong>',tip:'Ruthless choices yield short-term gains but destroy morale and your legacy.',icons:['🌾 Fires','🦠 Disease','🚪 Refugees','⚡ Storms']},
-  {step:'05 / 05',title:'Survive 60 Days',body:'Keep at least one citizen alive for <strong>60 days</strong>. The world grows harsher each day — difficulty slowly increases.\n\nBut if you endure, you will have built something real. A colony. A community. A story.',tip:'Use 2× or 4× speed once you\'re stable. Pause during events to think.',icons:['⏸ Pause','1× Normal','2× Fast','4× Rush']},
+  {step:'05 / 05',title:'Survive 60 Days',body:'Keep at least one citizen alive for <strong>60 days</strong>. The world grows harsher each day - difficulty slowly increases.\n\nBut if you endure, you will have built something real. A colony. A community. A story.',tip:'Use 2× or 4× speed once you\'re stable. Pause during events to think.',icons:['⏸ Pause','1× Normal','2× Fast','4× Rush']},
 ];
 let tutStep=0;
 function renderTut(){
@@ -1029,7 +1029,7 @@ function renderTut(){
   </div>`;
 }
 function tutNav(d){tutStep=Math.max(0,Math.min(STEPS.length-1,tutStep+d));renderTut();}
-function startGame(){document.getElementById('tutorial').style.display='none';G.paused=false;addLog('Colony systems online. Stay vigilant.',0x4a9a8a);notify('COLONY ZERO — DAY ONE BEGINS',0x4a9a8a);updateHUD();}
+function startGame(){document.getElementById('tutorial').style.display='none';G.paused=false;addLog('Colony systems online. Stay vigilant.',0x4a9a8a);notify('COLONY ZERO - DAY ONE BEGINS',0x4a9a8a);updateHUD();}
 renderTut();
 
 /* ═══════════════════════ RENDER LOOP ═══════════════════════ */
