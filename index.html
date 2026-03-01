@@ -2,1387 +2,878 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COLONY ZERO — SURVIVE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>COLONY ZERO</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
-
-  :root {
-    --red: #ff2233;
-    --orange: #ff6a00;
-    --amber: #ffb300;
-    --green: #00ff88;
-    --cyan: #00e5ff;
-    --dim: #0a0c0f;
-    --panel: rgba(8,12,18,0.92);
-    --border: rgba(0,229,255,0.2);
-    --glow: 0 0 20px rgba(0,229,255,0.3);
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
-  body {
-    background: #000;
-    font-family: 'Share Tech Mono', monospace;
-    color: #cce8ff;
-    overflow: hidden;
-    user-select: none;
-  }
-
-  #canvas-container {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-  }
-
-  canvas { display: block; }
-
-  /* ─── HUD ─── */
-  #hud {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    gap: 10px;
-  }
-
-  #top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .title-block {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .game-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 6px;
-    color: var(--cyan);
-    text-shadow: 0 0 15px var(--cyan);
-    opacity: 0.8;
-  }
-
-  #day-counter {
-    font-family: 'Orbitron', monospace;
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(255,255,255,0.5);
-    line-height: 1;
-  }
-
-  #day-label {
-    font-size: 10px;
-    color: rgba(200,220,255,0.4);
-    letter-spacing: 3px;
-  }
-
-  /* Resource bars */
-  #resources {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .res-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 14px;
-    min-width: 130px;
-    backdrop-filter: blur(8px);
-    position: relative;
-    overflow: hidden;
-    pointer-events: auto;
-    transition: border-color 0.3s;
-  }
-
-  .res-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--bar-color, var(--cyan));
-    transform-origin: left;
-    transition: transform 0.5s ease, background 0.5s;
-    transform: scaleX(var(--fill, 1));
-  }
-
-  .res-label {
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: rgba(150,200,255,0.5);
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-
-  .res-value {
-    font-family: 'Orbitron', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1;
-  }
-
-  .res-delta {
-    font-size: 10px;
-    margin-top: 2px;
-  }
-
-  .res-delta.neg { color: var(--red); }
-  .res-delta.pos { color: var(--green); }
-
-  /* Population card special */
-  #pop-card .res-value { color: var(--amber); text-shadow: 0 0 12px var(--amber); }
-
-  /* Danger states */
-  .res-card.danger { border-color: rgba(255,34,51,0.6); animation: danger-pulse 1s infinite; }
-  .res-card.warning { border-color: rgba(255,179,0,0.5); }
-
-  @keyframes danger-pulse {
-    0%,100% { box-shadow: none; }
-    50% { box-shadow: 0 0 15px rgba(255,34,51,0.4); }
-  }
-
-  /* Bottom controls */
-  #controls {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    gap: 8px;
-    pointer-events: auto;
-  }
-
-  .ctrl-btn {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--cyan);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    padding: 8px 18px;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition: all 0.2s;
-    text-transform: uppercase;
-  }
-
-  .ctrl-btn:hover {
-    background: rgba(0,229,255,0.1);
-    border-color: var(--cyan);
-    box-shadow: var(--glow);
-    color: #fff;
-  }
-
-  .ctrl-btn.active {
-    background: rgba(0,229,255,0.2);
-    border-color: var(--cyan);
-    box-shadow: var(--glow);
-  }
-
-  .ctrl-btn.danger-btn {
-    border-color: rgba(255,34,51,0.5);
-    color: var(--red);
-  }
-  .ctrl-btn.danger-btn:hover {
-    background: rgba(255,34,51,0.15);
-    box-shadow: 0 0 20px rgba(255,34,51,0.3);
-  }
-
-  /* Speed controls */
-  #speed-bar {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 10;
-    display: flex;
-    gap: 4px;
-    pointer-events: auto;
-  }
-
-  .speed-btn {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: rgba(150,200,255,0.5);
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    padding: 6px 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .speed-btn.on {
-    background: rgba(0,229,255,0.15);
-    border-color: var(--cyan);
-    color: var(--cyan);
-    box-shadow: 0 0 10px rgba(0,229,255,0.2);
-  }
-
-  .speed-btn:hover { color: var(--cyan); }
-
-  /* ─── EVENT PANEL ─── */
-  #event-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    z-index: 100;
-    background: rgba(4,8,14,0.97);
-    border: 1px solid rgba(0,229,255,0.35);
-    border-radius: 4px;
-    padding: 36px;
-    max-width: 520px;
-    width: 90%;
-    box-shadow: 0 0 60px rgba(0,229,255,0.1), 0 0 120px rgba(0,0,0,0.8);
-    display: none;
-    pointer-events: auto;
-    backdrop-filter: blur(16px);
-  }
-
-  #event-panel.visible {
-    display: block;
-    animation: panel-in 0.25s cubic-bezier(0.2,0,0,1) forwards;
-  }
-
-  @keyframes panel-in {
-    from { opacity:0; transform: translate(-50%,-50%) scale(0.93); }
-    to { opacity:1; transform: translate(-50%,-50%) scale(1); }
-  }
-
-  .event-category {
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: var(--cyan);
-    margin-bottom: 8px;
-    opacity: 0.6;
-  }
-
-  .event-category.critical { color: var(--red); }
-  .event-category.warning { color: var(--amber); }
-
-  .event-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 22px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 16px;
-    line-height: 1.2;
-  }
-
-  .event-desc {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    color: rgba(180,210,255,0.8);
-    margin-bottom: 28px;
-    border-left: 2px solid rgba(0,229,255,0.3);
-    padding-left: 14px;
-  }
-
-  .event-choices {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .choice-btn {
-    background: rgba(10,15,22,0.8);
-    border: 1px solid rgba(0,229,255,0.2);
-    color: #cce8ff;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 12px 18px;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    transition: all 0.2s;
-    border-radius: 2px;
-  }
-
-  .choice-btn:hover {
-    background: rgba(0,229,255,0.08);
-    border-color: rgba(0,229,255,0.5);
-    color: #fff;
-    transform: translateX(4px);
-  }
-
-  .choice-btn.moral-bad {
-    border-color: rgba(255,34,51,0.25);
-  }
-
-  .choice-btn.moral-bad:hover {
-    background: rgba(255,34,51,0.08);
-    border-color: rgba(255,34,51,0.5);
-  }
-
-  .choice-cost {
-    font-size: 11px;
-    color: rgba(150,200,255,0.5);
-    margin-top: 2px;
-    font-weight: 400;
-    letter-spacing: 1px;
-  }
-
-  .choice-letter {
-    font-family: 'Orbitron', monospace;
-    font-size: 12px;
-    color: var(--cyan);
-    opacity: 0.7;
-    padding-top: 1px;
-    min-width: 16px;
-  }
-
-  .choice-btn.moral-bad .choice-letter { color: var(--red); }
-
-  /* ─── LOG ─── */
-  #log-panel {
-    position: fixed;
-    bottom: 70px;
-    right: 16px;
-    z-index: 10;
-    width: 300px;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 4px;
-    max-height: 200px;
-    overflow: hidden;
-  }
-
-  .log-entry {
-    font-size: 11px;
-    padding: 5px 10px;
-    background: rgba(4,8,14,0.85);
-    border-left: 2px solid var(--entry-color, rgba(0,229,255,0.4));
-    color: rgba(180,210,255,0.7);
-    animation: log-in 0.3s ease;
-    backdrop-filter: blur(4px);
-  }
-
-  @keyframes log-in {
-    from { opacity:0; transform: translateX(10px); }
-    to { opacity:1; transform: translateX(0); }
-  }
-
-  /* ─── MORALE BAR ─── */
-  #morale-wrap {
-    position: fixed;
-    bottom: 70px;
-    left: 16px;
-    z-index: 10;
-    pointer-events: none;
-    width: 200px;
-  }
-
-  .morale-label {
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: rgba(150,200,255,0.4);
-    margin-bottom: 5px;
-  }
-
-  .morale-track {
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .morale-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
-    border-radius: 2px;
-    transition: width 0.5s ease;
-    background-size: 200px 100%;
-    background-position: calc(100% - var(--morale-pct, 50) * 2px) 0;
-  }
-
-  /* ─── GAME OVER / WIN ─── */
-  #end-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: rgba(0,0,0,0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
-    pointer-events: auto;
-    backdrop-filter: blur(8px);
-  }
-
-  #end-screen.visible {
-    display: flex;
-    animation: fade-in 1s ease;
-  }
-
-  @keyframes fade-in {
-    from { opacity:0; }
-    to { opacity:1; }
-  }
-
-  .end-title {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(32px, 6vw, 72px);
-    font-weight: 900;
-    text-align: center;
-    letter-spacing: 8px;
-  }
-
-  .end-title.lose { color: var(--red); text-shadow: 0 0 40px var(--red); }
-  .end-title.win { color: var(--green); text-shadow: 0 0 40px var(--green); }
-
-  .end-stats {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
-    color: rgba(180,210,255,0.6);
-    text-align: center;
-    line-height: 1.8;
-  }
-
-  /* ─── SCANLINE OVERLAY ─── */
-  #scanlines {
-    position: fixed;
-    inset: 0;
-    z-index: 5;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-  }
-
-  #vignette {
-    position: fixed;
-    inset: 0;
-    z-index: 5;
-    pointer-events: none;
-    background: radial-gradient(ellipse at center,
-      transparent 50%,
-      rgba(0,0,0,0.7) 100%
-    );
-  }
-
-  /* ─── NOTIFICATIONS ─── */
-  #notif-stack {
-    position: fixed;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .notif {
-    font-family: 'Orbitron', monospace;
-    font-size: 13px;
-    letter-spacing: 2px;
-    padding: 8px 24px;
-    background: rgba(4,8,14,0.95);
-    border: 1px solid var(--notif-color, var(--cyan));
-    color: var(--notif-color, var(--cyan));
-    text-shadow: 0 0 10px var(--notif-color, var(--cyan));
-    box-shadow: 0 0 20px rgba(0,229,255,0.1);
-    animation: notif-life 3s ease forwards;
-  }
-
-  @keyframes notif-life {
-    0% { opacity:0; transform:translateY(-10px); }
-    15% { opacity:1; transform:translateY(0); }
-    70% { opacity:1; }
-    100% { opacity:0; }
-  }
-
-  /* ─── INTRO ─── */
-  #intro {
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-    pointer-events: auto;
-    cursor: pointer;
-  }
-
-  .intro-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(28px, 5vw, 64px);
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: 12px;
-    animation: logo-flicker 4s ease infinite;
-    text-align: center;
-  }
-
-  @keyframes logo-flicker {
-    0%,94%,100% { opacity:1; text-shadow: 0 0 30px rgba(0,229,255,0.5); }
-    95% { opacity:0.3; text-shadow: none; }
-    97% { opacity:1; }
-  }
-
-  .intro-sub {
-    font-size: 12px;
-    letter-spacing: 5px;
-    color: rgba(0,229,255,0.5);
-    text-align: center;
-  }
-
-  .intro-lore {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px;
-    color: rgba(150,180,255,0.4);
-    max-width: 480px;
-    text-align: center;
-    line-height: 1.8;
-    margin-top: 10px;
-  }
-
-  .intro-start {
-    margin-top: 24px;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--cyan);
-    animation: blink 1.4s step-end infinite;
-  }
-
-  @keyframes blink { 50% { opacity:0; } }
-
-  .intro-divider {
-    width: 80px;
-    height: 1px;
-    background: rgba(0,229,255,0.3);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;600&display=swap');
+
+:root {
+  --bg:#1a1f1b;--bg2:#222820;--bg3:#2a3028;
+  --surface:rgba(30,36,28,0.92);--border:rgba(140,170,120,0.22);--border2:rgba(140,170,120,0.45);
+  --text:#c8d4b8;--text2:#8a9e7a;--text3:#5a6e4e;
+  --amber:#d4973a;--gold:#e8c060;--green:#6abf7a;--red:#c44a3a;--blue:#5a8ab0;--teal:#4a9a8a;--orange:#d07040;
+  --glow-g:rgba(106,191,122,0.35);--glow-a:rgba(212,151,58,0.35);--glow-r:rgba(196,74,58,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0e120f;}
+
+#portrait-warn{display:none;position:fixed;inset:0;z-index:9999;background:#0e120f;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:'Cinzel',serif;color:var(--text);text-align:center;padding:30px;}
+.pw-icon{font-size:60px;animation:rotate90 2s ease infinite;}
+@keyframes rotate90{0%{transform:rotate(0)}50%{transform:rotate(90deg)}100%{transform:rotate(0)}}
+@media(orientation:portrait){#portrait-warn{display:flex!important;}#game-root{display:none!important;}}
+
+#game-root{width:100%;height:100%;position:relative;background:var(--bg);font-family:'JetBrains Mono',monospace;}
+#c{position:absolute;inset:0;display:block;}
+#atmo{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse 60% 40% at 70% 30%,rgba(60,80,50,0.15) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(30,50,40,0.1) 0%,transparent 60%);}
+#grain{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px;}
+
+#hud{position:absolute;inset:0;pointer-events:none;z-index:10;display:flex;flex-direction:column;}
+
+#top-bar{display:flex;align-items:stretch;background:rgba(14,18,12,0.85);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);pointer-events:auto;}
+.top-section{display:flex;align-items:center;gap:10px;padding:8px 14px;border-right:1px solid var(--border);}
+.game-wordmark{font-family:'Cinzel',serif;font-size:clamp(10px,1.2vw,14px);font-weight:900;color:var(--text);letter-spacing:3px;text-shadow:0 0 20px rgba(200,212,184,0.3);white-space:nowrap;}
+#day-block{font-family:'Cinzel',serif;font-size:clamp(18px,2.2vw,26px);font-weight:700;color:#fff;line-height:1;text-shadow:0 1px 12px rgba(200,220,180,0.4);}
+.day-sub{font-size:8px;color:var(--text3);letter-spacing:2px;margin-top:2px;}
+
+#credits-block{display:flex;align-items:center;gap:8px;background:rgba(212,151,58,0.08);border:1px solid rgba(212,151,58,0.25);border-radius:3px;padding:5px 12px;position:relative;overflow:hidden;pointer-events:auto;cursor:help;margin:6px;}
+#credits-block::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,151,58,0.06),transparent);animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.credits-icon{font-size:15px;}
+#credits-val{font-family:'Cinzel',serif;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--gold);text-shadow:0 0 12px var(--glow-a);}
+.credits-label{font-size:8px;color:var(--amber);letter-spacing:2px;opacity:0.7;}
+
+#res-bar{flex:1;display:flex;}
+.res-item{flex:1;display:flex;flex-direction:column;justify-content:center;padding:5px 10px;border-right:1px solid var(--border);position:relative;overflow:hidden;cursor:default;transition:background 0.2s;}
+.res-item:hover{background:rgba(140,170,120,0.05);}
+.res-item::after{content:'';position:absolute;bottom:0;left:0;height:2px;background:var(--ri-color,var(--teal));width:calc(var(--fill,0.5)*100%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 6px var(--ri-color,var(--teal));}
+.ri-label{font-size:8px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:2px;}
+.ri-row{display:flex;align-items:baseline;gap:5px;}
+.ri-val{font-family:'Cinzel',serif;font-size:clamp(12px,1.4vw,16px);font-weight:700;color:var(--text);transition:color 0.3s;}
+.ri-delta{font-size:9px;color:var(--text3);}
+.ri-delta.pos{color:var(--green);}.ri-delta.neg{color:var(--red);}
+
+#speed-ctrl{display:flex;align-items:center;gap:3px;padding:0 10px;}
+.spd{font-size:10px;letter-spacing:1px;background:transparent;border:1px solid var(--border);color:var(--text3);padding:4px 7px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all 0.15s;border-radius:2px;}
+.spd.on{background:rgba(140,170,120,0.15);border-color:var(--border2);color:var(--text);}
+.spd:hover{color:var(--text);border-color:var(--border2);}
+
+#bottom-bar{margin-top:auto;background:rgba(14,18,12,0.85);border-top:1px solid var(--border);backdrop-filter:blur(12px);display:flex;align-items:center;pointer-events:auto;flex-wrap:wrap;}
+.act-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 12px;border:none;border-right:1px solid var(--border);background:transparent;color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;min-width:72px;}
+.act-btn .ab-icon{font-size:17px;line-height:1;}
+.act-btn .ab-cost{font-size:7px;color:var(--text3);margin-top:1px;}
+.act-btn:hover{background:rgba(140,170,120,0.08);color:var(--text);}
+.act-btn:active{background:rgba(140,170,120,0.15);}
+.act-btn.red-btn{border-color:rgba(196,74,58,0.3);}
+.act-btn.red-btn:hover{background:rgba(196,74,58,0.08);color:#e08070;}
+.act-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+#log-strip{flex:1;overflow:hidden;padding:4px 12px;display:flex;flex-direction:column;gap:2px;max-height:52px;border-right:1px solid var(--border);}
+.log-line{font-size:10px;color:var(--text3);animation:log-appear 0.3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.log-line span{color:var(--li-color,var(--teal));}
+@keyframes log-appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+#morale-panel{padding:6px 14px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--border);min-width:120px;}
+.mp-label{font-size:8px;letter-spacing:2px;color:var(--text3);}
+.mp-track{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.mp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 40%,var(--green) 100%);background-size:200px 100%;transition:width 0.5s ease;box-shadow:0 0 8px rgba(106,191,122,0.3);}
+.mp-val{font-size:10px;color:var(--text2);}
+
+#popup-layer{position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden;}
+.float-pop{position:absolute;font-family:'Cinzel',serif;font-size:clamp(11px,1.3vw,15px);font-weight:700;color:var(--fp-color,#fff);text-shadow:0 2px 8px rgba(0,0,0,0.8);animation:float-up 2.2s ease forwards;white-space:nowrap;pointer-events:none;filter:drop-shadow(0 0 4px var(--fp-color,#fff));}
+@keyframes float-up{0%{opacity:0;transform:translateY(0) scale(0.7);}15%{opacity:1;transform:translateY(-10px) scale(1.1);}40%{opacity:1;transform:translateY(-25px) scale(1);}100%{opacity:0;transform:translateY(-60px) scale(0.9);}}
+
+#combo-banner{position:absolute;top:65px;right:20px;z-index:25;font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,20px);font-weight:900;color:var(--gold);text-shadow:0 0 20px var(--glow-a);opacity:0;transform:scale(0.8);transition:opacity 0.3s,transform 0.3s;pointer-events:none;}
+#combo-banner.show{opacity:1;transform:scale(1);}
+
+#loot-overlay{position:absolute;inset:0;z-index:50;pointer-events:none;display:flex;align-items:center;justify-content:center;}
+.loot-box{background:rgba(14,18,12,0.97);border:1px solid var(--gold);border-radius:4px;padding:24px 32px;text-align:center;box-shadow:0 0 40px var(--glow-a),0 0 80px rgba(0,0,0,0.6);animation:loot-pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);display:none;pointer-events:auto;}
+.loot-box.show{display:block;}
+@keyframes loot-pop{from{opacity:0;transform:scale(0.6) rotate(-5deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.loot-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--amber);margin-bottom:12px;}
+.loot-icon{font-size:48px;margin:8px 0;animation:spin-in 0.5s ease 0.1s both;}
+@keyframes spin-in{from{transform:rotate(-180deg) scale(0)}to{transform:rotate(0) scale(1)}}
+.loot-name{font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,18px);font-weight:700;color:#fff;margin:8px 0 4px;}
+.loot-value{font-family:'Cinzel',serif;font-size:clamp(22px,2.8vw,30px);font-weight:900;color:var(--gold);text-shadow:0 0 20px var(--glow-a);}
+.loot-sub{font-size:10px;color:var(--text3);letter-spacing:2px;margin-top:8px;}
+
+#evt-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.96);z-index:40;width:min(460px,86vw);background:rgba(16,20,14,0.97);border:1px solid rgba(140,170,120,0.3);border-radius:4px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 40px rgba(106,191,122,0.05);display:none;pointer-events:auto;backdrop-filter:blur(16px);}
+#evt-panel.open{display:block;animation:evt-in 0.25s cubic-bezier(0.2,0,0,1) forwards;}
+@keyframes evt-in{from{opacity:0;transform:translate(-50%,-50%) scale(0.94);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+.evt-tag{font-size:8px;letter-spacing:4px;color:var(--teal);margin-bottom:8px;text-transform:uppercase;}
+.evt-tag.crit{color:var(--red);}.evt-tag.warn{color:var(--amber);}
+.evt-h{font-family:'Cinzel',serif;font-size:clamp(15px,2vw,20px);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3;}
+.evt-body{font-family:'Crimson Pro',serif;font-size:clamp(12px,1.4vw,14px);color:rgba(180,200,160,0.85);line-height:1.7;border-left:2px solid rgba(140,170,120,0.2);padding-left:12px;margin-bottom:18px;font-style:italic;}
+.evt-choices{display:flex;flex-direction:column;gap:7px;}
+.ev-btn{background:rgba(24,30,22,0.8);border:1px solid rgba(140,170,120,0.15);border-radius:2px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left;width:100%;transition:all 0.18s;}
+.ev-btn:hover{background:rgba(140,170,120,0.07);border-color:rgba(140,170,120,0.35);transform:translateX(3px);}
+.ev-btn.evil{border-color:rgba(196,74,58,0.2);}.ev-btn.evil:hover{background:rgba(196,74,58,0.06);border-color:rgba(196,74,58,0.4);}
+.ev-btn.good{border-color:rgba(106,191,122,0.2);}.ev-btn.good:hover{background:rgba(106,191,122,0.06);border-color:rgba(106,191,122,0.4);}
+.ev-key{font-family:'Cinzel',serif;font-size:11px;color:var(--text3);min-width:16px;padding-top:1px;}
+.ev-btn.evil .ev-key{color:var(--red);}.ev-btn.good .ev-key{color:var(--green);}
+.ev-text{font-family:'Crimson Pro',serif;font-size:clamp(12px,1.3vw,14px);color:var(--text);line-height:1.4;}
+.ev-cost{font-size:9px;color:var(--text3);letter-spacing:1px;margin-top:2px;font-family:'JetBrains Mono',monospace;}
+
+#tutorial{position:absolute;inset:0;z-index:80;background:rgba(10,14,10,0.93);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;}
+.tut-card{background:rgba(18,24,16,0.98);border:1px solid rgba(140,170,120,0.3);border-radius:6px;padding:28px 32px;max-width:min(500px,88vw);width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.8);}
+.tut-step{font-size:9px;letter-spacing:4px;color:var(--teal);margin-bottom:8px;}
+.tut-title{font-family:'Cinzel',serif;font-size:clamp(16px,2.2vw,24px);font-weight:900;color:#fff;margin-bottom:12px;line-height:1.2;}
+.tut-body{font-family:'Crimson Pro',serif;font-size:clamp(13px,1.4vw,15px);color:rgba(180,200,160,0.85);line-height:1.8;margin-bottom:16px;}
+.tut-body strong{color:var(--gold);font-weight:600;}
+.tut-tip{background:rgba(90,138,176,0.08);border-left:2px solid var(--blue);padding:9px 12px;margin-bottom:16px;border-radius:0 2px 2px 0;font-family:'Crimson Pro',serif;font-size:clamp(11px,1.2vw,13px);color:rgba(160,190,220,0.8);line-height:1.6;}
+.tut-icons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.tut-icon-item{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(140,170,120,0.1);border-radius:3px;padding:4px 9px;font-size:10px;color:var(--text2);}
+.tut-icon-item span:first-child{font-size:14px;}
+.tut-nav{display:flex;gap:10px;justify-content:space-between;align-items:center;}
+.tut-dots{display:flex;gap:5px;}
+.tut-dot{width:6px;height:6px;border-radius:50%;background:rgba(140,170,120,0.2);transition:background 0.2s;}
+.tut-dot.on{background:var(--teal);}
+.tut-btn{background:rgba(74,154,138,0.15);border:1px solid rgba(74,154,138,0.4);color:var(--teal);padding:8px 20px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;border-radius:2px;transition:all 0.2s;}
+.tut-btn:hover{background:rgba(74,154,138,0.25);color:#fff;}
+.tut-btn.primary{background:rgba(74,154,138,0.25);border-color:var(--teal);}
+
+#notif-zone{position:absolute;top:62px;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.notif{font-family:'Cinzel',serif;font-size:clamp(9px,1.1vw,12px);letter-spacing:2px;padding:6px 18px;background:rgba(14,18,12,0.96);border:1px solid var(--n-color,var(--teal));color:var(--n-color,var(--teal));text-shadow:0 0 10px var(--n-color,var(--teal));box-shadow:0 0 20px rgba(0,0,0,0.4);animation:notif-life 3s ease forwards;white-space:nowrap;}
+@keyframes notif-life{0%{opacity:0;transform:translateY(-8px);}12%{opacity:1;transform:translateY(0);}70%{opacity:1;}100%{opacity:0;}}
+
+#end-screen{position:absolute;inset:0;z-index:90;background:rgba(8,10,8,0.88);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#end-screen.open{display:flex;animation:fade-in 1.2s ease;}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+.end-h{font-family:'Cinzel',serif;font-size:clamp(24px,4.5vw,56px);font-weight:900;text-align:center;letter-spacing:6px;line-height:1;}
+.end-h.lose{color:var(--red);text-shadow:0 0 40px var(--glow-r);}
+.end-h.win{color:var(--gold);text-shadow:0 0 40px var(--glow-a);}
+.end-quote{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(13px,1.6vw,17px);color:var(--text2);text-align:center;max-width:420px;line-height:1.6;}
+.end-stats{font-size:clamp(10px,1.3vw,13px);color:var(--text3);text-align:center;line-height:2;letter-spacing:1px;}
+.restart-btn{margin-top:10px;background:rgba(74,154,138,0.12);border:1px solid rgba(74,154,138,0.4);color:var(--teal);padding:10px 28px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;border-radius:2px;transition:all 0.2s;text-transform:uppercase;}
+.restart-btn:hover{background:rgba(74,154,138,0.22);color:#fff;}
+
+.achievement{position:absolute;right:14px;background:rgba(14,18,12,0.97);border:1px solid var(--gold);border-left:3px solid var(--gold);border-radius:3px;padding:9px 13px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 20px rgba(212,151,58,0.1);animation:achieve-in 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards,achieve-out 0.4s ease 4s forwards;z-index:35;pointer-events:none;max-width:240px;}
+.ach-icon{font-size:18px;}.ach-label{font-size:7px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:2px;}.ach-name{font-family:'Cinzel',serif;font-size:11px;color:#fff;font-weight:700;}
+@keyframes achieve-in{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+@keyframes achieve-out{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
 </style>
 </head>
 <body>
+<div id="portrait-warn">
+  <div class="pw-icon">📱</div>
+  <div style="font-size:18px;letter-spacing:3px;font-family:'Cinzel',serif;">ROTATE DEVICE</div>
+  <div style="font-size:11px;color:#5a6e4e;letter-spacing:2px;font-family:'JetBrains Mono',monospace;">COLONY ZERO REQUIRES LANDSCAPE</div>
+</div>
 
-<!-- Three.js -->
+<div id="game-root">
+  <canvas id="c"></canvas>
+  <div id="atmo"></div><div id="grain"></div>
+
+  <div id="hud">
+    <div id="top-bar">
+      <div class="top-section">
+        <div>
+          <div class="game-wordmark">COLONY ZERO</div>
+          <div class="day-sub">DAYS SURVIVED</div>
+        </div>
+        <div id="day-block">01</div>
+      </div>
+      <div id="credits-block" title="Credits — earn by surviving and completing events">
+        <div class="credits-icon">⚙</div>
+        <div><div id="credits-val">0</div><div class="credits-label">CREDITS</div></div>
+      </div>
+      <div id="res-bar">
+        <div class="res-item" id="ri-pop" style="--ri-color:var(--amber)">
+          <div class="ri-label">👥 POPULATION</div>
+          <div class="ri-row"><span class="ri-val" id="rv-pop">20</span><span class="ri-delta" id="rd-pop">stable</span></div>
+        </div>
+        <div class="res-item" id="ri-food" style="--ri-color:var(--green)">
+          <div class="ri-label">🌾 FOOD STORES</div>
+          <div class="ri-row"><span class="ri-val" id="rv-food">200</span><span class="ri-delta pos" id="rd-food">+40/d</span></div>
+        </div>
+        <div class="res-item" id="ri-nrg" style="--ri-color:var(--blue)">
+          <div class="ri-label">⚡ ENERGY</div>
+          <div class="ri-row"><span class="ri-val" id="rv-nrg">150</span><span class="ri-delta pos" id="rd-nrg">+20/d</span></div>
+        </div>
+        <div class="res-item" id="ri-med" style="--ri-color:var(--teal)">
+          <div class="ri-label">💊 MEDICINE</div>
+          <div class="ri-row"><span class="ri-val" id="rv-med">30</span><span class="ri-delta" id="rd-med">scarce</span></div>
+        </div>
+      </div>
+      <div id="speed-ctrl">
+        <button class="spd" id="s0" onclick="setSpd(0)">⏸</button>
+        <button class="spd on" id="s1" onclick="setSpd(1)">1×</button>
+        <button class="spd" id="s2" onclick="setSpd(2)">2×</button>
+        <button class="spd" id="s3" onclick="setSpd(3)">4×</button>
+      </div>
+    </div>
+
+    <div id="bottom-bar">
+      <button class="act-btn" onclick="doAction('farm')"><span class="ab-icon">🌱</span><span>FARM</span><span class="ab-cost">+food</span></button>
+      <button class="act-btn" onclick="doAction('power')"><span class="ab-icon">🔋</span><span>RECHARGE</span><span class="ab-cost">+energy</span></button>
+      <button class="act-btn" onclick="doAction('heal')"><span class="ab-icon">💉</span><span>MEDIC</span><span class="ab-cost">−10 med</span></button>
+      <button class="act-btn" onclick="doAction('scout')"><span class="ab-icon">🔭</span><span>SCOUT</span><span class="ab-cost">loot chance</span></button>
+      <button class="act-btn" onclick="doAction('trade')"><span class="ab-icon">🤝</span><span>TRADE</span><span class="ab-cost">50⚙→food</span></button>
+      <button class="act-btn red-btn" onclick="doAction('conscript')"><span class="ab-icon">⚠</span><span>CONSCRIPT</span><span class="ab-cost">morale cost</span></button>
+      <div id="log-strip"></div>
+      <div id="morale-panel">
+        <div class="mp-label">COLONY MORALE</div>
+        <div class="mp-track"><div class="mp-fill" id="mp-fill" style="width:65%"></div></div>
+        <div class="mp-val" id="mp-val">65 — Resilient</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popup-layer"></div>
+  <div id="combo-banner">🔥 STREAK ×<span id="combo-n">5</span></div>
+  <div id="loot-overlay">
+    <div class="loot-box" id="loot-box">
+      <div class="loot-title">SUPPLY DROP DISCOVERED</div>
+      <div class="loot-icon" id="loot-icon">📦</div>
+      <div class="loot-name" id="loot-name">FOOD CACHE</div>
+      <div class="loot-value" id="loot-val">+80</div>
+      <div class="loot-sub">[ TAP TO COLLECT ]</div>
+    </div>
+  </div>
+  <div id="evt-panel">
+    <div class="evt-tag" id="etag">TRANSMISSION</div>
+    <div class="evt-h" id="etitle">–</div>
+    <div class="evt-body" id="ebody">–</div>
+    <div class="evt-choices" id="echoices"></div>
+  </div>
+  <div id="tutorial"></div>
+  <div id="notif-zone"></div>
+  <div id="ach-layer" style="position:absolute;right:14px;top:68px;z-index:35;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
+  <div id="end-screen">
+    <div class="end-h" id="end-h">COLONY EXTINCT</div>
+    <div class="end-quote" id="end-q">–</div>
+    <div class="end-stats" id="end-stats">–</div>
+    <button class="restart-btn" onclick="location.reload()">↺ NEW COLONY</button>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-<div id="intro">
-  <div class="intro-logo">COLONY ZERO</div>
-  <div class="intro-divider"></div>
-  <div class="intro-sub">SECTOR 7 — SURVIVAL PROTOCOL ACTIVE</div>
-  <div class="intro-lore">
-    Earth transmission lost. Day 1 of isolation.<br>
-    You command the last human settlement in the outer ring.<br>
-    Resources drain. Systems fail. Your people are watching.
-  </div>
-  <div class="intro-start">[ CLICK TO BEGIN ]</div>
-</div>
-
-<div id="canvas-container"></div>
-<div id="scanlines"></div>
-<div id="vignette"></div>
-
-<!-- HUD -->
-<div id="hud">
-  <div id="top-bar">
-    <div class="title-block">
-      <div class="game-title">COLONY ZERO</div>
-      <div id="day-counter">01</div>
-      <div id="day-label">EARTH DAYS SURVIVED</div>
-    </div>
-    <div id="resources">
-      <div class="res-card" id="pop-card">
-        <div class="res-label">POPULATION</div>
-        <div class="res-value" id="pop-val">20</div>
-        <div class="res-delta" id="pop-delta">STABLE</div>
-      </div>
-      <div class="res-card" id="food-card">
-        <div class="res-label">FOOD UNITS</div>
-        <div class="res-value" id="food-val">200</div>
-        <div class="res-delta" id="food-delta">+40/day</div>
-      </div>
-      <div class="res-card" id="energy-card">
-        <div class="res-label">ENERGY CELLS</div>
-        <div class="res-value" id="energy-val">150</div>
-        <div class="res-delta" id="energy-delta">+20/day</div>
-      </div>
-      <div class="res-card" id="morale-card">
-        <div class="res-label">AVG MORALE</div>
-        <div class="res-value" id="morale-val">65</div>
-        <div class="res-delta" id="morale-delta">NOMINAL</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="morale-wrap">
-  <div class="morale-label">COLONY MORALE</div>
-  <div class="morale-track">
-    <div class="morale-fill" id="morale-fill" style="width:65%"></div>
-  </div>
-</div>
-
-<div id="speed-bar">
-  <button class="speed-btn" id="spd-pause" onclick="setSpeed(0)">⏸</button>
-  <button class="speed-btn on" id="spd-1" onclick="setSpeed(1)">1×</button>
-  <button class="speed-btn" id="spd-2" onclick="setSpeed(2)">2×</button>
-  <button class="speed-btn" id="spd-3" onclick="setSpeed(3)">4×</button>
-</div>
-
-<div id="controls">
-  <button class="ctrl-btn" onclick="triggerAction('ration')">RATION FOOD</button>
-  <button class="ctrl-btn" onclick="triggerAction('repair')">REPAIR SYSTEMS</button>
-  <button class="ctrl-btn" onclick="triggerAction('recruit')">MOBILIZE WORKERS</button>
-  <button class="ctrl-btn danger-btn" onclick="triggerAction('purge')">FORCED LABOR</button>
-</div>
-
-<!-- Event Panel -->
-<div id="event-panel">
-  <div class="event-category" id="evt-cat">INCOMING TRANSMISSION</div>
-  <div class="event-title" id="evt-title">EVENT TITLE</div>
-  <div class="event-desc" id="evt-desc">Description here.</div>
-  <div class="event-choices" id="evt-choices"></div>
-</div>
-
-<!-- Log -->
-<div id="log-panel" id="log-panel"></div>
-
-<!-- Notif stack -->
-<div id="notif-stack"></div>
-
-<!-- End screen -->
-<div id="end-screen">
-  <div class="end-title" id="end-title">COLONY EXTINCT</div>
-  <div class="end-stats" id="end-stats"></div>
-  <button class="ctrl-btn" onclick="location.reload()">RESTART PROTOCOL</button>
-</div>
-
 <script>
-/* ══════════════════════════════════════════
-   THREE.JS SCENE
-══════════════════════════════════════════ */
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000508);
-scene.fog = new THREE.FogExp2(0x000508, 0.018);
+/* ═══════════════════════ THREE.JS SCENE ═══════════════════════ */
+const W=()=>window.innerWidth,H=()=>window.innerHeight;
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(W(),H());
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.8;
-document.getElementById('canvas-container').appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x111815);
+scene.fog=new THREE.FogExp2(0x111815,0.02);
 
-const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 500);
-camera.position.set(0, 28, 42);
-camera.lookAt(0, 0, 0);
+const camera=new THREE.PerspectiveCamera(52,W()/H(),0.1,400);
+camera.position.set(0,34,48);camera.lookAt(0,0,0);
 
-/* ─── Ambient ─── */
-scene.add(new THREE.AmbientLight(0x112233, 0.6));
+/* Lighting */
+scene.add(new THREE.AmbientLight(0x223322,1.0));
+const moon=new THREE.DirectionalLight(0xc8d4e8,1.4);
+moon.position.set(-30,60,20);moon.castShadow=true;
+moon.shadow.mapSize.set(2048,2048);
+moon.shadow.camera.near=1;moon.shadow.camera.far=200;
+moon.shadow.camera.left=-60;moon.shadow.camera.right=60;
+moon.shadow.camera.top=60;moon.shadow.camera.bottom=-60;
+moon.shadow.bias=-0.0005;
+scene.add(moon);
+const warmFill=new THREE.PointLight(0x9a7040,1.5,35);warmFill.position.set(0,6,0);scene.add(warmFill);
+const hazardLight=new THREE.PointLight(0xc44030,0,30);hazardLight.position.set(0,3,0);scene.add(hazardLight);
 
-const sun = new THREE.DirectionalLight(0x4466ff, 0.8);
-sun.position.set(30, 60, 20);
-sun.castShadow = true;
-sun.shadow.mapSize.width = 2048;
-sun.shadow.mapSize.height = 2048;
-sun.shadow.camera.near = 0.5;
-sun.shadow.camera.far = 200;
-sun.shadow.camera.left = -50;
-sun.shadow.camera.right = 50;
-sun.shadow.camera.top = 50;
-sun.shadow.camera.bottom = -50;
-scene.add(sun);
+/* Stars */
+{const geo=new THREE.BufferGeometry(),n=3000,pos=new Float32Array(n*3);
+for(let i=0;i<n;i++){const r=150+Math.random()*100,t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1);pos[i*3]=r*Math.sin(p)*Math.cos(t);pos[i*3+1]=r*Math.sin(p)*Math.sin(t);pos[i*3+2]=r*Math.cos(p);}
+geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0xaac0b8,size:0.28,sizeAttenuation:true})));}
 
-/* hazard glow */
-const redLight = new THREE.PointLight(0xff2233, 0, 40);
-redLight.position.set(0, 5, 0);
-scene.add(redLight);
+/* Ground */
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:0x1a2418,roughness:1}));
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
 
-/* ─── Stars ─── */
-(function(){
-  const geo = new THREE.BufferGeometry();
-  const count = 4000;
-  const pos = new Float32Array(count * 3);
-  for(let i = 0; i < count; i++){
-    const r = 200 + Math.random()*100;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2*Math.random()-1);
-    pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
-    pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-    pos[i*3+2] = r * Math.cos(phi);
-  }
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({ color: 0xaabbcc, size: 0.35, sizeAttenuation: true });
-  scene.add(new THREE.Points(geo, mat));
-})();
-
-/* ─── Ground ─── */
-const groundGeo = new THREE.PlaneGeometry(120, 120, 30, 30);
-const groundMat = new THREE.MeshStandardMaterial({
-  color: 0x0a1520,
-  roughness: 0.9,
-  metalness: 0.2,
-});
-const ground = new THREE.Mesh(groundGeo, groundMat);
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
-scene.add(ground);
-
-/* Grid lines */
-const gridHelper = new THREE.GridHelper(80, 30, 0x001a2e, 0x001a2e);
-gridHelper.position.y = 0.01;
-scene.add(gridHelper);
-
-/* ─── Dome ─── */
-const domeMat = new THREE.MeshPhysicalMaterial({
-  color: 0x003355,
-  transparent: true,
-  opacity: 0.12,
-  roughness: 0.1,
-  metalness: 0.1,
-  side: THREE.FrontSide,
-  wireframe: false,
-});
-const domeGeo = new THREE.SphereGeometry(22, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-const dome = new THREE.Mesh(domeGeo, domeMat);
-dome.position.y = 0;
-scene.add(dome);
-
-/* Dome wireframe */
-const domeWireMat = new THREE.MeshBasicMaterial({ color: 0x003366, wireframe: true, transparent: true, opacity: 0.15 });
-const domeWire = new THREE.Mesh(domeGeo.clone(), domeWireMat);
-domeWire.position.y = 0;
-scene.add(domeWire);
-
-/* ─── Central hub ─── */
-function makeMetal(color, rough=0.4, metal=0.8) {
-  return new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal });
+/* Dirt paths */
+function addPath(x1,z1,x2,z2,w=1.8){
+  const len=Math.sqrt((x2-x1)**2+(z2-z1)**2);
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,len),new THREE.MeshStandardMaterial({color:0x2a3028,roughness:1}));
+  m.rotation.x=-Math.PI/2;m.position.set((x1+x2)/2,0.02,(z1+z2)/2);
+  m.rotation.z=-Math.atan2(x2-x1,z2-z1);m.receiveShadow=true;scene.add(m);
 }
+[[0,0,0,-21],[0,0,0,21],[0,0,-21,0],[0,0,21,0],[0,0,-13,-13],[0,0,13,13],[0,0,-13,13],[0,0,13,-13]].forEach(p=>addPath(p[0],p[1],p[2],p[3]));
 
-const hubGeo = new THREE.CylinderGeometry(2.5, 3, 5, 8);
-const hub = new THREE.Mesh(hubGeo, makeMetal(0x1a3a5c));
-hub.position.y = 2.5;
-hub.castShadow = true;
-hub.receiveShadow = true;
-scene.add(hub);
-
-/* Hub glow ring */
-const glowRingGeo = new THREE.TorusGeometry(3.5, 0.1, 8, 32);
-const glowRingMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
-glowRing.rotation.x = Math.PI/2;
-glowRing.position.y = 2;
-scene.add(glowRing);
-
-/* ─── Buildings ─── */
-const buildings = [];
-const buildingData = [
-  { x: -8, z: -5, w: 3, h: 5, d: 3, color: 0x0d2640 },
-  { x: 8, z: -5, w: 3, h: 7, d: 2.5, color: 0x0d2035 },
-  { x: -10, z: 4, w: 2, h: 3.5, d: 3.5, color: 0x122840 },
-  { x: 10, z: 4, w: 2.5, h: 6, d: 2.5, color: 0x0a1e30 },
-  { x: 0, z: -9, w: 5, h: 3, d: 2, color: 0x152535 },
-  { x: -14, z: -2, w: 2, h: 9, d: 2, color: 0x0d1e2e },
-  { x: 14, z: -2, w: 2, h: 8, d: 2, color: 0x0d1e2e },
-];
-buildingData.forEach(b => {
-  const geo = new THREE.BoxGeometry(b.w, b.h, b.d);
-  const mat = makeMetal(b.color, 0.8, 0.3);
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(b.x, b.h/2, b.z);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  scene.add(mesh);
-  buildings.push(mesh);
-
-  /* window lights */
-  for(let i = 0; i < 3; i++){
-    const wGeo = new THREE.BoxGeometry(0.25, 0.25, 0.05);
-    const wMat = new THREE.MeshBasicMaterial({ color: 0x88ccff });
-    const w = new THREE.Mesh(wGeo, wMat);
-    w.position.set(
-      b.x + (Math.random()-0.5) * b.w * 0.6,
-      b.h * 0.3 + Math.random() * b.h * 0.5,
-      b.z + b.d/2 + 0.01
-    );
-    scene.add(w);
-  }
-});
-
-/* ─── Resource nodes ─── */
-const nodes = [];
-const nodePosData = [
-  { x: -16, z: 10, color: 0x00ff88, label: 'FOOD' },
-  { x: 16, z: 10, color: 0xffb300, label: 'ENERGY' },
-  { x: -16, z: -10, color: 0x00aaff, label: 'WATER' },
-  { x: 16, z: -10, color: 0xff6a00, label: 'FUEL' },
-];
-nodePosData.forEach(n => {
-  const geo = new THREE.OctahedronGeometry(1.2, 0);
-  const mat = new THREE.MeshStandardMaterial({ color: n.color, emissive: n.color, emissiveIntensity: 0.3, roughness: 0.3, metalness: 0.7 });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(n.x, 1.5, n.z);
-  mesh.castShadow = true;
-  scene.add(mesh);
-
-  const light = new THREE.PointLight(n.color, 1, 8);
-  light.position.set(n.x, 2, n.z);
-  scene.add(light);
-
-  nodes.push({ mesh, light, base: n.color });
-});
-
-/* ─── Citizens (spheres) ─── */
-const citizenMeshes = [];
-function spawnCitizenMesh(index) {
-  const angle = (index / 20) * Math.PI * 2;
-  const r = 5 + Math.random() * 6;
-  const geo = new THREE.SphereGeometry(0.3, 8, 6);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x4488cc, roughness: 0.6, metalness: 0.2 });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(
-    Math.cos(angle) * r,
-    0.3,
-    Math.sin(angle) * r
-  );
-  mesh.castShadow = true;
-  mesh.userData = { angle, r, speed: 0.3 + Math.random() * 0.4, offset: Math.random() * Math.PI * 2 };
-  scene.add(mesh);
-  citizenMeshes.push(mesh);
-  return mesh;
-}
-for(let i = 0; i < 20; i++) spawnCitizenMesh(i);
-
-/* ─── Pipes ─── */
-[[-5,0,-12],[5,0,-12],[-12,0,5],[12,0,5]].forEach(p => {
-  const geo = new THREE.CylinderGeometry(0.15, 0.15, 8, 6);
-  const mesh = new THREE.Mesh(geo, makeMetal(0x0d2033, 0.9, 0.5));
-  mesh.rotation.z = Math.PI/2;
-  mesh.position.set(p[0], 0.5, p[2]);
-  scene.add(mesh);
-});
-
-/* ─── Camera orbit ─── */
-let camAngle = 0;
-let camTargetY = 28;
-let cameraMode = 0; // 0=orbit, 1=top
-
-window.addEventListener('wheel', e => {
-  camTargetY = Math.max(10, Math.min(60, camTargetY + e.deltaY * 0.05));
-});
-
-/* ══════════════════════════════════════════
-   GAME LOGIC
-══════════════════════════════════════════ */
-class Citizen {
-  constructor() {
-    this.health = 70 + Math.floor(Math.random() * 31);
-    this.morale = 50 + Math.floor(Math.random() * 31);
-  }
-  update(foodSupply) {
-    if (foodSupply < 1) {
-      this.health -= 5 + Math.floor(Math.random() * 11);
-      this.morale -= 5 + Math.floor(Math.random() * 6);
-    } else {
-      this.health -= 1 + Math.floor(Math.random() * 3);
-    }
-    this.morale = Math.max(0, Math.min(100, this.morale));
-    this.health = Math.max(0, Math.min(100, this.health));
-    return this.health > 0;
-  }
-}
-
-const EVENTS = [
-  {
-    id: 'meteor_shower',
-    category: 'CRITICAL ALERT',
-    categoryClass: 'critical',
-    title: 'METEOR SHOWER INCOMING',
-    desc: 'Long-range sensors detected a debris field. Impact imminent. Dome integrity at risk. The colony awaits your orders.',
-    choices: [
-      { text: 'Activate shield grid (costs 40 energy)', cost: 'ENERGY −40', moral: 'neutral', fn: g => { g.energy -= 40; addLog('Shield grid engaged. Dome protected.', '#00ff88'); } },
-      { text: 'Evacuate outer sectors (3 citizens risk evacuation injury)', cost: 'POP −1~3', moral: 'neutral', fn: g => { const loss = 1 + Math.floor(Math.random()*3); g.citizens.splice(0, loss); addLog(`Evacuation: ${loss} casualties.`, '#ffb300'); } },
-      { text: 'Do nothing — hope for the best', cost: 'FOOD −60, ENERGY −30', moral: 'bad', fn: g => { g.food -= 60; g.energy -= 30; addLog('Debris strikes colony. Systems damaged.', '#ff2233'); } },
-    ]
-  },
-  {
-    id: 'plague',
-    category: 'MEDICAL ALERT',
-    categoryClass: 'warning',
-    title: 'VIRAL OUTBREAK DETECTED',
-    desc: 'An unknown pathogen is spreading through the eastern quarters. Medical bays are overwhelmed. Every hour counts.',
-    choices: [
-      { text: 'Initiate full quarantine (reduces workforce 30% for 5 days)', cost: 'PRODUCTION −30%', moral: 'neutral', fn: g => { g.quarantine = 5; addLog('Quarantine enacted. Spread contained.', '#00e5ff'); } },
-      { text: 'Burn medical supplies for treatment (costs 50 food)', cost: 'FOOD −50', moral: 'neutral', fn: g => { g.food -= 50; g.citizens.forEach(c => { c.health = Math.min(100, c.health+10); }); addLog('Treatment administered.', '#00ff88'); } },
-      { text: 'Let it run — strengthen survivors', cost: 'POP −2~5', moral: 'bad', fn: g => { const loss = 2 + Math.floor(Math.random()*4); g.citizens.splice(0, Math.min(loss, g.citizens.length-1)); g.citizens.forEach(c => { c.health = Math.min(100, c.health+5); }); addLog('Natural selection. Population reduced.', '#ff6a00'); } },
-    ]
-  },
-  {
-    id: 'reactor_leak',
-    category: 'SYSTEMS CRITICAL',
-    categoryClass: 'critical',
-    title: 'REACTOR CORE BREACH',
-    desc: 'Radiation detected in corridor 7-C. The main reactor shows micro-fractures. If ignored, the energy grid collapses.',
-    choices: [
-      { text: 'Emergency patch (costs 30 energy, 20 food for workers)', cost: 'ENERGY −30 FOOD −20', moral: 'neutral', fn: g => { g.energy -= 30; g.food -= 20; addLog('Reactor stabilized. Crisis averted.', '#00ff88'); } },
-      { text: 'Conscript workers into hazard zone (morale collapse)', cost: 'MORALE −20', moral: 'bad', fn: g => { g.citizens.forEach(c => { c.morale -= 20; }); addLog('Workers conscripted under duress.', '#ff2233'); } },
-      { text: 'Switch to backup cells (reduces energy production 40%)', cost: 'PRODUCTION −40%', moral: 'neutral', fn: g => { g.energyPenalty = 0.6; g.energyPenaltyDays = 8; addLog('Backup power online. Reduced output.', '#ffb300'); } },
-    ]
-  },
-  {
-    id: 'food_blight',
-    category: 'AGRICULTURAL ALERT',
-    categoryClass: 'warning',
-    title: 'HYDROPONIC BLIGHT',
-    desc: 'A fungal strain has infected the grow pods. Estimated 40% of food stores contaminated. Hunger projections are dire.',
-    choices: [
-      { text: 'Emergency rations — halve food consumption', cost: 'MORALE −10', moral: 'neutral', fn: g => { g.rationMode = true; g.citizens.forEach(c => c.morale -= 10); addLog('Ration mode activated.', '#ffb300'); } },
-      { text: 'Trade energy cells for food from signal buoy cache', cost: 'ENERGY −60, FOOD +80', moral: 'neutral', fn: g => { g.energy -= 60; g.food += 80; addLog('Emergency food drop secured.', '#00ff88'); } },
-      { text: 'Seize personal food caches from citizens', cost: 'MORALE −25, FOOD +40', moral: 'bad', fn: g => { g.food += 40; g.citizens.forEach(c => c.morale -= 25); addLog('Food seized by force. Resentment surges.', '#ff2233'); } },
-    ]
-  },
-  {
-    id: 'mutiny',
-    category: 'SOCIAL CRISIS',
-    categoryClass: 'critical',
-    title: 'UPRISING IN SECTOR 4',
-    desc: 'Citizens have barricaded the processing plant. They demand better conditions, more food, less forced labor. The colony teeters.',
-    choices: [
-      { text: 'Negotiate — grant food bonus and rest period', cost: 'FOOD −50, MORALE +20', moral: 'good', fn: g => { g.food -= 50; g.citizens.forEach(c => c.morale = Math.min(100, c.morale+20)); addLog('Negotiations succeeded. Tensions eased.', '#00ff88'); } },
-      { text: 'Promise future reforms (buy time)', cost: 'MORALE +5 SHORT-TERM', moral: 'neutral', fn: g => { g.citizens.forEach(c => c.morale = Math.min(100, c.morale+5)); addLog('Reforms promised. Citizens cautiously calm.', '#ffb300'); } },
-      { text: 'Forcibly suppress uprising (security crackdown)', cost: 'POP −2, MORALE −30', moral: 'bad', fn: g => { g.citizens.splice(0, Math.min(2, g.citizens.length-1)); g.citizens.forEach(c => c.morale -= 30); addLog('Uprising crushed. Fear permeates the colony.', '#ff2233'); } },
-    ]
-  },
-  {
-    id: 'transmission',
-    category: 'INCOMING SIGNAL',
-    categoryClass: '',
-    title: 'DISTRESS SIGNAL DETECTED',
-    desc: 'A weak signal from an unknown vessel. 8 survivors aboard, drifting 3 hours out. Resources to rescue them will strain the colony.',
-    choices: [
-      { text: 'Launch rescue mission (costs 40 energy, gain 6-8 citizens)', cost: 'ENERGY −40, POP +7', moral: 'good', fn: g => { g.energy -= 40; const newPop = 6 + Math.floor(Math.random()*3); for(let i=0;i<newPop;i++){ g.citizens.push(new Citizen()); if(citizenMeshes.length < 60) spawnCitizenMesh(g.citizens.length); } addLog(`Rescued ${newPop} survivors.`, '#00ff88'); } },
-      { text: 'Respond with supplies only (save 3, conserve energy)', cost: 'FOOD −30, POP +3', moral: 'neutral', fn: g => { g.food -= 30; for(let i=0;i<3;i++){ g.citizens.push(new Citizen()); if(citizenMeshes.length < 60) spawnCitizenMesh(g.citizens.length); } addLog('Partial rescue. 3 survivors aboard.', '#ffb300'); } },
-      { text: 'Ignore the signal — protect your own', cost: 'MORALE −15 (guilt)', moral: 'bad', fn: g => { g.citizens.forEach(c => c.morale -= 15); addLog('Signal ignored. Crew perished. Colony haunted.', '#ff2233'); } },
-    ]
-  },
-  {
-    id: 'solar_flare',
-    category: 'ENVIRONMENTAL HAZARD',
-    categoryClass: 'warning',
-    title: 'SOLAR FLARE WARNING',
-    desc: 'Class X flare projected to hit in 2 hours. Unshielded electronics will fry. Energy grid vulnerability: CRITICAL.',
-    choices: [
-      { text: 'Power down non-essentials — safe mode (energy +30 saved)', cost: 'MORALE −5', moral: 'neutral', fn: g => { g.energy += 30; g.citizens.forEach(c => c.morale -= 5); addLog('Colony in safe mode. Flare survived.', '#00e5ff'); } },
-      { text: 'Full power-down: save everything, go dark for 12hrs', cost: 'FOOD −20 (cold storage fails)', moral: 'neutral', fn: g => { g.food -= 20; g.energy += 50; addLog('Full blackout. Systems preserved.', '#00ff88'); } },
-      { text: 'Ride it out — bet on shielding', cost: 'ENERGY −70 if shielding fails (60% chance)', moral: 'bad', fn: g => { if(Math.random() < 0.6) { g.energy -= 70; addLog('Shielding failed. Energy grid damaged.', '#ff2233'); } else { addLog('Lucky — shielding held.', '#00ff88'); } } },
-    ]
-  },
-];
-
-let gameState = {
-  day: 1,
-  food: 200,
-  energy: 150,
-  citizens: [],
-  difficultyScale: 1.0,
-  alive: true,
-  quarantine: 0,
-  rationMode: false,
-  energyPenalty: 1,
-  energyPenaltyDays: 0,
-  moralChoices: { good: 0, bad: 0 },
-  eventQueue: [],
-  paused: false,
-  speed: 1,
-  dayTimer: 0,
-  dayInterval: 4000, // ms per day
-  pendingEvent: null,
+/* Materials */
+const MAT={
+  stone:new THREE.MeshStandardMaterial({color:0x3a4838,roughness:0.9,metalness:0.05}),
+  brick:new THREE.MeshStandardMaterial({color:0x4a3e30,roughness:0.95,metalness:0}),
+  wood:new THREE.MeshStandardMaterial({color:0x382e22,roughness:1,metalness:0}),
+  roof:new THREE.MeshStandardMaterial({color:0x2a3830,roughness:0.9,metalness:0.1}),
+  metal:new THREE.MeshStandardMaterial({color:0x4a5848,roughness:0.6,metalness:0.5}),
+  wall:new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9,metalness:0.1}),
+  thatch:new THREE.MeshStandardMaterial({color:0x4a3e20,roughness:1,metalness:0}),
 };
 
-for(let i = 0; i < 20; i++) gameState.citizens.push(new Citizen());
+/* Building factory — creates proper village structures */
+function makeBuilding(cfg){
+  const g=new THREE.Group();
+  const base=new THREE.Mesh(new THREE.BoxGeometry(cfg.w,cfg.h,cfg.d),cfg.mat||MAT.stone);
+  base.position.y=cfg.h/2;base.castShadow=true;base.receiveShadow=true;g.add(base);
 
-let lastEventDay = 0;
-let usedEvents = new Set();
+  // Foundation/base strip
+  const found=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+0.2,0.3,cfg.d+0.2),MAT.wall);
+  found.position.y=0.15;found.receiveShadow=true;g.add(found);
 
-/* ─── Actions ─── */
-function triggerAction(type) {
-  if(!gameState.alive || gameState.pendingEvent) return;
-  const g = gameState;
-  switch(type) {
-    case 'ration':
-      g.food += 20;
-      g.citizens.forEach(c => c.morale = Math.max(0, c.morale - 8));
-      addLog('Food rationed. +20 reserves.', '#ffb300');
-      notify('RATION ORDER ISSUED', '#ffb300');
-      break;
-    case 'repair':
-      if(g.energy >= 30) { g.energy -= 30; addLog('Systems repaired. −30 energy.', '#00e5ff'); notify('SYSTEMS REPAIRED', '#00e5ff'); }
-      else { addLog('Insufficient energy to repair.', '#ff2233'); }
-      break;
-    case 'recruit':
-      g.citizens.forEach(c => c.morale = Math.min(100, c.morale + 5));
-      addLog('Workers mobilized. Morale +5.', '#00ff88');
-      notify('WORKFORCE MOBILIZED', '#00ff88');
-      break;
-    case 'purge':
-      if(g.citizens.length > 3) {
-        g.food += 40;
-        g.energy += 20;
-        g.citizens.splice(0, 2);
-        g.citizens.forEach(c => c.morale = Math.max(0, c.morale - 20));
-        g.moralChoices.bad++;
-        addLog('Forced labor enacted. 2 workers lost.', '#ff2233');
-        notify('FORCED LABOR ENFORCED', '#ff2233');
+  // Roof
+  if(cfg.roof!==false){
+    const rh=cfg.roofH||cfg.w*0.45;
+    const shape=cfg.flatRoof?
+      new THREE.BoxGeometry(cfg.w+0.3,0.25,cfg.d+0.3):
+      new THREE.ConeGeometry(Math.max(cfg.w,cfg.d)*0.74,rh,4);
+    const roof=new THREE.Mesh(shape,cfg.roofMat||(cfg.flatRoof?MAT.metal:MAT.roof));
+    roof.position.y=cfg.h+(cfg.flatRoof?0.12:rh/2);
+    if(!cfg.flatRoof)roof.rotation.y=Math.PI/4;
+    roof.castShadow=true;g.add(roof);
+    // Roof overhang
+    if(!cfg.flatRoof){
+      const ovh=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+0.4,0.15,cfg.d+0.4),MAT.wood);
+      ovh.position.y=cfg.h+0.07;ovh.castShadow=true;g.add(ovh);
+    }
+  }
+
+  // Chimney
+  if(cfg.chimney){
+    const ch=new THREE.Mesh(new THREE.BoxGeometry(0.5,1.8,0.5),MAT.brick);
+    ch.position.set(cfg.w*0.22,cfg.h+0.6,cfg.d*0.22);ch.castShadow=true;g.add(ch);
+    // chimney cap
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(0.65,0.12,0.65),MAT.stone);
+    cap.position.set(cfg.w*0.22,cfg.h+1.52,cfg.d*0.22);g.add(cap);
+    // smoke point
+    g.userData.smokeX=cfg.x+(cfg.w*0.22);
+    g.userData.smokeZ=(cfg.z||0)+(cfg.d*0.22);
+  }
+
+  // Windows (warm glow)
+  const wRows=Math.max(1,Math.floor(cfg.h/2));
+  const wCols=Math.max(1,Math.floor(cfg.w/1.5));
+  for(let wr=0;wr<Math.min(wRows,3);wr++){
+    for(let wc=0;wc<Math.min(wCols,4);wc++){
+      if(Math.random()<0.65){
+        const isLit=Math.random()<0.8;
+        const wm=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.38,0.06),
+          new THREE.MeshBasicMaterial({color:isLit?0x9a7a38:0x202820}));
+        wm.position.set((wc-(Math.min(wCols,4)-1)/2)*1.2,0.9+wr*1.5,cfg.d/2+0.03);g.add(wm);
+        if(isLit){const wl=new THREE.PointLight(0x8a6030,0.25,3);wl.position.copy(wm.position);wl.position.z+=0.3;g.add(wl);}
+        // Shutters
+        const sl=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.38,0.04),MAT.wood);
+        sl.position.set(wm.position.x-0.22,wm.position.y,wm.position.z);g.add(sl);
+        const sr=sl.clone();sr.position.x=wm.position.x+0.22;g.add(sr);
       }
-      break;
-  }
-}
-
-function setSpeed(s) {
-  gameState.speed = s;
-  gameState.paused = (s === 0);
-  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('on'));
-  const ids = ['spd-pause','spd-1','spd-2','spd-3'];
-  document.getElementById(ids[s]).classList.add('on');
-}
-
-/* ─── Day tick ─── */
-function tickDay() {
-  const g = gameState;
-  if(!g.alive) return;
-
-  g.day++;
-
-  // Quarantine
-  if(g.quarantine > 0) g.quarantine--;
-
-  // Penalty countdown
-  if(g.energyPenaltyDays > 0) {
-    g.energyPenaltyDays--;
-    if(g.energyPenaltyDays <= 0) g.energyPenalty = 1;
-  }
-
-  // Production
-  const qFactor = g.quarantine > 0 ? 0.7 : 1;
-  const prod = Math.floor(g.citizens.length * 3 * g.difficultyScale * qFactor);
-  g.food += prod;
-  g.energy += Math.floor(prod * 0.5 * g.energyPenalty);
-
-  // Consumption
-  const consump = g.citizens.length * (g.rationMode ? 1 : 2);
-  g.food -= consump;
-  g.rationMode = false; // reset each day unless re-activated
-
-  // Random background event
-  const r = Math.random();
-  if(r < 0.25) {
-    const loss = 10 + Math.floor(Math.random() * 31);
-    g.energy -= loss;
-    if(loss > 20) addLog(`Power surge! −${loss} energy.`, '#ffb300');
-  } else if(r < 0.45) {
-    const loss = 10 + Math.floor(Math.random() * 31);
-    g.food -= loss;
-    if(loss > 20) addLog(`Supply spoilage! −${loss} food.`, '#ffb300');
-  } else if(r < 0.55) {
-    g.citizens.forEach(c => c.morale = Math.max(0, c.morale - (3 + Math.floor(Math.random()*8))));
-  }
-
-  // Population update
-  const survivors = g.citizens.filter(c => c.update(g.food));
-  const died = g.citizens.length - survivors.length;
-  g.citizens = survivors;
-
-  // Sync 3D citizens
-  while(citizenMeshes.length > g.citizens.length) {
-    const m = citizenMeshes.pop();
-    scene.remove(m);
-  }
-
-  if(died > 0) addLog(`${died} citizen${died>1?'s':''} perished today.`, '#ff2233');
-
-  g.difficultyScale += 0.02;
-  g.food = Math.max(0, g.food);
-  g.energy = Math.max(0, g.energy);
-
-  // Narrative event check
-  if(g.day - lastEventDay >= 5 + Math.floor(Math.random()*4)) {
-    const available = EVENTS.filter(e => !usedEvents.has(e.id));
-    if(available.length > 0) {
-      const evt = available[Math.floor(Math.random() * available.length)];
-      usedEvents.add(evt.id);
-      lastEventDay = g.day;
-      g.pendingEvent = evt;
-      gameState.paused = true;
-      showEvent(evt);
-    } else {
-      usedEvents.clear(); // reset for repeat
     }
   }
 
-  checkEndState();
-  updateHUD();
+  // Door
+  const dm=new THREE.Mesh(new THREE.BoxGeometry(0.65,1.05,0.07),new THREE.MeshStandardMaterial({color:0x251a0e,roughness:1}));
+  dm.position.set(0,0.52,cfg.d/2+0.04);g.add(dm);
+  // Doorstep
+  const step=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.12,0.25),MAT.stone);
+  step.position.set(0,0.06,cfg.d/2+0.12);g.add(step);
+
+  // Fence/small wall for larger buildings
+  if(cfg.w>4){
+    const fence=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+1,0.8,0.15),MAT.wood);
+    fence.position.set(0,0.4,cfg.d/2+0.8);fence.receiveShadow=true;g.add(fence);
+  }
+
+  g.position.set(cfg.x||0,0,cfg.z||0);
+  scene.add(g);
+  return g;
 }
 
-function checkEndState() {
-  const g = gameState;
-  if(g.citizens.length <= 0) {
-    endGame(false, 'All citizens perished. The colony fell silent.');
-  } else if(g.day >= 60) {
-    endGame(true, 'Colony stabilized after 60 days. You survived.');
+/* ─── THE COLONY VILLAGE ─── */
+// Town Hall — center
+makeBuilding({x:0,z:0,w:5.5,h:6.5,d:5.5,mat:MAT.wall,roofMat:MAT.roof,roofH:3.5,chimney:true});
+// Bell tower adjacent
+makeBuilding({x:4,z:-4,w:2,h:10,d:2,mat:MAT.stone,roofH:2.5});
+
+// Residential houses — inner ring
+[
+  {x:-7,z:-5,w:3,h:3.5,d:3,chimney:true},
+  {x:7,z:-5,w:2.8,h:4,d:2.8,chimney:true,mat:MAT.brick},
+  {x:-7,z:5,w:3,h:3.2,d:3,chimney:true},
+  {x:7,z:5,w:2.8,h:3.6,d:2.8,mat:MAT.brick},
+  {x:0,z:-9,w:3.5,h:3,d:2.8,chimney:true},
+  {x:0,z:9,w:3.2,h:3.5,d:3,chimney:true},
+  {x:-10,z:0,w:2.5,h:5,d:2,chimney:true},
+  {x:10,z:0,w:2.5,h:5,d:2},
+].forEach(b=>makeBuilding(b));
+
+// Outer ring — larger structures
+[
+  {x:-14,z:-8,w:4.5,h:5.5,d:3.5,mat:MAT.brick,chimney:true},
+  {x:14,z:-8,w:4.5,h:6,d:3.5,mat:MAT.brick},
+  {x:-14,z:8,w:3.5,h:4,d:3,chimney:true},
+  {x:14,z:8,w:3.5,h:4.5,d:3,mat:MAT.brick,chimney:true},
+  {x:-6,z:-14,w:5.5,h:4.5,d:3.5,mat:MAT.metal,flatRoof:true},  // factory
+  {x:6,z:-14,w:4,h:4.5,d:3.5,mat:MAT.stone,chimney:true},
+  {x:-6,z:14,w:3.2,h:3.5,d:3,chimney:true},
+  {x:6,z:14,w:4.5,h:3.2,d:3.5,chimney:true},
+  {x:-16,z:0,w:3,h:4,d:4,mat:MAT.stone},                        // barracks
+  {x:16,z:0,w:3,h:4,d:4,mat:MAT.stone,chimney:true},
+].forEach(b=>makeBuilding(b));
+
+/* Colony wall */
+const wallMat=new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9,metalness:0.1});
+[{x:0,z:-23,w:46,h:3.5,d:1.5},{x:0,z:23,w:46,h:3.5,d:1.5},{x:-23,z:0,w:1.5,h:3.5,d:46},{x:23,z:0,w:1.5,h:3.5,d:46}]
+.forEach(s=>{const m=new THREE.Mesh(new THREE.BoxGeometry(s.w,s.h,s.d),wallMat);m.position.set(s.x,s.h/2,s.z);m.castShadow=true;m.receiveShadow=true;scene.add(m);});
+// Battlements
+for(let i=-4;i<=4;i++){
+  [[-23],[23]].forEach(([z])=>{
+    const bm=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.2,1.5),MAT.stone);
+    bm.position.set(i*5,4.1,z);bm.castShadow=true;scene.add(bm);
+  });
+}
+// Corner towers
+[[-23,-23],[23,-23],[-23,23],[23,23]].forEach(([x,z])=>{
+  makeBuilding({x,z,w:3,h:5,d:3,mat:MAT.stone,roofH:2,chimney:false});
+});
+
+/* Trees */
+function makeTree(x,z,h=4){
+  const g=new THREE.Group();
+  const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.3,h*0.35,6),new THREE.MeshStandardMaterial({color:0x1e1610,roughness:1}));
+  trunk.position.y=h*0.35/2;trunk.castShadow=true;g.add(trunk);
+  [[0,0.5,h*0.5,0x1a2e18],[0.3,0.42,h*0.75,0x1e3520],[0.6,0.34,h*0.95,0x223818]].forEach(([frac,r,cy,col])=>{
+    const c=new THREE.Mesh(new THREE.ConeGeometry(h*r,h*0.45,7),new THREE.MeshStandardMaterial({color:col,roughness:0.9}));
+    c.position.y=cy;c.castShadow=true;g.add(c);
+  });
+  g.position.set(x,0,z);scene.add(g);
+}
+[[-25,-18],[-28,-10],[-27,0],[-26,10],[-24,18],[-20,25],[-10,27],[0,28],[10,27],[20,25],[25,18],[28,10],[27,0],[26,-10],[24,-18],[20,-25],[10,-27],[0,-28],[-10,-27],[-20,-25]].forEach(([x,z])=>makeTree(x,z,3+Math.random()*3));
+for(let i=0;i<16;i++){const a=i/16*Math.PI*2;makeTree(Math.cos(a)*28+(Math.random()-0.5),Math.sin(a)*28+(Math.random()-0.5),2+Math.random()*2.5);}
+
+/* Street lamps */
+function makeLamp(x,z){
+  const g=new THREE.Group();
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,4.2,6),MAT.metal);pole.position.y=2.1;pole.castShadow=true;g.add(pole);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.07,0.07),MAT.metal);arm.position.set(0.3,4.2,0);g.add(arm);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6),new THREE.MeshBasicMaterial({color:0xb08040}));head.position.set(0.6,4.2,0);g.add(head);
+  const pl=new THREE.PointLight(0x8a6020,1.0,9);pl.position.set(0.6,4.0,0);g.add(pl);
+  g.position.set(x,0,z);scene.add(g);
+}
+[[-4,-4],[4,-4],[-4,4],[4,4],[-9,0],[9,0],[0,-9],[0,9],[-12,-12],[12,-12],[-12,12],[12,12],[-18,0],[18,0],[0,-18],[0,18]].forEach(([x,z])=>makeLamp(x,z));
+
+/* Fire pits */
+const firePits=[];
+[[-9,9],[9,-9],[-16,6],[16,-6]].forEach(([x,z])=>{
+  const fp=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.55,0.3,8),new THREE.MeshStandardMaterial({color:0x1a1008,roughness:1}));
+  fp.position.set(x,0.15,z);scene.add(fp);
+  const fl=new THREE.PointLight(0xc06020,2,12);fl.position.set(x,0.9,z);scene.add(fl);
+  firePits.push(fl);
+  // Stacked logs
+  const log=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.14,0.7,6),new THREE.MeshStandardMaterial({color:0x1e1408,roughness:1}));
+  log.rotation.z=Math.PI/2;log.position.set(x,0.22,z);scene.add(log);
+});
+
+/* Citizens */
+const citizenGroup=new THREE.Group();scene.add(citizenGroup);
+const citizenObjs=[];
+function makeCitizen(i){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.22,0.9,6),new THREE.MeshStandardMaterial({color:0x3a4838,roughness:0.8}));
+  body.position.y=0.45;body.castShadow=true;g.add(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),new THREE.MeshStandardMaterial({color:0x6a5540,roughness:0.7}));
+  head.position.y=1.06;head.castShadow=true;g.add(head);
+  // Cloak
+  const cloak=new THREE.Mesh(new THREE.ConeGeometry(0.28,0.7,6),new THREE.MeshStandardMaterial({color:0x2a3028,roughness:1}));
+  cloak.position.y=0.55;g.add(cloak);
+  // Lantern
+  const lantern=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.13,0.1),new THREE.MeshBasicMaterial({color:0xc08030}));
+  lantern.position.set(0.28,0.6,0);g.add(lantern);
+  const ll=new THREE.PointLight(0xa06020,0.35,3);ll.position.set(0.28,0.6,0);g.add(ll);
+  const angle=(i/20)*Math.PI*2,r=4+Math.random()*10;
+  g.position.set(Math.cos(angle)*r,0,Math.sin(angle)*r);
+  g.userData={angle,r,speed:0.2+Math.random()*0.3,offset:Math.random()*Math.PI*2,bobPhase:Math.random()*Math.PI*2};
+  citizenGroup.add(g);citizenObjs.push(g);return g;
+}
+for(let i=0;i<20;i++) makeCitizen(i);
+
+/* Particles */
+const particles=[];
+function spawnParticle(x,y,z,color,vx,vy,vz,life){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(0.07,4,3),new THREE.MeshBasicMaterial({color,transparent:true,opacity:1}));
+  m.position.set(x,y,z);m.userData={vx,vy:vy||1,vz:vz||0,life:life||50,maxLife:life||50};
+  scene.add(m);particles.push(m);
+}
+function spawnExplosion(x,z,color=0xff4020,count=18){
+  for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.5+Math.random()*2;spawnParticle(x,0.5,z,color,Math.cos(a)*s,1.5+Math.random()*2,Math.sin(a)*s,55);}
+}
+function spawnGain(x,z,color=0x60c050,count=12){
+  for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.3+Math.random();spawnParticle(x,0.3,z,color,Math.cos(a)*s,1+Math.random()*1.5,Math.sin(a)*s,40);}
+}
+function spawnSmoke(x,z){
+  for(let i=0;i<6;i++){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(0.18+Math.random()*0.22,5,4),new THREE.MeshBasicMaterial({color:0x3a4038,transparent:true,opacity:0.35}));
+    m.position.set(x+(Math.random()-0.5),0.8,z+(Math.random()-0.5));
+    m.userData={vx:(Math.random()-0.5)*0.02,vy:0.05+Math.random()*0.04,vz:(Math.random()-0.5)*0.02,life:90,maxLife:90,smoke:true};
+    scene.add(m);particles.push(m);
   }
 }
 
-function endGame(win, msg) {
-  gameState.alive = false;
-  const g = gameState;
-  const endEl = document.getElementById('end-screen');
-  const titleEl = document.getElementById('end-title');
-  const statsEl = document.getElementById('end-stats');
-  titleEl.textContent = win ? 'COLONY SURVIVED' : 'COLONY EXTINCT';
-  titleEl.className = `end-title ${win ? 'win' : 'lose'}`;
-  const avgMorale = g.citizens.length > 0
-    ? Math.floor(g.citizens.reduce((a,c) => a+c.morale, 0) / g.citizens.length)
-    : 0;
-  statsEl.innerHTML = `${msg}<br><br>Days Survived: ${g.day} &nbsp;|&nbsp; Final Population: ${g.citizens.length}<br>Avg Morale: ${avgMorale} &nbsp;|&nbsp; Moral Choices: ${g.moralChoices.good} good, ${g.moralChoices.bad} bad`;
-  endEl.classList.add('visible');
-  if(win) { redLight.color.setHex(0x00ff88); redLight.intensity = 3; }
-  else { redLight.color.setHex(0xff2233); redLight.intensity = 6; }
-}
+/* Camera */
+let camAngle=0,camDist=50,camTargetY=34;
+window.addEventListener('wheel',e=>{camDist=Math.max(20,Math.min(80,camDist+e.deltaY*0.05));});
 
-/* ─── Event UI ─── */
-function showEvent(evt) {
-  const panel = document.getElementById('event-panel');
-  document.getElementById('evt-cat').textContent = evt.category;
-  document.getElementById('evt-cat').className = `event-category ${evt.categoryClass}`;
-  document.getElementById('evt-title').textContent = evt.title;
-  document.getElementById('evt-desc').textContent = evt.desc;
-  const choices = document.getElementById('evt-choices');
-  choices.innerHTML = '';
-  const letters = ['A','B','C'];
-  evt.choices.forEach((c, i) => {
-    const btn = document.createElement('button');
-    btn.className = `choice-btn${c.moral === 'bad' ? ' moral-bad' : ''}`;
-    btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><div><div>${c.text}</div><div class="choice-cost">${c.cost}</div></div>`;
-    btn.onclick = () => {
-      c.fn(gameState);
-      if(c.moral === 'good') gameState.moralChoices.good++;
-      if(c.moral === 'bad') gameState.moralChoices.bad++;
-      panel.classList.remove('visible');
-      gameState.pendingEvent = null;
-      gameState.paused = false;
-      updateHUD();
-    };
-    choices.appendChild(btn);
-  });
-  panel.classList.add('visible');
-
-  // Danger flash
-  redLight.intensity = 4;
-  setTimeout(() => { redLight.intensity = 0; }, 2000);
-}
-
-/* ─── HUD Update ─── */
-function updateHUD() {
-  const g = gameState;
-  const pop = g.citizens.length;
-  const avgMorale = pop > 0 ? Math.floor(g.citizens.reduce((a,c) => a+c.morale, 0) / pop) : 0;
-
-  document.getElementById('day-counter').textContent = String(g.day).padStart(2,'0');
-  document.getElementById('pop-val').textContent = pop;
-  document.getElementById('food-val').textContent = Math.floor(g.food);
-  document.getElementById('energy-val').textContent = Math.floor(g.energy);
-  document.getElementById('morale-val').textContent = avgMorale;
-
-  // Delta labels
-  const foodPerDay = Math.floor(pop * 3 * g.difficultyScale) - pop * 2;
-  const foodDeltaEl = document.getElementById('food-delta');
-  foodDeltaEl.textContent = `${foodPerDay >= 0 ? '+' : ''}${foodPerDay}/day`;
-  foodDeltaEl.className = `res-delta ${foodPerDay < 0 ? 'neg' : 'pos'}`;
-
-  document.getElementById('pop-delta').textContent = pop > 15 ? 'STABLE' : pop > 8 ? 'DECLINING' : 'CRITICAL';
-  document.getElementById('pop-delta').className = `res-delta ${pop > 15 ? 'pos' : pop > 8 ? '' : 'neg'}`;
-
-  // Bar fills
-  const maxFood = 400;
-  const maxEnergy = 300;
-  setBar('food-card', g.food / maxFood, g.food < 50 ? '#ff2233' : g.food < 100 ? '#ffb300' : '#00e5ff');
-  setBar('energy-card', g.energy / maxEnergy, g.energy < 40 ? '#ff2233' : g.energy < 80 ? '#ffb300' : '#00e5ff');
-  setBar('pop-card', pop / 20, pop < 5 ? '#ff2233' : pop < 10 ? '#ffb300' : '#ffb300');
-  setBar('morale-card', avgMorale / 100, avgMorale < 25 ? '#ff2233' : avgMorale < 50 ? '#ffb300' : '#00ff88');
-
-  // Danger classes
-  setDanger('food-card', g.food);
-  setDanger('energy-card', g.energy);
-
-  // Morale bar
-  document.getElementById('morale-fill').style.width = avgMorale + '%';
-
-  // Citizen colors
-  citizenMeshes.forEach((m, i) => {
-    if(i < g.citizens.length) {
-      const c = g.citizens[i];
-      const health = c.health / 100;
-      m.material.color.setRGB(health * 0.3, health * 0.6, health);
-      m.material.emissive.setRGB(0, health * 0.1, health * 0.15);
-    }
-  });
-
-  // Node intensity by resource
-  nodes[0].mesh.material.emissiveIntensity = Math.min(1, g.food / 200);
-  nodes[1].mesh.material.emissiveIntensity = Math.min(1, g.energy / 150);
-  nodes[0].light.intensity = Math.min(2, g.food / 100);
-  nodes[1].light.intensity = Math.min(2, g.energy / 75);
-}
-
-function setBar(id, fill, color) {
-  const el = document.getElementById(id);
-  el.style.setProperty('--fill', Math.max(0, Math.min(1, fill)));
-  el.style.setProperty('--bar-color', color);
-}
-
-function setDanger(id, val) {
-  const el = document.getElementById(id);
-  el.classList.remove('danger', 'warning');
-  if(val < 30) el.classList.add('danger');
-  else if(val < 80) el.classList.add('warning');
-}
-
-/* ─── Log ─── */
-const logEntries = [];
-function addLog(msg, color='rgba(0,229,255,0.7)') {
-  const panel = document.getElementById('log-panel');
-  const entry = document.createElement('div');
-  entry.className = 'log-entry';
-  entry.style.setProperty('--entry-color', color);
-  entry.textContent = `D${String(gameState.day).padStart(2,'0')} › ${msg}`;
-  panel.prepend(entry);
-  logEntries.push(entry);
-  if(logEntries.length > 8) {
-    const old = logEntries.shift();
-    old.remove();
+/* ═══════════════════════ GAME STATE ═══════════════════════ */
+class Citizen{
+  constructor(){this.health=70+Math.floor(Math.random()*31);this.morale=50+Math.floor(Math.random()*31);}
+  update(food){
+    if(food<1){this.health-=5+Math.floor(Math.random()*11);this.morale-=5+Math.floor(Math.random()*6);}
+    else{this.health-=1+Math.floor(Math.random()*3);}
+    this.health=Math.max(0,Math.min(100,this.health));this.morale=Math.max(0,Math.min(100,this.morale));
+    return this.health>0;
   }
 }
 
-/* ─── Notifications ─── */
-function notify(msg, color='var(--cyan)') {
-  const el = document.createElement('div');
-  el.className = 'notif';
-  el.style.setProperty('--notif-color', color);
-  el.textContent = msg;
-  document.getElementById('notif-stack').appendChild(el);
-  setTimeout(() => el.remove(), 3100);
+const G={day:1,food:200,energy:150,medicine:30,credits:0,citizens:[],diffScale:1.0,alive:true,paused:true,speed:1,dayTimer:0,dayMs:4200,quarantine:0,rationMode:false,energyPenalty:1,energyPenaltyDays:0,winterPenalty:0,streak:0,moralGood:0,moralBad:0,pendingEvent:null,achievements:new Set(),eventCooldown:0,actionCooldown:{}};
+for(let i=0;i<20;i++) G.citizens.push(new Citizen());
+
+const EVENTS=[
+  {id:'meteor',cat:'CRITICAL ALERT',cls:'crit',title:'Debris Field Incoming',
+   body:'Scout drones detected a dense debris cloud on approach. Your people look to the sky with hollow eyes. The colony walls may not hold.',
+   choices:[
+    {t:'Activate emergency barriers',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;spawnGain(0,0,0x4080ff);addLog('Barriers held. Colony intact.',0x5a8ab0);floatPop('⚡ BARRIERS ACTIVE',0x5a8ab0);g.credits+=30;}},
+    {t:'Rally citizens to brace together',cost:'MORALE +10',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));spawnGain(0,0,0x60c070);addLog('Community rallied.',0x6abf7a);g.credits+=20;}},
+    {t:'Do nothing — endure it',cost:'FOOD −60, ENERGY −30',moral:'b',cls:'evil',fn:g=>{g.food-=60;g.energy-=30;spawnExplosion(0,0);addLog('Debris strikes. Heavy damage.',0xc44a3a);}},
+   ]},
+  {id:'plague',cat:'MEDICAL ALERT',cls:'warn',title:'The Coughing Sickness',
+   body:'It started in the east quarter. Fever, fatigue, hollow eyes. The healer\'s hut is overwhelmed. Children are among the first to fall ill.',
+   choices:[
+    {t:'Full quarantine',cost:'PROD −30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;addLog('Quarantine in place.',0x4a9a8a);g.credits+=25;}},
+    {t:'Burn medicine to treat everyone',cost:'MEDICINE −20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=35;}},
+    {t:'Let it thin the herd',cost:'POP −2 to 5',moral:'b',cls:'evil',fn:g=>{const n=2+Math.floor(Math.random()*4);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} perished. Colony grieves.`,0xc44a3a);g.moralBad++;}},
+   ]},
+  {id:'strangers',cat:'INCOMING SIGNAL',cls:'',title:'Strangers at the Gate',
+   body:'Eight survivors, half-starved, carrying only what they could when their village burned. They beg for shelter. Your council is divided.',
+   choices:[
+    {t:'Open the gates — welcome them',cost:'FOOD −40, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls found refuge.',0x6abf7a);g.credits+=40;}},
+    {t:'Let in only those who can work',cost:'FOOD −15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},
+    {t:'Close the gates',cost:'MORALE −20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);addLog('Gates shut. Guilt spreads.',0xc44a3a);g.moralBad++;}},
+   ]},
+  {id:'fire',cat:'FIRE EMERGENCY',cls:'crit',title:'Grain Store is Burning',
+   body:'Flames light up the night sky. The main grain store is ablaze. Thick smoke rolls through the streets. Your people are terrified.',
+   choices:[
+    {t:'All hands — water chain',cost:'ENERGY −50, FOOD −30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food-=30;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most food saved.',0x5a8ab0);g.credits+=20;}},
+    {t:'Create a firebreak',cost:'FOOD −60',moral:'n',cls:'',fn:g=>{g.food-=60;spawnExplosion(0,-8,0xff6020);addLog('Firebreak held the line.',0xd4973a);}},
+    {t:'Run. Save yourselves.',cost:'FOOD −100',moral:'b',cls:'evil',fn:g=>{g.food-=100;spawnExplosion(0,-8,0xff2000,30);addLog('Fire raged. Devastating loss.',0xc44a3a);g.moralBad++;}},
+   ]},
+  {id:'trader',cat:'OPPORTUNITY',cls:'',title:'The Wandering Merchant',
+   body:'A cloaked figure arrives before dawn with a loaded cart. She offers supplies in exchange for intelligence about safe routes south.',
+   choices:[
+    {t:'Trade energy for food and medicine',cost:'ENERGY −60, FOOD +80, MED +20',moral:'n',cls:'good',fn:g=>{g.energy-=60;g.food+=80;g.medicine+=20;spawnGain(0,0,0x80c050,20);addLog('Fair trade. Shelves stocked.',0x6abf7a);g.credits+=30;}},
+    {t:'Give routes freely — build goodwill',cost:'MORALE +15',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+15));addLog('Goodwill built. Morale lifted.',0x6abf7a);g.credits+=15;}},
+    {t:'Rob the merchant',cost:'FOOD +120, MORALE −30',moral:'b',cls:'evil',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xff2233,10);addLog('Merchant robbed. Shame spreads.',0xc44a3a);g.moralBad++;}},
+   ]},
+  {id:'uprising',cat:'SOCIAL CRISIS',cls:'crit',title:'Uprising in the East Quarter',
+   body:'The rationing has broken something. They\'ve barricaded the workshops. Chanting fills the cold air. Your enforcers look to you.',
+   choices:[
+    {t:'Negotiate — grant rest and rations',cost:'FOOD −50, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food-=50;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));spawnGain(0,0,0x60c050,12);addLog('Compromise reached.',0x6abf7a);g.credits+=35;}},
+    {t:'Speak to the crowd — promise reforms',cost:'MORALE +8',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Crowd calmed by words.',0xd4973a);}},
+    {t:'Crush the uprising by force',cost:'POP −2, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,15);addLog('Dissent silenced with blood.',0xc44a3a);g.moralBad++;}},
+   ]},
+  {id:'winter',cat:'SEASONAL SHIFT',cls:'warn',title:'The Long Cold Approaches',
+   body:'Frost killed the outer fields early. If you don\'t prepare now, the cold months will be catastrophic. Your breath fogs in the morning air.',
+   choices:[
+    {t:'Emergency harvest — work through night',cost:'MORALE −10, FOOD +60',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g.food+=60;spawnGain(0,0,0x80a040,15);addLog('Night harvest done. Reserves up.',0x6abf7a);g.credits+=25;}},
+    {t:'Trade energy for insulation',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;g.diffScale-=0.05;addLog('Colony insulated. Cold blunted.',0x5a8ab0);g.credits+=20;}},
+    {t:'Nothing. You\'ve survived worse.',cost:'FOOD DRAIN +30% for 10 days',moral:'b',cls:'evil',fn:g=>{g.winterPenalty=10;addLog('Winter bites. Rationing brutal.',0xc44a3a);}},
+   ]},
+];
+let usedEvtIds=new Set();
+
+/* ─── ACTIONS ─── */
+function doAction(type){
+  if(!G.alive||G.pendingEvent) return;
+  const now=Date.now(),cd=G.actionCooldown[type]||0;
+  if(now<cd){showPop('⏳ COOLDOWN',0xc44a3a);return;}
+  G.actionCooldown[type]=now+1800;
+  switch(type){
+    case 'farm':{
+      const gain=25+Math.floor(Math.random()*22);G.food+=gain;
+      spawnGain(0,-8,0x60c050);floatPop(`+${gain} FOOD 🌾`,0x6abf7a,50,55);
+      addLog(`Fields worked hard. +${gain} food.`,0x6abf7a);G.streak++;break;}
+    case 'power':{
+      const gain=20+Math.floor(Math.random()*18);G.energy+=gain;
+      spawnGain(8,0,0x4080ff);floatPop(`+${gain} ENERGY ⚡`,0x5a8ab0,60,50);
+      addLog(`Cells recharged. +${gain} energy.`,0x5a8ab0);G.streak++;break;}
+    case 'heal':
+      if(G.medicine<10){showPop('NO MEDICINE LEFT',0xc44a3a);return;}
+      G.medicine-=10;G.citizens.forEach(c=>c.health=Math.min(100,c.health+15));
+      spawnGain(-4,4,0x40c0a0);floatPop('+15 HEALTH 💊',0x4a9a8a,40,48);
+      addLog('Medic team deployed. Health +15.',0x4a9a8a);G.streak++;break;
+    case 'scout':{
+      G.energy-=8;const roll=Math.random();
+      if(roll<0.30){
+        const lootTable=[
+          {icon:'🥩',name:'FOOD CACHE',val:'+60 FOOD',fn:g=>{g.food+=60;}},
+          {icon:'⚡',name:'ENERGY CACHE',val:'+45 ENERGY',fn:g=>{g.energy+=45;}},
+          {icon:'💊',name:'MEDICINE STASH',val:'+28 MEDICINE',fn:g=>{g.medicine+=28;}},
+          {icon:'⚙',name:'CREDIT CHEST',val:'+90 CREDITS',fn:g=>{g.credits+=90;}},
+          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY −0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
+          {icon:'🗡',name:'WEAPONS CACHE',val:'CONSCRIPT REMOVED',fn:g=>{g.moralBad=Math.max(0,g.moralBad-1);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));}},
+        ];
+        showLoot(lootTable[Math.floor(Math.random()*lootTable.length)]);
+      } else if(roll<0.65){const s=15+Math.floor(Math.random()*25);G.food+=s;floatPop(`🔭 FOUND +${s} FOOD`,0x6abf7a,50,50);addLog(`Scout found ${s} food.`,0x6abf7a);}
+      else{floatPop('🔭 EMPTY HANDED',0x888888,50,50);addLog('Scouts returned empty.',0x888888);}
+      G.streak++;break;}
+    case 'trade':
+      if(G.credits<50){showPop('NEED 50 CREDITS',0xc44a3a);return;}
+      G.credits-=50;const tg=55+Math.floor(Math.random()*45);G.food+=tg;
+      spawnGain(0,0,0x80a040,12);floatPop(`⚙50 → +${tg} FOOD`,0xd4973a,50,50);
+      addLog(`Trade: +${tg} food acquired.`,0xd4973a);break;
+    case 'conscript':
+      if(G.citizens.length<=3){showPop('TOO FEW CITIZENS',0xc44a3a);return;}
+      G.food+=35;G.energy+=15;G.citizens.splice(0,1);
+      G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));
+      G.moralBad++;G.streak=0;
+      spawnExplosion(0,0,0xff4020,8);floatPop('⚠ FORCED LABOR',0xc44a3a,50,50);
+      addLog('Conscription: one lost, streak reset.',0xc44a3a);break;
+  }
+  if(G.streak>0&&G.streak%5===0){const b=20+G.streak*2;G.credits+=b;showStreakBanner(G.streak);floatPop(`🔥 STREAK BONUS +${b}⚙`,0xe8c060,50,42);}
+  checkAchievements();updateHUD();
 }
 
-/* ══════════════════════════════════════════
-   RENDER LOOP
-══════════════════════════════════════════ */
-let lastTime = 0;
-let gameTime = 0;
+function showLoot(loot){
+  const box=document.getElementById('loot-box');
+  document.getElementById('loot-icon').textContent=loot.icon;
+  document.getElementById('loot-name').textContent=loot.name;
+  document.getElementById('loot-val').textContent=loot.val;
+  box.classList.add('show');G.paused=true;
+  box.onclick=()=>{loot.fn(G);box.classList.remove('show');G.paused=false;spawnGain(0,0,0xe8c060,22);notify('SUPPLY DROP COLLECTED!',0xe8c060);updateHUD();};
+}
 
-function animate(timestamp) {
+let comboTO;
+function showStreakBanner(n){
+  const b=document.getElementById('combo-banner');
+  document.getElementById('combo-n').textContent=n;
+  b.classList.add('show');clearTimeout(comboTO);comboTO=setTimeout(()=>b.classList.remove('show'),2400);
+}
+
+/* ─── DAY TICK ─── */
+function tickDay(){
+  if(!G.alive)return;
+  G.day++;
+  if(G.quarantine>0)G.quarantine--;
+  if(G.energyPenaltyDays>0){G.energyPenaltyDays--;if(G.energyPenaltyDays<=0)G.energyPenalty=1;}
+  if(G.winterPenalty>0)G.winterPenalty--;
+  const qF=G.quarantine>0?0.7:1,wF=G.winterPenalty>0?0.7:1;
+  const prod=Math.floor(G.citizens.length*3*G.diffScale*qF*wF);
+  G.food+=prod;G.energy+=Math.floor(prod*0.5*G.energyPenalty);
+  G.medicine+=Math.floor(G.citizens.length*0.08);
+  G.food-=G.citizens.length*(G.rationMode?1:2);
+  G.rationMode=false;G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
+  G.credits+=G.citizens.length;
+  const r=Math.random();
+  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: −${l} energy`,0xc44a3a);}
+  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: −${l} food`,0xd4973a);}
+  else if(r<0.48){G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-(2+Math.floor(Math.random()*7))));}
+  const pop=G.citizens.length;
+  G.citizens=G.citizens.filter(c=>c.update(G.food));
+  const died=pop-G.citizens.length;
+  if(died>0){spawnExplosion(Math.random()*8-4,Math.random()*8-4,0xc44030,5);addLog(`${died} soul${died>1?'s':''} lost today.`,0xc44a3a);}
+  while(citizenObjs.length>G.citizens.length){const m=citizenObjs.pop();citizenGroup.remove(m);}
+  G.diffScale+=0.015;
+  if(G.eventCooldown>0)G.eventCooldown--;
+  else if(Math.random()<0.2&&!G.pendingEvent){
+    const avail=EVENTS.filter(e=>!usedEvtIds.has(e.id));
+    if(avail.length===0)usedEvtIds.clear();
+    else{const evt=avail[Math.floor(Math.random()*avail.length)];usedEvtIds.add(evt.id);G.eventCooldown=6;G.pendingEvent=evt;G.paused=true;showEvent(evt);hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);}
+  }
+  checkAchievements();checkEnd();updateHUD();
+}
+
+/* ─── ACHIEVEMENTS ─── */
+const ACHS=[
+  {id:'s10',icon:'🌙',name:'First Dawn',fn:g=>g.day>=10},
+  {id:'s30',icon:'⭐',name:'Month of Shadows',fn:g=>g.day>=30},
+  {id:'p30',icon:'👥',name:'Growing Colony',fn:g=>g.citizens.length>=30},
+  {id:'c100',icon:'⚙',name:'Resourceful',fn:g=>g.credits>=100},
+  {id:'c500',icon:'💎',name:'Credit Baron',fn:g=>g.credits>=500},
+  {id:'mg5',icon:'🕊',name:'Shepherd',fn:g=>g.moralGood>=5},
+  {id:'str10',icon:'🔥',name:'On A Roll',fn:g=>g.streak>=10},
+  {id:'s60',icon:'🏆',name:'Colony Stands',fn:g=>g.day>=60},
+];
+function checkAchievements(){ACHS.forEach(a=>{if(!G.achievements.has(a.id)&&a.fn(G)){G.achievements.add(a.id);showAch(a);G.credits+=50;}});}
+function showAch(a){
+  const layer=document.getElementById('ach-layer');
+  const el=document.createElement('div');
+  el.className='achievement';
+  el.style.top=`${layer.children.length*68}px`;
+  el.innerHTML=`<span class="ach-icon">${a.icon}</span><div><div class="ach-label">ACHIEVEMENT</div><div class="ach-name">${a.name}</div></div>`;
+  layer.appendChild(el);setTimeout(()=>el.remove(),4600);
+}
+
+/* ─── EVENTS ─── */
+function showEvent(evt){
+  const p=document.getElementById('evt-panel');
+  document.getElementById('etag').textContent=evt.cat;document.getElementById('etag').className=`evt-tag ${evt.cls}`;
+  document.getElementById('etitle').textContent=evt.title;document.getElementById('ebody').textContent=evt.body;
+  const ch=document.getElementById('echoices');ch.innerHTML='';
+  ['A','B','C'].forEach((l,i)=>{
+    const c=evt.choices[i];if(!c)return;
+    const btn=document.createElement('button');btn.className=`ev-btn ${c.cls}`;
+    btn.innerHTML=`<span class="ev-key">${l}</span><div><div class="ev-text">${c.t}</div><div class="ev-cost">${c.cost}</div></div>`;
+    btn.onclick=()=>{c.fn(G);if(c.moral==='g')G.moralGood++;if(c.moral==='b')G.moralBad++;p.classList.remove('open');G.pendingEvent=null;G.paused=false;updateHUD();};
+    ch.appendChild(btn);
+  });
+  p.classList.add('open');
+}
+
+/* ─── HUD ─── */
+function updateHUD(){
+  const g=G,pop=g.citizens.length;
+  const avg=pop>0?Math.floor(g.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
+  document.getElementById('day-block').textContent=String(g.day).padStart(2,'0');
+  document.getElementById('credits-val').textContent=g.credits;
+  document.getElementById('rv-pop').textContent=pop;
+  document.getElementById('rv-food').textContent=Math.floor(g.food);
+  document.getElementById('rv-nrg').textContent=Math.floor(g.energy);
+  document.getElementById('rv-med').textContent=Math.floor(g.medicine);
+  document.getElementById('mp-val').textContent=`${avg} — ${avg>70?'Resilient':avg>45?'Weary':avg>25?'Desperate':'Breaking'}`;
+  document.getElementById('mp-fill').style.width=avg+'%';
+  const pPD=Math.floor(pop*3*g.diffScale);
+  setRI('food',g.food/400,g.food<50?'#c44a3a':g.food<100?'#d4973a':'#6abf7a',`${pPD-pop*2>=0?'+':''}${pPD-pop*2}/d`,pPD-pop*2>=0?'pos':'neg');
+  setRI('nrg',g.energy/300,g.energy<40?'#c44a3a':g.energy<80?'#d4973a':'#5a8ab0',`+${Math.floor(pPD*0.5)}/d`,'pos');
+  setRI('pop',pop/30,pop<5?'#c44a3a':pop<10?'#d4973a':'#d4973a',pop>15?'stable':pop>8?'declining':'critical','');
+  setRI('med',g.medicine/80,g.medicine<10?'#c44a3a':g.medicine<20?'#d4973a':'#4a9a8a',g.medicine<15?'scarce':'ok','');
+  citizenObjs.forEach((m,i)=>{if(i<g.citizens.length){const h=g.citizens[i].health/100;m.children[0].material.color.setRGB(0.15+h*0.1,0.2+h*0.1,0.15+h*0.06);}});
+  firePits.forEach(f=>{f.intensity=0.8+(avg/100)*2.2;});
+}
+function setRI(id,fill,color,delta,cls){
+  const el=document.getElementById(`ri-${id}`);
+  el.style.setProperty('--fill',Math.max(0,Math.min(1,fill)));
+  el.style.setProperty('--ri-color',color);
+  document.getElementById(`rv-${id}`).style.color=fill<0.2?'#c44a3a':fill<0.35?'#d4973a':'#c8d4b8';
+  const d=document.getElementById(`rd-${id}`);if(d){d.textContent=delta;d.className=`ri-delta ${cls}`;}
+}
+
+/* ─── LOG / NOTIF / POPUPS ─── */
+const logLines=[];
+function addLog(msg,colorHex){
+  const strip=document.getElementById('log-strip');
+  const hex=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';
+  const el=document.createElement('div');el.className='log-line';
+  el.innerHTML=`<span style="--li-color:${hex}">D${String(G.day).padStart(2,'0')}</span> ${msg}`;
+  strip.prepend(el);logLines.push(el);if(logLines.length>3){const o=logLines.shift();o.remove();}
+}
+function notify(msg,colorHex){
+  const el=document.createElement('div');el.className='notif';
+  const c=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';
+  el.style.setProperty('--n-color',c);el.textContent=msg;
+  document.getElementById('notif-zone').appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+function showPop(msg,colorHex){notify(msg,colorHex);}
+function floatPop(msg,colorHex,xPct=50,yPct=50){
+  const layer=document.getElementById('popup-layer');const el=document.createElement('div');
+  el.className='float-pop';
+  el.style.setProperty('--fp-color',colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#fff');
+  el.style.left=`${xPct+Math.random()*8-4}%`;el.style.top=`${yPct+Math.random()*5-2.5}%`;
+  el.textContent=msg;layer.appendChild(el);setTimeout(()=>el.remove(),2400);
+}
+
+/* ─── SPEED ─── */
+function setSpd(s){G.speed=s;G.paused=(s===0);['s0','s1','s2','s3'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===s));}
+
+/* ─── END ─── */
+function checkEnd(){if(G.citizens.length<=0)endGame(false);else if(G.day>=60)endGame(true);}
+function endGame(win){
+  G.alive=false;
+  document.getElementById('end-h').textContent=win?'COLONY ENDURES':'THE SILENCE COMES';
+  document.getElementById('end-h').className=`end-h ${win?'win':'lose'}`;
+  const qw=['"They said we would not last the winter. They were wrong."','"Sixty days of hunger and cold. And still — we stand."'];
+  const ql=['"The last fire went out before anyone noticed."','"History will not record them. The wind already forgot."'];
+  document.getElementById('end-q').textContent=(win?qw:ql)[Math.floor(Math.random()*2)];
+  const avg=G.citizens.length>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/G.citizens.length):0;
+  document.getElementById('end-stats').innerHTML=`Days: ${G.day} &nbsp;·&nbsp; Survivors: ${G.citizens.length} &nbsp;·&nbsp; Credits: ${G.credits}<br>Morale: ${avg} &nbsp;·&nbsp; ${G.moralGood} compassionate choices, ${G.moralBad} ruthless`;
+  document.getElementById('end-screen').classList.add('open');
+}
+
+/* ─── TUTORIAL ─── */
+const STEPS=[
+  {step:'01 / 05',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.\n\nYou are their hope — or their end.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
+  {step:'02 / 05',title:'Take Action Every Day',body:'Use the <strong>bottom buttons</strong> to keep your colony alive. Farm for food, recharge energy cells, deploy medics, or send scouts into the wilderness.',tip:'Actions have short cooldowns. Keep tapping them — every turn counts.',icons:['🌱 Farm','🔋 Recharge','💉 Medic','🔭 Scout']},
+  {step:'03 / 05',title:'Credits, Loot & Streaks',body:'<strong>Credits ⚙</strong> accumulate each day and from achievements. Trade them for emergency supplies.\n\nScouts may return with <strong>Supply Drops</strong> — glowing loot crates with RNG rewards. Chain 5 actions without stopping for a <strong>Streak Bonus</strong>.',tip:'Scouts finding loot is ~30% chance — worth the gamble when desperate.',icons:['⚙ Credits','📦 Loot Drops','🔥 Streaks','🏆 Achievements']},
+  {step:'04 / 05',title:'Crisis Events',body:'Every few days a <strong>crisis event</strong> interrupts the colony. A fire. Sickness. Strangers at the gate.\n\nThree choices. One compassionate, one pragmatic, one dark. <strong>Your choices define your colony\'s soul.</strong>',tip:'Ruthless choices yield short-term gains but destroy morale and your legacy.',icons:['🌾 Fires','🦠 Disease','🚪 Refugees','⚡ Storms']},
+  {step:'05 / 05',title:'Survive 60 Days',body:'Keep at least one citizen alive for <strong>60 days</strong>. The world grows harsher each day — difficulty slowly increases.\n\nBut if you endure, you will have built something real. A colony. A community. A story.',tip:'Use 2× or 4× speed once you\'re stable. Pause during events to think.',icons:['⏸ Pause','1× Normal','2× Fast','4× Rush']},
+];
+let tutStep=0;
+function renderTut(){
+  const s=STEPS[tutStep],isLast=tutStep===STEPS.length-1;
+  document.getElementById('tutorial').innerHTML=`<div class="tut-card">
+    <div class="tut-step">${s.step}</div>
+    <div class="tut-title">${s.title}</div>
+    <div class="tut-body">${s.body.replace(/\n/g,'<br>')}</div>
+    <div class="tut-tip">${s.tip}</div>
+    <div class="tut-icons">${s.icons.map(ic=>`<div class="tut-icon-item"><span>${ic.split(' ')[0]}</span><span>${ic.split(' ').slice(1).join(' ')}</span></div>`).join('')}</div>
+    <div class="tut-nav">
+      <div class="tut-dots">${STEPS.map((_,i)=>`<div class="tut-dot${i===tutStep?' on':''}"></div>`).join('')}</div>
+      <div style="display:flex;gap:8px">${tutStep>0?`<button class="tut-btn" onclick="tutNav(-1)">← BACK</button>`:''}<button class="tut-btn primary" onclick="${isLast?'startGame()':'tutNav(1)'}">${isLast?'▶ BEGIN':'NEXT →'}</button></div>
+    </div>
+  </div>`;
+}
+function tutNav(d){tutStep=Math.max(0,Math.min(STEPS.length-1,tutStep+d));renderTut();}
+function startGame(){document.getElementById('tutorial').style.display='none';G.paused=false;addLog('Colony systems online. Stay vigilant.',0x4a9a8a);notify('COLONY ZERO — DAY ONE BEGINS',0x4a9a8a);updateHUD();}
+renderTut();
+
+/* ═══════════════════════ RENDER LOOP ═══════════════════════ */
+let lastT=0;
+function animate(ts){
   requestAnimationFrame(animate);
+  const dt=Math.min(ts-lastT,80);lastT=ts;
+  const sm=[0,1,2,4][G.speed]||1,t=ts*0.001;
+  if(G.alive&&!G.paused){G.dayTimer+=dt*sm;if(G.dayTimer>=G.dayMs){G.dayTimer=0;tickDay();}}
 
-  const dt = Math.min(timestamp - lastTime, 100);
-  lastTime = timestamp;
-  const speedMult = [0, 1, 2, 4][gameState.speed] || 1;
+  // Camera
+  if(!G.paused)camAngle+=0.0003;
+  camera.position.x=Math.cos(camAngle)*camDist;
+  camera.position.z=Math.sin(camAngle)*camDist;
+  camera.position.y+=(camTargetY-camera.position.y)*0.04;
+  camera.lookAt(0,2,0);
 
-  if(gameState.alive && !gameState.paused) {
-    gameTime += dt * speedMult;
-    gameState.dayTimer += dt * speedMult;
-
-    if(gameState.dayTimer >= gameState.dayInterval) {
-      gameState.dayTimer = 0;
-      tickDay();
-    }
-  }
-
-  const t = timestamp * 0.001;
-
-  // Camera slow orbit
-  if(!gameState.paused) camAngle += 0.0004;
-  const cr = 42;
-  camera.position.x = Math.cos(camAngle) * cr;
-  camera.position.z = Math.sin(camAngle) * cr;
-  camera.position.y += (camTargetY - camera.position.y) * 0.05;
-  camera.lookAt(0, 2, 0);
-
-  // Citizen movement
-  citizenMeshes.forEach((m, i) => {
-    if(i < gameState.citizens.length) {
-      const u = m.userData;
-      u.angle += u.speed * 0.003;
-      m.position.x = Math.cos(u.angle + u.offset) * u.r;
-      m.position.z = Math.sin(u.angle + u.offset) * u.r;
-      m.position.y = 0.3 + Math.sin(t * 2 + i) * 0.05;
+  // Citizens
+  citizenObjs.forEach((m,i)=>{
+    if(i<G.citizens.length){
+      const u=m.userData;
+      u.angle+=u.speed*0.004;
+      m.position.x=Math.cos(u.angle+u.offset)*u.r+Math.sin(t*0.8+i)*0.25;
+      m.position.z=Math.sin(u.angle+u.offset)*u.r+Math.cos(t*0.6+i)*0.25;
+      m.position.y=Math.abs(Math.sin(t*2+u.bobPhase))*0.18;
+      m.rotation.y=u.angle+u.offset+Math.PI;
     }
   });
 
-  // Node float
-  nodes.forEach((n, i) => {
-    n.mesh.position.y = 1.5 + Math.sin(t * 1.5 + i * 1.2) * 0.3;
-    n.mesh.rotation.y += 0.02;
-    n.mesh.rotation.x += 0.01;
-  });
+  // Fire pits flicker
+  firePits.forEach((f,i)=>{f.intensity=1.2+(Math.sin(t*7+i*2.1)+1)*0.7;});
+  warmFill.intensity=1.2+Math.sin(t*0.9)*0.25;
 
-  // Dome pulse
-  const domeAlpha = 0.08 + Math.sin(t * 0.5) * 0.03;
-  dome.material.opacity = domeAlpha;
-
-  // Glow ring pulse
-  glowRing.material.color.setHSL(0.55, 1, 0.4 + Math.sin(t * 2) * 0.1);
-
-  // Red light heartbeat on low resources
-  const foodCrit = gameState.food < 50;
-  const popCrit = gameState.citizens.length < 5;
-  if(foodCrit || popCrit) {
-    redLight.intensity = (Math.sin(t * 4) + 1) * 2;
+  // Particles
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i],u=p.userData;
+    p.position.x+=u.vx*0.035;p.position.y+=u.vy*0.035;p.position.z+=u.vz*0.035;
+    u.vy-=0.06;u.life--;
+    const lr=u.life/u.maxLife;
+    p.material.opacity=lr;
+    if(u.smoke){p.scale.setScalar(1+(1-lr)*2.5);}
+    if(u.life<=0){scene.remove(p);p.geometry.dispose();p.material.dispose();particles.splice(i,1);}
   }
 
-  renderer.render(scene, camera);
+  // Chimney smoke
+  if(Math.random()<0.03){
+    const pos=[{x:-7,z:-5},{x:7,z:-5},{x:0,z:-9},{x:-10,z:0},{x:-14,z:-8},{x:14,z:8}];
+    const p=pos[Math.floor(Math.random()*pos.length)];
+    spawnSmoke(p.x,p.z);
+  }
+
+  renderer.render(scene,camera);
 }
+animate(0);updateHUD();
 
-/* ─── Resize ─── */
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-/* ─── Intro ─── */
-document.getElementById('intro').addEventListener('click', () => {
-  document.getElementById('intro').style.animation = 'fade-in 0.5s reverse forwards';
-  setTimeout(() => {
-    document.getElementById('intro').style.display = 'none';
-    updateHUD();
-    addLog('Colony systems online. Day 1 begins.', '#00e5ff');
-    notify('COLONY ZERO INITIALIZED', '#00e5ff');
-  }, 500);
-});
-
-/* ─── Start render ─── */
-updateHUD();
-animate(0);
+window.addEventListener('resize',()=>{camera.aspect=W()/H();camera.updateProjectionMatrix();renderer.setSize(W(),H());});
 </script>
 </body>
 </html>
