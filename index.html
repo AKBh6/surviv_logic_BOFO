@@ -352,6 +352,60 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   /* ── ACH LAYER: reposition ── */
   #ach-layer { right: 8px; top: 52px; }
 }
+
+/* ── MORALE TIER BADGE (live indicator next to morale bar) ── */
+#morale-tier{font-size:8px;letter-spacing:2px;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;transition:all 0.4s;white-space:nowrap;}
+#morale-tier.tier-heroic{background:rgba(106,191,122,0.2);color:var(--green);border:1px solid rgba(106,191,122,0.4);}
+#morale-tier.tier-strong{background:rgba(74,154,138,0.15);color:var(--teal);border:1px solid rgba(74,154,138,0.3);}
+#morale-tier.tier-stable{background:rgba(90,138,176,0.12);color:var(--blue);border:1px solid rgba(90,138,176,0.25);}
+#morale-tier.tier-low{background:rgba(212,151,58,0.12);color:var(--amber);border:1px solid rgba(212,151,58,0.25);}
+#morale-tier.tier-strike{background:rgba(196,74,58,0.2);color:var(--red);border:1px solid rgba(196,74,58,0.4);animation:crit-pulse 0.8s ease-in-out infinite;}
+@keyframes crit-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ── INFRASTRUCTURE PANEL ── */
+#infra-panel{position:absolute;right:14px;top:68px;z-index:30;width:200px;pointer-events:auto;}
+#infra-toggle{background:rgba(14,18,12,0.92);border:1px solid var(--border);border-radius:3px;padding:6px 12px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text2);width:100%;text-align:left;transition:all 0.2s;}
+#infra-toggle:hover{color:var(--text);border-color:var(--border2);}
+#infra-body{display:none;background:rgba(14,18,12,0.97);border:1px solid var(--border);border-top:none;border-radius:0 0 3px 3px;padding:10px;}
+#infra-body.open{display:block;}
+.infra-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid rgba(140,170,120,0.08);}
+.infra-item:last-child{border-bottom:none;}
+.infra-left{display:flex;flex-direction:column;gap:1px;}
+.infra-name{font-size:10px;color:var(--text);font-family:'JetBrains Mono',monospace;}
+.infra-desc{font-size:8px;color:var(--text3);}
+.infra-buy{background:rgba(74,154,138,0.12);border:1px solid rgba(74,154,138,0.3);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:all 0.2s;border-radius:2px;}
+.infra-buy:hover{background:rgba(74,154,138,0.25);color:#fff;}
+.infra-buy:disabled{opacity:0.3;cursor:not-allowed;}
+.infra-built{font-size:9px;color:var(--green);letter-spacing:1px;}
+
+/* ── DEBUG / TELEMETRY PANEL ── */
+#debug-panel{position:absolute;left:14px;bottom:80px;z-index:30;width:220px;pointer-events:auto;display:none;}
+#debug-panel.open{display:block;}
+#debug-inner{background:rgba(10,14,10,0.97);border:1px solid rgba(140,170,120,0.2);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:9px;line-height:1.9;color:var(--text3);}
+#debug-inner span{color:var(--teal);}
+#debug-toggle{background:rgba(14,18,12,0.85);border:none;border-top:1px solid rgba(140,170,120,0.15);color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;padding:3px 8px;cursor:pointer;position:fixed;left:14px;bottom:60px;z-index:31;}
+
+/* ── SAVE/LOAD BAR ── */
+#saveload-bar{position:absolute;left:14px;top:68px;z-index:30;display:flex;gap:4px;}
+.sl-btn{background:rgba(14,18,12,0.88);border:1px solid var(--border);color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;padding:4px 9px;cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.sl-btn:hover{color:var(--text);border-color:var(--border2);}
+.sl-btn.save-pulse{animation:save-flash 0.6s ease;}
+@keyframes save-flash{0%,100%{border-color:var(--border)}50%{border-color:var(--green);color:var(--green);}}
+
+/* ── ENDGAME BOSS WAVE ── */
+#boss-overlay{position:absolute;inset:0;z-index:75;pointer-events:none;display:flex;align-items:center;justify-content:center;}
+#boss-warning{font-family:'Cinzel',serif;font-size:clamp(18px,3vw,32px);font-weight:900;color:var(--red);text-shadow:0 0 30px var(--glow-r),0 0 60px rgba(196,74,58,0.2);letter-spacing:6px;text-align:center;opacity:0;pointer-events:none;}
+#boss-warning.show{animation:boss-in 4s ease forwards;}
+@keyframes boss-in{0%{opacity:0;transform:scale(1.3);}20%{opacity:1;transform:scale(1);}75%{opacity:1;}100%{opacity:0;}}
+
+/* ── ENDLESS MODE BADGE ── */
+#endless-badge{position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:25;pointer-events:none;display:none;}
+#endless-badge.show{display:block;animation:badge-pulse 2s ease-in-out infinite;}
+@keyframes badge-pulse{0%,100%{opacity:0.7}50%{opacity:1}}
+.eb-inner{background:rgba(212,151,58,0.12);border:1px solid var(--amber);padding:3px 14px;font-family:'Cinzel',serif;font-size:10px;color:var(--amber);letter-spacing:3px;}
+
+/* ── STRIKE EVENT VISUAL ── */
+.strike-dim{filter:brightness(0.7);transition:filter 0.8s;}
 </style>
 </head>
 <body>
@@ -407,7 +461,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
     <div id="bottom-bar">
       <button class="act-btn" onclick="doAction('farm')"><span class="ab-icon">🌱</span><span>FARM</span><span class="ab-cost">+food</span></button>
       <button class="act-btn" onclick="doAction('power')"><span class="ab-icon">🔋</span><span>RECHARGE</span><span class="ab-cost">+energy</span></button>
-      <button class="act-btn" onclick="doAction('heal')"><span class="ab-icon">💉</span><span>MEDIC</span><span class="ab-cost">-10 med</span></button>
+      <button class="act-btn" onclick="doAction('heal')"><span class="ab-icon">💉</span><span>MEDIC</span><span class="ab-cost">−10 med</span></button>
       <button class="act-btn" onclick="doAction('scout')"><span class="ab-icon">🔭</span><span>SCOUT</span><span class="ab-cost">loot chance</span></button>
       <button class="act-btn" onclick="doAction('trade')"><span class="ab-icon">🤝</span><span>TRADE</span><span class="ab-cost">50⚙→food</span></button>
       <button class="act-btn red-btn" onclick="doAction('conscript')"><span class="ab-icon">⚠</span><span>CONSCRIPT</span><span class="ab-cost">morale cost</span></button>
@@ -415,7 +469,10 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
       <div id="morale-panel">
         <div class="mp-label">COLONY MORALE</div>
         <div class="mp-track"><div class="mp-fill" id="mp-fill" style="width:65%"></div></div>
-        <div class="mp-val" id="mp-val">65 - Resilient</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:2px;">
+          <div class="mp-val" id="mp-val">65 - Resilient</div>
+          <div id="morale-tier" class="tier-stable">STABLE</div>
+        </div>
       </div>
     </div>
   </div>
@@ -440,6 +497,29 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   <div id="tutorial"></div>
   <div id="notif-zone"></div>
   <div id="ach-layer" style="position:absolute;right:14px;top:68px;z-index:35;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
+
+  <!-- Infrastructure / Build panel -->
+  <div id="infra-panel">
+    <button id="infra-toggle" onclick="toggleInfra()">🏗 BUILD &amp; INVEST ▾</button>
+    <div id="infra-body" id="infra-body"></div>
+  </div>
+
+  <!-- Save / Load -->
+  <div id="saveload-bar">
+    <button class="sl-btn" onclick="saveGame()" title="Save colony state">💾 SAVE</button>
+    <button class="sl-btn" onclick="loadGame()" title="Load last save">📂 LOAD</button>
+  </div>
+
+  <!-- Debug / Telemetry -->
+  <button id="debug-toggle" onclick="toggleDebug()">⚙ TELEMETRY</button>
+  <div id="debug-panel"><div id="debug-inner">loading…</div></div>
+
+  <!-- Endgame boss wave warning -->
+  <div id="boss-overlay"><div id="boss-warning">THE FINAL TRIAL BEGINS</div></div>
+
+  <!-- Endless mode badge -->
+  <div id="endless-badge"><div class="eb-inner">✦ ENDLESS MODE</div></div>
+
   <div id="end-screen">
     <div class="end-h" id="end-h">COLONY EXTINCT</div>
     <div class="end-quote" id="end-q">–</div>
@@ -724,71 +804,273 @@ window.addEventListener('wheel',e=>{camDist=Math.max(20,Math.min(80,camDist+e.de
 /* ═══════════════════════ GAME STATE ═══════════════════════ */
 class Citizen{
   constructor(){this.health=70+Math.floor(Math.random()*31);this.morale=50+Math.floor(Math.random()*31);}
-  update(food){
+  update(food,moraleBonus=0){
     if(food<1){this.health-=5+Math.floor(Math.random()*11);this.morale-=5+Math.floor(Math.random()*6);}
-    else{this.health-=1+Math.floor(Math.random()*3);}
+    else{this.health-=Math.max(0,1+Math.floor(Math.random()*3)-moraleBonus);}
     this.health=Math.max(0,Math.min(100,this.health));this.morale=Math.max(0,Math.min(100,this.morale));
     return this.health>0;
   }
 }
 
-const G={day:1,food:200,energy:150,medicine:30,credits:0,citizens:[],diffScale:1.0,alive:true,paused:true,speed:1,dayTimer:0,dayMs:4200,quarantine:0,rationMode:false,energyPenalty:1,energyPenaltyDays:0,winterPenalty:0,streak:0,moralGood:0,moralBad:0,pendingEvent:null,achievements:new Set(),eventCooldown:0,actionCooldown:{}};
+const G={
+  // Core
+  day:1,food:200,energy:150,medicine:30,credits:0,
+  citizens:[],diffScale:1.0,alive:true,paused:true,
+  speed:1,dayTimer:0,dayMs:4200,
+  // Status flags
+  quarantine:0,rationMode:false,energyPenalty:1,energyPenaltyDays:0,winterPenalty:0,
+  strikeActive:0,          // days remaining on worker strike
+  desertionImmune:0,       // heroic buff days
+  // Moral memory
+  moralGood:0,moralBad:0,
+  // Streak / achievements
+  streak:0,achievements:new Set(),
+  // Event state
+  pendingEvent:null,eventCooldown:0,
+  actionCooldown:{},
+  // ── NEW: Infrastructure ──
+  infra:{
+    workshop:false,      // +12% production permanently
+    walls:false,         // raid damage −50%, energy drain +3/day
+    school:false,        // health decay −1/day, food drain +0.5/citizen/day
+    granary:false,       // spoilage cap reduced, surplus cap +200
+    hospital:false,      // medicine regenerates +0.15/citizen/day
+  },
+  // ── NEW: Conditional difficulty multipliers ──
+  raidPressure:0,        // 0-1, scales with wealth
+  spoilageRate:1.0,      // scales with food surplus
+  // ── NEW: Endgame state ──
+  endgameTriggered:false,
+  bossWaveDay:55,
+  endlessMode:false,
+  endlessDayBonus:0,
+  // ── NEW: World memory (affects probabilities) ──
+  refugeesRejected:0,
+  totalDeaths:0,
+};
 for(let i=0;i<20;i++) G.citizens.push(new Citizen());
+
+/* ── MORALE TIER SYSTEM ─── */
+// Returns { tier, label, prodMult, eventFreqMult, healthBonus }
+function getMoraleTier(avg){
+  if(avg>=85) return {tier:'heroic', label:'HEROIC',   prodMult:1.20, eventFreqMult:0.5,  healthBonus:2, desertRisk:0};
+  if(avg>=65) return {tier:'strong', label:'RESILIENT',prodMult:1.08, eventFreqMult:0.8,  healthBonus:1, desertRisk:0};
+  if(avg>=45) return {tier:'stable', label:'STABLE',   prodMult:1.00, eventFreqMult:1.0,  healthBonus:0, desertRisk:0};
+  if(avg>=25) return {tier:'low',    label:'WEARY',    prodMult:0.85, eventFreqMult:1.4,  healthBonus:0, desertRisk:0.02};
+  return              {tier:'strike', label:'BREAKING', prodMult:0.60, eventFreqMult:2.0,  healthBonus:0, desertRisk:0.08};
+}
+
+/* ── INFRASTRUCTURE CATALOGUE ── */
+const INFRA=[
+  {id:'workshop',icon:'🔧',name:'Workshop',desc:'+12% production forever',longDesc:'Upgrades all farming and energy work. Permanent.',cost:200,drain:null,
+   effect:'prod+12%',built:g=>g.infra.workshop,fn:g=>{g.infra.workshop=true;}},
+  {id:'walls',   icon:'🏰',name:'Reinforced Walls',desc:'−50% raid dmg, +3 energy/day',longDesc:'Better defenses but higher maintenance.',cost:180,drain:'+3 energy/day',
+   effect:'armor+50%',built:g=>g.infra.walls,fn:g=>{g.infra.walls=true;}},
+  {id:'school',  icon:'📚',name:'Colony School',desc:'−1 health decay, +0.5 food/person',longDesc:'Educated citizens last longer. Costs daily feeding.',cost:150,drain:'+0.5 food/citizen',
+   effect:'health−decay',built:g=>g.infra.school,fn:g=>{g.infra.school=true;}},
+  {id:'granary', icon:'🌾',name:'Granary',desc:'−40% spoilage, +200 food cap',longDesc:'Proper storage. Surpluses actually hold.',cost:120,drain:null,
+   effect:'spoilage−40%',built:g=>g.infra.granary,fn:g=>{g.infra.granary=true;}},
+  {id:'hospital',icon:'🏥',name:'Field Hospital',desc:'+0.15 medicine/citizen/day',longDesc:'Passive medicine generation. The colony heals itself.',cost:160,drain:null,
+   effect:'med+passive',built:g=>g.infra.hospital,fn:g=>{g.infra.hospital=true;}},
+];
 
 const EVENTS=[
   {id:'meteor',cat:'CRITICAL ALERT',cls:'crit',title:'Debris Field Incoming',
    body:'Scout drones detected a dense debris cloud on approach. Your people look to the sky with hollow eyes. The colony walls may not hold.',
    choices:[
-    {t:'Activate emergency barriers',cost:'ENERGY -40',moral:'n',cls:'',fn:g=>{g.energy-=40;spawnGain(0,0,0x4080ff);addLog('Barriers held. Colony intact.',0x5a8ab0);floatPop('⚡ BARRIERS ACTIVE',0x5a8ab0);g.credits+=30;}},
+    {t:'Activate emergency barriers',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;spawnGain(0,0,0x4080ff);addLog('Barriers held. Colony intact.',0x5a8ab0);floatPop('⚡ BARRIERS ACTIVE',0x5a8ab0);g.credits+=30;}},
     {t:'Rally citizens to brace together',cost:'MORALE +10',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));spawnGain(0,0,0x60c070);addLog('Community rallied.',0x6abf7a);g.credits+=20;}},
-    {t:'Do nothing and endure it',cost:'FOOD -60, ENERGY -30',moral:'b',cls:'evil',fn:g=>{g.food-=60;g.energy-=30;spawnExplosion(0,0);addLog('Debris strikes. Heavy damage.',0xc44a3a);}},
+    {t:'Do nothing - endure it',cost:'FOOD −60, ENERGY −30',moral:'b',cls:'evil',fn:g=>{g.food-=60;g.energy-=30;spawnExplosion(0,0);addLog('Debris strikes. Heavy damage.',0xc44a3a);}},
    ]},
   {id:'plague',cat:'MEDICAL ALERT',cls:'warn',title:'The Coughing Sickness',
    body:'It started in the east quarter. Fever, fatigue, hollow eyes. The healer\'s hut is overwhelmed. Children are among the first to fall ill.',
    choices:[
-    {t:'Full quarantine',cost:'PROD -30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;addLog('Quarantine in place.',0x4a9a8a);g.credits+=25;}},
-    {t:'Burn medicine to treat everyone',cost:'MEDICINE -20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=35;}},
-    {t:'Let it thin the herd',cost:'POP -2 to 5',moral:'b',cls:'evil',fn:g=>{const n=2+Math.floor(Math.random()*4);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} perished. Colony grieves.`,0xc44a3a);g.moralBad++;}},
+    {t:'Full quarantine',cost:'PROD −30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;addLog('Quarantine in place.',0x4a9a8a);g.credits+=25;}},
+    {t:'Burn medicine to treat everyone',cost:'MEDICINE −20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=35;}},
+    {t:'Let it thin the herd',cost:'POP −2 to 5',moral:'b',cls:'evil',fn:g=>{const n=2+Math.floor(Math.random()*4);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} perished. Colony grieves.`,0xc44a3a);g.moralBad++;}},
    ]},
   {id:'strangers',cat:'INCOMING SIGNAL',cls:'',title:'Strangers at the Gate',
    body:'Eight survivors, half-starved, carrying only what they could when their village burned. They beg for shelter. Your council is divided.',
    choices:[
-    {t:'Open the gates - welcome them',cost:'FOOD -40, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls found refuge.',0x6abf7a);g.credits+=40;}},
-    {t:'Let in only those who can work',cost:'FOOD -15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},
-    {t:'Close the gates',cost:'MORALE -20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);addLog('Gates shut. Guilt spreads.',0xc44a3a);g.moralBad++;}},
+    {t:'Open the gates - welcome them',cost:'FOOD −40, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls found refuge.',0x6abf7a);g.credits+=40;}},
+    {t:'Let in only those who can work',cost:'FOOD −15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},
+    {t:'Close the gates',cost:'MORALE −20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);addLog('Gates shut. Guilt spreads.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'fire',cat:'FIRE EMERGENCY',cls:'crit',title:'Grain Store is Burning',
    body:'Flames light up the night sky. The main grain store is ablaze. Thick smoke rolls through the streets. Your people are terrified.',
    choices:[
-    {t:'All hands - water chain',cost:'ENERGY -50, FOOD -30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food-=30;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most food saved.',0x5a8ab0);g.credits+=20;}},
-    {t:'Create a firebreak',cost:'FOOD -60',moral:'n',cls:'',fn:g=>{g.food-=60;spawnExplosion(0,-8,0xff6020);addLog('Firebreak held the line.',0xd4973a);}},
-    {t:'Run. Save yourselves.',cost:'FOOD -100',moral:'b',cls:'evil',fn:g=>{g.food-=100;spawnExplosion(0,-8,0xff2000,30);addLog('Fire raged. Devastating loss.',0xc44a3a);g.moralBad++;}},
+    {t:'All hands - water chain',cost:'ENERGY −50, FOOD −30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food-=30;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most food saved.',0x5a8ab0);g.credits+=20;}},
+    {t:'Create a firebreak',cost:'FOOD −60',moral:'n',cls:'',fn:g=>{g.food-=60;spawnExplosion(0,-8,0xff6020);addLog('Firebreak held the line.',0xd4973a);}},
+    {t:'Run. Save yourselves.',cost:'FOOD −100',moral:'b',cls:'evil',fn:g=>{g.food-=100;spawnExplosion(0,-8,0xff2000,30);addLog('Fire raged. Devastating loss.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'trader',cat:'OPPORTUNITY',cls:'',title:'The Wandering Merchant',
    body:'A cloaked figure arrives before dawn with a loaded cart. She offers supplies in exchange for intelligence about safe routes south.',
    choices:[
-    {t:'Trade energy for food and medicine',cost:'ENERGY -60, FOOD +80, MED +20',moral:'n',cls:'good',fn:g=>{g.energy-=60;g.food+=80;g.medicine+=20;spawnGain(0,0,0x80c050,20);addLog('Fair trade. Shelves stocked.',0x6abf7a);g.credits+=30;}},
+    {t:'Trade energy for food and medicine',cost:'ENERGY −60, FOOD +80, MED +20',moral:'n',cls:'good',fn:g=>{g.energy-=60;g.food+=80;g.medicine+=20;spawnGain(0,0,0x80c050,20);addLog('Fair trade. Shelves stocked.',0x6abf7a);g.credits+=30;}},
     {t:'Give routes freely - build goodwill',cost:'MORALE +15',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+15));addLog('Goodwill built. Morale lifted.',0x6abf7a);g.credits+=15;}},
-    {t:'Rob the merchant',cost:'FOOD +120, MORALE -30',moral:'b',cls:'evil',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xff2233,10);addLog('Merchant robbed. Shame spreads.',0xc44a3a);g.moralBad++;}},
+    {t:'Rob the merchant',cost:'FOOD +120, MORALE −30',moral:'b',cls:'evil',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xff2233,10);addLog('Merchant robbed. Shame spreads.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'uprising',cat:'SOCIAL CRISIS',cls:'crit',title:'Uprising in the East Quarter',
    body:'The rationing has broken something. They\'ve barricaded the workshops. Chanting fills the cold air. Your enforcers look to you.',
    choices:[
-    {t:'Negotiate - grant rest and rations',cost:'FOOD -50, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food-=50;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));spawnGain(0,0,0x60c050,12);addLog('Compromise reached.',0x6abf7a);g.credits+=35;}},
+    {t:'Negotiate - grant rest and rations',cost:'FOOD −50, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food-=50;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));spawnGain(0,0,0x60c050,12);addLog('Compromise reached.',0x6abf7a);g.credits+=35;}},
     {t:'Speak to the crowd - promise reforms',cost:'MORALE +8',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Crowd calmed by words.',0xd4973a);}},
-    {t:'Crush the uprising by force',cost:'POP -2, MORALE -35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,15);addLog('Dissent silenced with blood.',0xc44a3a);g.moralBad++;}},
+    {t:'Crush the uprising by force',cost:'POP −2, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,15);addLog('Dissent silenced with blood.',0xc44a3a);g.moralBad++;}},
    ]},
   {id:'winter',cat:'SEASONAL SHIFT',cls:'warn',title:'The Long Cold Approaches',
    body:'Frost killed the outer fields early. If you don\'t prepare now, the cold months will be catastrophic. Your breath fogs in the morning air.',
    choices:[
-    {t:'Emergency harvest - work through night',cost:'MORALE -10, FOOD +60',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g.food+=60;spawnGain(0,0,0x80a040,15);addLog('Night harvest done. Reserves up.',0x6abf7a);g.credits+=25;}},
-    {t:'Trade energy for insulation',cost:'ENERGY -40',moral:'n',cls:'',fn:g=>{g.energy-=40;g.diffScale-=0.05;addLog('Colony insulated. Cold blunted.',0x5a8ab0);g.credits+=20;}},
+    {t:'Emergency harvest - work through night',cost:'MORALE −10, FOOD +60',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g.food+=60;spawnGain(0,0,0x80a040,15);addLog('Night harvest done. Reserves up.',0x6abf7a);g.credits+=25;}},
+    {t:'Trade energy for insulation',cost:'ENERGY −40',moral:'n',cls:'',fn:g=>{g.energy-=40;g.diffScale-=0.05;addLog('Colony insulated. Cold blunted.',0x5a8ab0);g.credits+=20;}},
     {t:'Nothing. You\'ve survived worse.',cost:'FOOD DRAIN +30% for 10 days',moral:'b',cls:'evil',fn:g=>{g.winterPenalty=10;addLog('Winter bites. Rationing brutal.',0xc44a3a);}},
+   ]},
+  // ── RAIDER event (triggers at high credits) ──
+  {id:'raiders',cat:'RAID WARNING',cls:'crit',title:'Raiders at the Wall',
+   body:'Your colony\'s wealth has drawn unwanted attention. Dozens of armed scavengers camp outside your walls. They want everything.',
+   choices:[
+    {t:'Buy them off',cost:'CREDITS −150',moral:'n',cls:'',fn:g=>{if(g.credits>=150){g.credits-=150;addLog('Raiders paid off. Threat gone.',0xd4973a);}else{g.food-=80;spawnExplosion(0,0,0xff2000,20);addLog('Couldn\'t pay. They took food.',0xc44a3a);}},},
+    {t:'Defend with all hands',cost:'POP −1~2, MORALE +8 (victory)',moral:'n',cls:'good',fn:g=>{const n=1+Math.floor(Math.random()*2);g.citizens.splice(0,Math.min(n,g.citizens.length-1));g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));spawnExplosion(0,0,0xff6020,15);spawnGain(0,0,0x60c050,10);addLog(`${n} lost defending. Colony holds.`,0x6abf7a);g.credits+=40;}},
+    {t:'Open a hidden gate - let some in to settle',cost:'FOOD −40, POP +4',moral:'g',cls:'good',fn:g=>{g.food-=40;for(let i=0;i<4;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,12);addLog('Former raiders now colonists.',0x6abf7a);g.moralGood++;}},
+   ]},
+  // ── HEROIC events (only when avg morale ≥ 85) ──
+  {id:'heroic_harvest',cat:'HEROIC MOMENT',cls:'',title:'The Great Harvest',heroicOnly:true,
+   body:'Morale is at a peak. Citizens worked through the night, singing. The fields yielded three times the expected crop. The granaries overflow.',
+   choices:[
+    {t:'Distribute the bounty equally',cost:'FOOD +120, MORALE +5',moral:'g',cls:'good',fn:g=>{g.food+=120;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+5));spawnGain(0,-8,0x80c040,25);addLog('Bounty shared. Colony feasts.',0x6abf7a);g.credits+=60;}},
+    {t:'Store half, sell half for credits',cost:'FOOD +60, CREDITS +100',moral:'n',cls:'',fn:g=>{g.food+=60;g.credits+=100;spawnGain(0,0,0xe8c060,18);addLog('Harvest stored and traded.',0xd4973a);g.credits+=20;}},
+    {t:'Invest it all in growth',cost:'FOOD +40, DIFFSCALE −0.08',moral:'g',cls:'good',fn:g=>{g.food+=40;g.diffScale=Math.max(1,g.diffScale-0.08);spawnGain(0,0,0x80c050,20);addLog('Resources invested. Colony strengthened.',0x6abf7a);g.moralGood++;}},
+   ]},
+  {id:'heroic_envoy',cat:'HEROIC MOMENT',cls:'',title:'The Wandering Envoy',heroicOnly:true,
+   body:'Word of your colony\'s humanity has spread. An envoy arrives - offering knowledge, medicine, and alliance. Your reputation precedes you.',
+   choices:[
+    {t:'Accept all aid',cost:'MED +40, CREDITS +80, FOOD +60',moral:'g',cls:'good',fn:g=>{g.medicine+=40;g.credits+=80;g.food+=60;spawnGain(0,0,0x80c0a0,22);addLog('Alliance forged. Aid received.',0x6abf7a);g.moralGood++;}},
+    {t:'Accept medicine and knowledge only',cost:'MED +30, DIFFSCALE −0.05',moral:'g',cls:'good',fn:g=>{g.medicine+=30;g.diffScale=Math.max(1,g.diffScale-0.05);addLog('Knowledge trade complete.',0x4a9a8a);g.credits+=30;}},
+    {t:'Politely decline - stay independent',cost:'MORALE +15',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+15));addLog('Colony stands proud. Morale surges.',0x6abf7a);g.credits+=15;}},
+   ]},
+  // ── BOSS WAVE (day 55 forced) ──
+  {id:'boss_wave',cat:'⚠ FINAL TRIAL',cls:'crit',title:'The Collapse Front',forced:true,
+   body:'Every failing colony in the sector has collapsed toward yours. A wave of the desperate, the dying, and the dangerous. This is the test everything was building to.',
+   choices:[
+    {t:'Fortify - deny entry, weather the storm',cost:'ENERGY −80, FOOD −60',moral:'n',cls:'',fn:g=>{g.energy-=80;g.food-=60;if(g.infra.walls){g.energy+=30;addLog('Walls held. Damage reduced.',0x5a8ab0);}spawnExplosion(0,0,0xff4020,25);addLog('Colony endures. The wave breaks.',0x6abf7a);g.credits+=80;}},
+    {t:'Open gates - absorb the wave (+15 pop, massive drain)',cost:'FOOD −120, POP +15',moral:'g',cls:'good',fn:g=>{g.food-=120;for(let i=0;i<15;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,30);addLog('Fifteen souls absorbed. Colony swells.',0x6abf7a);g.moralGood+=2;g.credits+=60;}},
+    {t:'Scatter - split the colony, survive in pieces',cost:'POP −8 (split), MORALE −30',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(8,g.citizens.length-3));g.citizens.forEach(c=>c.morale-=30);spawnExplosion(0,0,0xc44030,20);addLog('Colony fractured. Some fled.',0xc44a3a);g.moralBad+=2;}},
    ]},
 ];
 let usedEvtIds=new Set();
 
-/* ─── ACTIONS ─── */
+/* ── INFRASTRUCTURE UI ── */
+function toggleInfra(){
+  const body=document.getElementById('infra-body');
+  body.classList.toggle('open');
+  if(body.classList.contains('open')) renderInfra();
+}
+function renderInfra(){
+  const body=document.getElementById('infra-body');
+  body.innerHTML=INFRA.map(item=>{
+    const built=item.built(G);
+    const canAfford=G.credits>=item.cost;
+    return `<div class="infra-item">
+      <div class="infra-left">
+        <div class="infra-name">${item.icon} ${item.name}</div>
+        <div class="infra-desc">${built?item.effect:item.desc}</div>
+        ${item.drain?`<div class="infra-desc" style="color:#c44a3a">▼ ${item.drain}</div>`:''}
+      </div>
+      ${built
+        ? `<span class="infra-built">✓ BUILT</span>`
+        : `<button class="infra-buy" ${canAfford?'':'disabled'} onclick="buyInfra('${item.id}')">${item.cost}⚙</button>`
+      }
+    </div>`;
+  }).join('');
+}
+function buyInfra(id){
+  const item=INFRA.find(i=>i.id===id);
+  if(!item||item.built(G)||G.credits<item.cost)return;
+  G.credits-=item.cost;
+  item.fn(G);
+  addLog(`${item.icon} ${item.name} constructed.`,0xe8c060);
+  floatPop(`🏗 ${item.name.toUpperCase()} BUILT`,0xe8c060,50,45);
+  spawnGain(0,0,0xe8c060,14);
+  checkAchievements();updateHUD();renderInfra();
+}
+
+/* ── SAVE / LOAD ── */
+function saveGame(){
+  const state={
+    day:G.day,food:G.food,energy:G.energy,medicine:G.medicine,credits:G.credits,
+    citizens:G.citizens.map(c=>({health:c.health,morale:c.morale})),
+    diffScale:G.diffScale,infra:{...G.infra},
+    moralGood:G.moralGood,moralBad:G.moralBad,
+    streak:G.streak,totalDeaths:G.totalDeaths,
+    achievements:[...G.achievements],
+    endlessMode:G.endlessMode,endlessDayBonus:G.endlessDayBonus,
+  };
+  localStorage.setItem('colonyzero_save',JSON.stringify(state));
+  const btn=document.querySelector('.sl-btn');
+  btn.classList.add('save-pulse');
+  setTimeout(()=>btn.classList.remove('save-pulse'),700);
+  notify('COLONY SAVED',0x6abf7a);
+}
+function loadGame(){
+  try{
+    const raw=localStorage.getItem('colonyzero_save');
+    if(!raw){notify('NO SAVE FOUND',0xc44a3a);return;}
+    const s=JSON.parse(raw);
+    G.day=s.day;G.food=s.food;G.energy=s.energy;G.medicine=s.medicine;G.credits=s.credits;
+    G.citizens=s.citizens.map(c=>{const n=new Citizen();n.health=c.health;n.morale=c.morale;return n;});
+    G.diffScale=s.diffScale;Object.assign(G.infra,s.infra);
+    G.moralGood=s.moralGood;G.moralBad=s.moralBad;
+    G.streak=s.streak;G.totalDeaths=s.totalDeaths||0;
+    G.achievements=new Set(s.achievements||[]);
+    G.endlessMode=s.endlessMode||false;G.endlessDayBonus=s.endlessDayBonus||0;
+    // Sync 3D citizens
+    while(citizenObjs.length>G.citizens.length){const m=citizenObjs.pop();citizenGroup.remove(m);}
+    while(citizenObjs.length<G.citizens.length&&citizenObjs.length<50)makeCitizen(citizenObjs.length);
+    notify('SAVE LOADED - DAY '+G.day,0x6abf7a);
+    updateHUD();
+  }catch(e){notify('LOAD FAILED',0xc44a3a);}
+}
+
+/* ── DEBUG / TELEMETRY ── */
+function toggleDebug(){document.getElementById('debug-panel').classList.toggle('open');updateDebug();}
+function updateDebug(){
+  const d=document.getElementById('debug-inner');
+  if(!d||!document.getElementById('debug-panel').classList.contains('open'))return;
+  const pop=G.citizens.length;
+  const avg=pop>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
+  const mt=getMoraleTier(avg);
+  const prod=Math.floor(pop*3*G.diffScale*(G.infra.workshop?1.12:1));
+  const infraBuilt=Object.values(G.infra).filter(Boolean).length;
+  d.innerHTML=[
+    `<span>diffScale</span>    ${G.diffScale.toFixed(3)}`,
+    `<span>eventCD</span>      ${G.eventCooldown}d`,
+    `<span>prod/day</span>     ${prod}`,
+    `<span>moraleTier</span>   ${mt.tier} (×${mt.prodMult})`,
+    `<span>evtFreqMult</span>  ×${mt.eventFreqMult}`,
+    `<span>raidPressure</span> ${(G.raidPressure*100).toFixed(0)}%`,
+    `<span>spoilageRate</span> ×${G.spoilageRate.toFixed(2)}`,
+    `<span>strikeActive</span> ${G.strikeActive}d`,
+    `<span>infra</span>        ${infraBuilt}/5 built`,
+    `<span>moralG/B</span>     ${G.moralGood}/${G.moralBad}`,
+    `<span>totalDeaths</span>  ${G.totalDeaths}`,
+    `<span>endless</span>      ${G.endlessMode}`,
+  ].join('<br>');
+}
+
+/* ── BOSS WAVE ── */
+function triggerBossWave(){
+  G.endgameTriggered=true;
+  const warn=document.getElementById('boss-warning');
+  warn.classList.add('show');
+  hazardLight.intensity=8;
+  setTimeout(()=>{hazardLight.intensity=0;warn.classList.remove('show');},4200);
+  setTimeout(()=>{
+    const boss=EVENTS.find(e=>e.id==='boss_wave');
+    G.pendingEvent=boss;G.paused=true;showEvent(boss);
+    hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);
+  },4500);
+}
+
+
 function doAction(type){
   if(!G.alive||G.pendingEvent) return;
   const now=Date.now(),cd=G.actionCooldown[type]||0;
@@ -816,7 +1098,7 @@ function doAction(type){
           {icon:'⚡',name:'ENERGY CACHE',val:'+45 ENERGY',fn:g=>{g.energy+=45;}},
           {icon:'💊',name:'MEDICINE STASH',val:'+28 MEDICINE',fn:g=>{g.medicine+=28;}},
           {icon:'⚙',name:'CREDIT CHEST',val:'+90 CREDITS',fn:g=>{g.credits+=90;}},
-          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY -0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
+          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY −0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
           {icon:'🗡',name:'WEAPONS CACHE',val:'CONSCRIPT REMOVED',fn:g=>{g.moralBad=Math.max(0,g.moralBad-1);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));}},
         ];
         showLoot(lootTable[Math.floor(Math.random()*lootTable.length)]);
@@ -870,45 +1152,181 @@ function showStreakBanner(n){
 function tickDay(){
   if(!G.alive)return;
   G.day++;
+
+  // Decrement counters
   if(G.quarantine>0)G.quarantine--;
   if(G.energyPenaltyDays>0){G.energyPenaltyDays--;if(G.energyPenaltyDays<=0)G.energyPenalty=1;}
   if(G.winterPenalty>0)G.winterPenalty--;
-  const qF=G.quarantine>0?0.7:1,wF=G.winterPenalty>0?0.7:1;
-  const prod=Math.floor(G.citizens.length*3*G.diffScale*qF*wF);
-  G.food+=prod;G.energy+=Math.floor(prod*0.5*G.energyPenalty);
-  G.medicine+=Math.floor(G.citizens.length*0.08);
-  G.food-=G.citizens.length*(G.rationMode?1:2);
-  G.rationMode=false;G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
-  G.credits+=G.citizens.length;
-  const r=Math.random();
-  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: -${l} energy`,0xc44a3a);}
-  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: -${l} food`,0xd4973a);}
-  else if(r<0.48){G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-(2+Math.floor(Math.random()*7))));}
+  if(G.strikeActive>0)G.strikeActive--;
+  if(G.desertionImmune>0)G.desertionImmune--;
+
   const pop=G.citizens.length;
-  G.citizens=G.citizens.filter(c=>c.update(G.food));
-  const died=pop-G.citizens.length;
+  const avg=pop>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
+  const mt=getMoraleTier(avg);
+
+  // ── CONDITIONAL DIFFICULTY (nonlinear) ──
+  // Linear base
+  G.diffScale+=0.015;
+  // Pop pressure - large colonies eat more
+  if(pop>25) G.diffScale+=0.005;
+  // Wealth pressure - raiders take interest
+  G.raidPressure=Math.min(1,G.credits/1500);
+  // Surplus spoilage - abundance rots
+  G.spoilageRate=G.infra.granary ? 1+(Math.max(0,G.food-300)/600)*0.3 : 1+(Math.max(0,G.food-200)/400)*0.6;
+  // Endless mode acceleration
+  if(G.endlessMode) G.diffScale+=0.008;
+
+  // ── PRODUCTION (morale multiplier applied) ──
+  const qF=G.quarantine>0?0.7:1;
+  const wF=G.winterPenalty>0?0.7:1;
+  const strikeF=G.strikeActive>0?0.4:1;
+  const workshopF=G.infra.workshop?1.12:1;
+  const prod=Math.floor(pop*3*G.diffScale*qF*wF*strikeF*workshopF*mt.prodMult);
+  G.food+=prod;
+  G.energy+=Math.floor(prod*0.5*G.energyPenalty);
+  // Hospital passive medicine
+  G.medicine+=Math.floor(pop*(G.infra.hospital?0.22:0.08));
+  // School food drain
+  if(G.infra.school) G.food-=Math.floor(pop*0.5);
+  // Walls energy drain
+  if(G.infra.walls) G.energy-=3;
+
+  // ── CONSUMPTION ──
+  G.food-=G.citizens.length*(G.rationMode?1:2);
+  G.rationMode=false;
+  // Spoilage on surplus
+  if(G.food>200){const spoil=Math.floor((G.food-200)*0.05*G.spoilageRate);if(spoil>5){G.food-=spoil;if(spoil>20)addLog(`Spoilage: −${spoil} food wasted.`,0xd4973a);}}
+  G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
+
+  // ── CREDITS ──
+  G.credits+=pop;
+  if(G.endlessMode)G.endlessDayBonus++;
+
+  // ── BACKGROUND HAZARDS ──
+  const r=Math.random();
+  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: −${l} energy`,0xc44a3a);}
+  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: −${l} food`,0xd4973a);}
+  else if(r<0.48){G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-(2+Math.floor(Math.random()*7))));}
+
+  // ── MORALE CONSEQUENCES ──
+  // Compassionate colony: faster morale recovery
+  if(G.moralGood>5){G.citizens.forEach(c=>c.morale=Math.min(100,c.morale+1));}
+  // Strike event trigger (very low morale, not immune)
+  if(avg<20&&G.strikeActive<=0&&G.desertionImmune<=0&&Math.random()<0.35){
+    G.strikeActive=4;
+    addLog('⚠ WORKER STRIKE - production at 40% for 4 days.',0xc44a3a);
+    floatPop('⚠ WORKERS STRIKE',0xc44a3a,50,45);
+    notify('WORKERS STRIKE - MORALE CRITICAL',0xc44a3a);
+    spawnExplosion(0,0,0xc44030,12);
+  }
+  // Desertion (very low morale, rng)
+  if(avg<15&&G.desertionImmune<=0&&pop>3&&Math.random()<mt.desertRisk){
+    const fled=1+Math.floor(Math.random()*3);
+    G.citizens.splice(0,Math.min(fled,G.citizens.length-2));
+    G.totalDeaths+=fled;
+    addLog(`${fled} citizen${fled>1?'s':''} deserted.`,0xc44a3a);
+    floatPop(`${fled} DESERTED`,0xc44a3a,50,50);
+  }
+  // Heroic desertionImmune: at high morale, citizens become resilient
+  if(avg>=85&&G.desertionImmune<=0){G.desertionImmune=3;}
+
+  // ── POPULATION UPDATE (with morale health bonus) ──
+  const schoolBonus=G.infra.school?1:0;
+  const popBefore=G.citizens.length;
+  G.citizens=G.citizens.filter(c=>c.update(G.food,mt.healthBonus+schoolBonus));
+  const died=popBefore-G.citizens.length;
+  G.totalDeaths+=died;
   if(died>0){spawnExplosion(Math.random()*8-4,Math.random()*8-4,0xc44030,5);addLog(`${died} soul${died>1?'s':''} lost today.`,0xc44a3a);}
   while(citizenObjs.length>G.citizens.length){const m=citizenObjs.pop();citizenGroup.remove(m);}
-  G.diffScale+=0.015;
-  if(G.eventCooldown>0)G.eventCooldown--;
-  else if(Math.random()<0.2&&!G.pendingEvent){
-    const avail=EVENTS.filter(e=>!usedEvtIds.has(e.id));
-    if(avail.length===0)usedEvtIds.clear();
-    else{const evt=avail[Math.floor(Math.random()*avail.length)];usedEvtIds.add(evt.id);G.eventCooldown=6;G.pendingEvent=evt;G.paused=true;showEvent(evt);hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);}
+
+  // ── MORALE AFFECTS WORLD MEMORY ──
+  // Ruthless history worsens trade prices
+  const tradePenalty=Math.min(0.5,G.moralBad*0.05);
+  // Compassionate history increases aid probability
+  const aidBonus=Math.min(0.3,G.moralGood*0.04);
+  // Random aid from good reputation
+  if(G.moralGood>5&&Math.random()<(0.03+aidBonus)){
+    const aid=20+Math.floor(Math.random()*30);
+    G.food+=aid;addLog(`Aid arrived from allied colony. +${aid} food.`,0x6abf7a);
+    floatPop(`✦ AID +${aid} FOOD`,0x6abf7a,50,45);
   }
-  checkAchievements();checkEnd();updateHUD();
+
+  // ── BOSS WAVE (day 55, once) ──
+  if(G.day===55&&!G.endgameTriggered){
+    triggerBossWave();
+    return; // let the wave event handle the pause
+  }
+
+  // ── ENDLESS MODE (day 60+) ──
+  if(G.day>=60&&!G.endlessMode&&G.citizens.length>0){
+    G.endlessMode=true;
+    document.getElementById('endless-badge').classList.add('show');
+    notify('✦ ENDLESS MODE - SURVIVE FURTHER',0xe8c060);
+    addLog('Colony stabilized. Endless mode begins.',0xe8c060);
+  }
+  // Endless: extra final disaster every 20 days after 60
+  if(G.endlessMode&&(G.day-60)%20===0&&G.day>60){
+    setTimeout(()=>{
+      const boss=EVENTS.find(e=>e.id==='boss_wave');
+      G.pendingEvent=boss;G.paused=true;showEvent(boss);
+      hazardLight.intensity=5;setTimeout(()=>hazardLight.intensity=0,2000);
+    },500);
+  }
+
+  // ── EVENT SELECTION (morale-weighted frequency) ──
+  if(G.eventCooldown>0)G.eventCooldown--;
+  else{
+    const baseChance=0.18*mt.eventFreqMult;
+    // Raid event elevated by wealth
+    if(G.raidPressure>0.5&&Math.random()<G.raidPressure*0.15&&!G.pendingEvent){
+      const raid=EVENTS.find(e=>e.id==='raiders');
+      if(!usedEvtIds.has('raiders')){
+        usedEvtIds.add('raiders');G.eventCooldown=8;G.pendingEvent=raid;G.paused=true;showEvent(raid);
+        hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);
+        return checkAchievements(),checkEnd(),updateHUD();
+      }
+    }
+    if(Math.random()<baseChance&&!G.pendingEvent){
+      // Heroic events only at avg ≥ 85
+      const avail=EVENTS.filter(e=>{
+        if(e.forced||e.id==='raiders')return false;
+        if(e.heroicOnly&&avg<85)return false;
+        if(e.heroicOnly===undefined&&avg>=85)return true; // normal events still happen
+        return !usedEvtIds.has(e.id);
+      });
+      // Weight heroic events higher at high morale
+      const heroic=EVENTS.filter(e=>e.heroicOnly&&avg>=85&&!usedEvtIds.has(e.id));
+      const pool=avg>=85&&heroic.length>0&&Math.random()<0.45?heroic:avail;
+      if(pool.length===0){usedEvtIds.clear();}
+      else{
+        const evt=pool[Math.floor(Math.random()*pool.length)];
+        usedEvtIds.add(evt.id);G.eventCooldown=6;G.pendingEvent=evt;G.paused=true;showEvent(evt);
+        hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);
+      }
+    }
+  }
+
+  checkAchievements();checkEnd();updateHUD();updateDebug();
 }
 
 /* ─── ACHIEVEMENTS ─── */
 const ACHS=[
-  {id:'s10',icon:'🌙',name:'First Dawn',fn:g=>g.day>=10},
-  {id:'s30',icon:'⭐',name:'Month of Shadows',fn:g=>g.day>=30},
-  {id:'p30',icon:'👥',name:'Growing Colony',fn:g=>g.citizens.length>=30},
-  {id:'c100',icon:'⚙',name:'Resourceful',fn:g=>g.credits>=100},
-  {id:'c500',icon:'💎',name:'Credit Baron',fn:g=>g.credits>=500},
-  {id:'mg5',icon:'🕊',name:'Shepherd',fn:g=>g.moralGood>=5},
-  {id:'str10',icon:'🔥',name:'On A Roll',fn:g=>g.streak>=10},
-  {id:'s60',icon:'🏆',name:'Colony Stands',fn:g=>g.day>=60},
+  {id:'s10',  icon:'🌙',name:'First Dawn',       fn:g=>g.day>=10},
+  {id:'s30',  icon:'⭐',name:'Month of Shadows',  fn:g=>g.day>=30},
+  {id:'s60',  icon:'🏆',name:'Colony Stands',     fn:g=>g.day>=60},
+  {id:'s80',  icon:'♾',name:'Beyond the Horizon', fn:g=>g.day>=80},
+  {id:'p30',  icon:'👥',name:'Growing Colony',    fn:g=>g.citizens.length>=30},
+  {id:'c100', icon:'⚙',name:'Resourceful',        fn:g=>g.credits>=100},
+  {id:'c500', icon:'💎',name:'Credit Baron',       fn:g=>g.credits>=500},
+  {id:'c1500',icon:'👑',name:'War Chest',          fn:g=>g.credits>=1500},
+  {id:'mg5',  icon:'🕊',name:'Shepherd',           fn:g=>g.moralGood>=5},
+  {id:'mg10', icon:'🌿',name:'Saint of the Ruins', fn:g=>g.moralGood>=10},
+  {id:'mb5',  icon:'🔪',name:'Iron Fist',          fn:g=>g.moralBad>=5},
+  {id:'str10',icon:'🔥',name:'On A Roll',          fn:g=>g.streak>=10},
+  {id:'inf3', icon:'🏗',name:'Builder',             fn:g=>Object.values(g.infra).filter(Boolean).length>=3},
+  {id:'inf5', icon:'🏰',name:'The Architect',       fn:g=>Object.values(g.infra).filter(Boolean).length>=5},
+  {id:'surv', icon:'💀',name:'From the Ashes',     fn:g=>g.citizens.length<=3&&g.day>=20},
+  {id:'heroic',icon:'✨',name:'Morale of Heroes',  fn:g=>g.citizens.length>0&&Math.floor(g.citizens.reduce((a,c)=>a+c.morale,0)/g.citizens.length)>=85},
 ];
 function checkAchievements(){ACHS.forEach(a=>{if(!G.achievements.has(a.id)&&a.fn(G)){G.achievements.add(a.id);showAch(a);G.credits+=50;}});}
 function showAch(a){
@@ -940,21 +1358,35 @@ function showEvent(evt){
 function updateHUD(){
   const g=G,pop=g.citizens.length;
   const avg=pop>0?Math.floor(g.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
+  const mt=getMoraleTier(avg);
   document.getElementById('day-block').textContent=String(g.day).padStart(2,'0');
   document.getElementById('credits-val').textContent=g.credits;
   document.getElementById('rv-pop').textContent=pop;
   document.getElementById('rv-food').textContent=Math.floor(g.food);
   document.getElementById('rv-nrg').textContent=Math.floor(g.energy);
   document.getElementById('rv-med').textContent=Math.floor(g.medicine);
+
+  // Morale bar and tier badge
+  const tierLabel=g.strikeActive>0?'ON STRIKE':mt.label;
+  const tierCls=g.strikeActive>0?'tier-strike':`tier-${mt.tier}`;
   document.getElementById('mp-val').textContent=`${avg} - ${avg>70?'Resilient':avg>45?'Weary':avg>25?'Desperate':'Breaking'}`;
   document.getElementById('mp-fill').style.width=avg+'%';
-  const pPD=Math.floor(pop*3*g.diffScale);
+  const tierEl=document.getElementById('morale-tier');
+  tierEl.textContent=tierLabel;tierEl.className=tierCls;
+
+  // Strike dims the game root slightly
+  document.getElementById('game-root').classList.toggle('strike-dim',g.strikeActive>0);
+
+  const pPD=Math.floor(pop*3*g.diffScale*(g.infra.workshop?1.12:1)*mt.prodMult);
   setRI('food',g.food/400,g.food<50?'#c44a3a':g.food<100?'#d4973a':'#6abf7a',`${pPD-pop*2>=0?'+':''}${pPD-pop*2}/d`,pPD-pop*2>=0?'pos':'neg');
   setRI('nrg',g.energy/300,g.energy<40?'#c44a3a':g.energy<80?'#d4973a':'#5a8ab0',`+${Math.floor(pPD*0.5)}/d`,'pos');
   setRI('pop',pop/30,pop<5?'#c44a3a':pop<10?'#d4973a':'#d4973a',pop>15?'stable':pop>8?'declining':'critical','');
   setRI('med',g.medicine/80,g.medicine<10?'#c44a3a':g.medicine<20?'#d4973a':'#4a9a8a',g.medicine<15?'scarce':'ok','');
   citizenObjs.forEach((m,i)=>{if(i<g.citizens.length){const h=g.citizens[i].health/100;m.children[0].material.color.setRGB(0.15+h*0.1,0.2+h*0.1,0.15+h*0.06);}});
-  firePits.forEach(f=>{f.intensity=0.8+(avg/100)*2.2;});
+  // Fire pits glow with morale
+  firePits.forEach(f=>{f.intensity=0.4+(avg/100)*3.0;});
+  // Warm fill follows morale
+  warmFill.intensity=0.8+(avg/100)*2.0;
 }
 function setRI(id,fill,color,delta,cls){
   const el=document.getElementById(`ri-${id}`);
@@ -992,26 +1424,38 @@ function floatPop(msg,colorHex,xPct=50,yPct=50){
 function setSpd(s){G.speed=s;G.paused=(s===0);['s0','s1','s2','s3'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===s));}
 
 /* ─── END ─── */
-function checkEnd(){if(G.citizens.length<=0)endGame(false);else if(G.day>=60)endGame(true);}
+function checkEnd(){
+  if(G.citizens.length<=0) endGame(false);
+  else if(G.day>=60&&!G.endlessMode) {} // handled in tickDay - no hard stop at 60
+  // Hard death only: all dead
+}
 function endGame(win){
   G.alive=false;
-  document.getElementById('end-h').textContent=win?'COLONY ENDURES':'THE SILENCE COMES';
+  const label=win?'COLONY ENDURES':'THE SILENCE COMES';
+  document.getElementById('end-h').textContent=label;
   document.getElementById('end-h').className=`end-h ${win?'win':'lose'}`;
-  const qw=['"They said we would not last the winter. They were wrong."','"Sixty days of hunger and cold. And still - we stand."'];
-  const ql=['"The last fire went out before anyone noticed."','"History will not record them. The wind already forgot."'];
-  document.getElementById('end-q').textContent=(win?qw:ql)[Math.floor(Math.random()*2)];
-  const avg=G.citizens.length>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/G.citizens.length):0;
-  document.getElementById('end-stats').innerHTML=`Days: ${G.day} &nbsp;·&nbsp; Survivors: ${G.citizens.length} &nbsp;·&nbsp; Credits: ${G.credits}<br>Morale: ${avg} &nbsp;·&nbsp; ${G.moralGood} compassionate choices, ${G.moralBad} ruthless`;
+  const qw=['"They said we would not last the winter. They were wrong."','"Sixty days of hunger and cold. And still - we stand."','"The colony that was supposed to fail became the one that endured."'];
+  const ql=['"The last fire went out before anyone noticed."','"History will not record them. The wind already forgot."','"It was quiet at the end. No screaming. Just silence."'];
+  document.getElementById('end-q').textContent=(win?qw:ql)[Math.floor(Math.random()*qw.length)];
+  const pop=G.citizens.length;
+  const avg=pop>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
+  const infraCount=Object.values(G.infra).filter(Boolean).length;
+  const reputation=G.moralGood>G.moralBad?'Compassionate':G.moralBad>G.moralGood?'Ruthless':'Pragmatic';
+  document.getElementById('end-stats').innerHTML=
+    `Days: ${G.day} &nbsp;·&nbsp; Survivors: ${pop} &nbsp;·&nbsp; Credits: ${G.credits}<br>`+
+    `Morale: ${avg} &nbsp;·&nbsp; Deaths: ${G.totalDeaths} &nbsp;·&nbsp; Infrastructure: ${infraCount}/5<br>`+
+    `${G.moralGood} compassionate · ${G.moralBad} ruthless · Leadership: <em>${reputation}</em>`+
+    (G.endlessMode?`<br><span style="color:var(--gold)">✦ Endless survivor - ${G.day-60} days beyond the threshold</span>`:'');
   document.getElementById('end-screen').classList.add('open');
 }
 
 /* ─── TUTORIAL ─── */
 const STEPS=[
   {step:'01 / 05',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.\n\nYou are their hope - or their end.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
-  {step:'02 / 05',title:'Take Action Every Day',body:'Use the <strong>bottom buttons</strong> to keep your colony alive. Farm for food, recharge energy cells, deploy medics, or send scouts into the wilderness.',tip:'Actions have short cooldowns. Keep tapping them - every turn counts.',icons:['🌱 Farm','🔋 Recharge','💉 Medic','🔭 Scout']},
-  {step:'03 / 05',title:'Credits, Loot & Streaks',body:'<strong>Credits ⚙</strong> accumulate each day and from achievements. Trade them for emergency supplies.\n\nScouts may return with <strong>Supply Drops</strong> - glowing loot crates with RNG rewards. Chain 5 actions without stopping for a <strong>Streak Bonus</strong>.',tip:'Scouts finding loot is ~30% chance - worth the gamble when desperate.',icons:['⚙ Credits','📦 Loot Drops','🔥 Streaks','🏆 Achievements']},
-  {step:'04 / 05',title:'Crisis Events',body:'Every few days a <strong>crisis event</strong> interrupts the colony. A fire. Sickness. Strangers at the gate.\n\nThree choices. One compassionate, one pragmatic, one dark. <strong>Your choices define your colony\'s soul.</strong>',tip:'Ruthless choices yield short-term gains but destroy morale and your legacy.',icons:['🌾 Fires','🦠 Disease','🚪 Refugees','⚡ Storms']},
-  {step:'05 / 05',title:'Survive 60 Days',body:'Keep at least one citizen alive for <strong>60 days</strong>. The world grows harsher each day - difficulty slowly increases.\n\nBut if you endure, you will have built something real. A colony. A community. A story.',tip:'Use 2× or 4× speed once you\'re stable. Pause during events to think.',icons:['⏸ Pause','1× Normal','2× Fast','4× Rush']},
+  {step:'02 / 05',title:'Morale Is a Multiplier',body:'Colony morale is not just a number - it shapes everything. <strong>High morale</strong> boosts production and unlocks rare heroic events. <strong>Low morale</strong> increases crisis frequency. <strong>Critically low</strong> morale triggers worker strikes or desertion.',tip:'Watch the MORALE TIER badge. HEROIC = +20% production. BREAKING = strikes.',icons:['✨ Heroic','🔵 Stable','🟡 Weary','🔴 Breaking']},
+  {step:'03 / 05',title:'Build and Invest',body:'<strong>Credits ⚙</strong> aren\'t just for trading - use them to build permanent infrastructure.\n\n🔧 Workshop: +12% production forever\n🏰 Walls: raid protection (costs energy)\n📚 School: −health decay (costs food)\n🌾 Granary: less spoilage\n🏥 Hospital: passive medicine',tip:'Infrastructure creates trade-offs. Walls cost energy every day. School costs food. Plan ahead.',icons:['🔧 Workshop','🏰 Walls','📚 School','🏥 Hospital']},
+  {step:'04 / 05',title:'Crisis Events & World Memory',body:'Every few days a <strong>crisis event</strong> interrupts the colony. Your choices are remembered.\n\n<strong>Ruthless play</strong> worsens trade, drives refugees away, risks uprisings. <strong>Compassionate play</strong> earns aid drops and faster morale recovery.',tip:'High credits attract raiders. Large food surplus causes spoilage. Wealth has consequences.',icons:['🌾 Events','⚔ Raiders','🕊 Aid','⚠ Strikes']},
+  {step:'05 / 05',title:'Day 55: The Final Trial',body:'Survive to <strong>Day 55</strong> and a guaranteed mega-crisis arrives - the Collapse Front. Survive it to reach <strong>Day 60</strong>.\n\nBut Day 60 is not the end. It\'s the beginning of <strong>Endless Mode</strong> - accelerated scaling, repeating final disasters, and no finish line.',tip:'Save your game with 💾 SAVE. Press ⚙ TELEMETRY to see hidden multipliers.',icons:['⏸ Pause','💾 Save','⚙ Telemetry','♾ Endless']},
 ];
 let tutStep=0;
 function renderTut(){
