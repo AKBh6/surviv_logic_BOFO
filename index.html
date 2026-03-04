@@ -674,25 +674,25 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
       <div class="dm-card easy" onclick="chooseDiff('easy')">
         <div class="dm-icon">🌿</div>
         <div class="dm-name">SURVIVOR</div>
-        <div class="dm-desc">Forgiving scarcity. Slower difficulty curve. Room to learn the systems.</div>
-        <span class="dm-tag easy">EASY</span>
+        <div class="dm-desc">More starting resources. Slower pressure. Survive 60 days. Good for learning the systems.</div>
+        <span class="dm-tag easy">FORGIVING</span>
       </div>
       <div class="dm-card hard" onclick="chooseDiff('hard')">
         <div class="dm-icon">⚔</div>
         <div class="dm-name">WARDEN</div>
-        <div class="dm-desc">Standard crisis pressure. Every choice carries weight. Survive to day 60.</div>
+        <div class="dm-desc">Tight margins from day one. Every choice costs something real. 60 days to prove yourself.</div>
         <span class="dm-tag hard">STANDARD</span>
       </div>
       <div class="dm-card impossible" onclick="chooseDiff('impossible')">
         <div class="dm-icon">💀</div>
         <div class="dm-name">TYRANT</div>
-        <div class="dm-desc">Brutal starting conditions. No margin for error. Most runs end in the first week.</div>
-        <span class="dm-tag impossible">BRUTAL</span>
+        <div class="dm-desc">Starting broken. 16 citizens, near-zero resources. Crises every few days. Perfect play barely survives.</div>
+        <span class="dm-tag impossible">LETHAL</span>
       </div>
       <div class="dm-card endless" onclick="chooseDiff('endless')">
         <div class="dm-icon">♾</div>
         <div class="dm-name">ENDLESS</div>
-        <div class="dm-desc">No win condition. Survive as long as possible. The world only gets worse.</div>
+        <div class="dm-desc">No win condition. The world only gets worse. Survive as long as you can.</div>
         <span class="dm-tag endless">ENDLESS</span>
       </div>
     </div>
@@ -908,7 +908,9 @@ function makeLamp(x,z){
   const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,4.2,6),MAT.metal);pole.position.y=2.1;pole.castShadow=true;g.add(pole);
   const arm=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.07,0.07),MAT.metal);arm.position.set(0.3,4.2,0);g.add(arm);
   const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6),new THREE.MeshBasicMaterial({color:0xb08040}));head.position.set(0.6,4.2,0);g.add(head);
-  const pl=new THREE.PointLight(0x8a6020,1.0,9);pl.position.set(0.6,4.0,0);g.add(pl);
+  const pl=new THREE.PointLight(0xffd080,0,10);pl.position.set(0.6,4.0,0);g.add(pl);
+  pl._phase=Math.random()*Math.PI*2; // random flicker offset
+  lampLights.push(pl);
   g.position.set(x,0,z);scene.add(g);
 }
 [[-4,-4],[4,-4],[-4,4],[4,4],[-9,0],[9,0],[0,-9],[0,9],[-12,-12],[12,-12],[-12,12],[12,12],[-18,0],[18,0],[0,-18],[0,18]].forEach(([x,z])=>makeLamp(x,z));
@@ -978,9 +980,15 @@ window.addEventListener('wheel',e=>{camDist=Math.max(20,Math.min(80,camDist+e.de
 class Citizen{
   constructor(){this.health=70+Math.floor(Math.random()*31);this.morale=50+Math.floor(Math.random()*31);}
   update(food,moraleBonus=0){
-    if(food<1){this.health-=5+Math.floor(Math.random()*11);this.morale-=5+Math.floor(Math.random()*6);}
-    else{this.health-=Math.max(0,1+Math.floor(Math.random()*3)-moraleBonus);}
-    this.health=Math.max(0,Math.min(100,this.health));this.morale=Math.max(0,Math.min(100,this.morale));
+    const decayScale=G?Math.max(0.8,G.diffScale):1;
+    if(food<1){
+      this.health-=Math.floor((8+Math.floor(Math.random()*14))*decayScale);
+      this.morale-=6+Math.floor(Math.random()*6);
+    } else {
+      this.health-=Math.max(0,Math.floor((1+Math.floor(Math.random()*3)-moraleBonus)*decayScale));
+    }
+    this.health=Math.max(0,Math.min(100,this.health));
+    this.morale=Math.max(0,Math.min(100,this.morale));
     return this.health>0;
   }
 }
@@ -989,11 +997,12 @@ const G={
   // Core
   day:1,food:200,energy:150,medicine:30,credits:0,
   citizens:[],diffScale:1.0,alive:true,paused:true,
-  speed:1,dayTimer:0,dayMs:4200,
+  speed:1,dayTimer:0,dayMs:60000,
+  // Difficulty params (set by chooseDiff)
+  baseDiffInc:0.018,baseFoodConsume:2,baseHazardChance:0.22,eventFreqMod:1.0,
   // Status flags
   quarantine:0,rationMode:false,energyPenalty:1,energyPenaltyDays:0,winterPenalty:0,
-  strikeActive:0,          // days remaining on worker strike
-  desertionImmune:0,       // heroic buff days
+  strikeActive:0,desertionImmune:0,
   // Moral memory
   moralGood:0,moralBad:0,
   // Streak / achievements
@@ -1189,6 +1198,62 @@ const EVENTS=[
     {t:'Accept everything. We earned this.',cost:'MED +45, CREDITS +90, FOOD +65',moral:'g',cls:'good',fn:g=>{g.medicine+=45;g.credits+=90;g.food+=65;spawnGain(0,0,0x80c0a0,22);addLog('Full aid received. Alliance forged.',0x6abf7a);g.moralGood++;}},
     {t:'Accept knowledge and medicine only.',cost:'MED +35, DIFFICULTY −0.05',moral:'g',cls:'good',fn:g=>{g.medicine+=35;g.diffScale=Math.max(0.8,g.diffScale-0.05);addLog('Knowledge shared. Colony grows wiser.',0x4a9a8a);g.credits+=28;}},
     {t:'Decline graciously. We stand alone.',cost:'MORALE +18, dignity preserved',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+18));addLog('Aid declined. Colony stands proud.',0x6abf7a);g.credits+=12;}},
+   ]},
+  {id:'triage',cat:'MEDICAL CRISIS',cls:'crit',title:'Not Enough Medicine for Everyone',
+   body:'Seven citizens are critically ill. You have medicine for three. The healer has ranked them by likelihood of recovery. The others will likely not survive the week without treatment.',
+   choices:[
+    {t:'Treat the most likely to survive',cost:'MED −18, save 3, lose ~4',moral:'n',cls:'',fn:g=>{g.medicine=Math.max(0,g.medicine-18);g.citizens.splice(0,Math.min(4,g.citizens.length-3));g.citizens.forEach(c=>c.health=Math.min(100,c.health+10));addLog('Triage applied. Four untreated.',0xd4973a);g.credits+=20;}},
+    {t:'Spread it thin — small doses for all seven',cost:'MED −25, all survive but weakened',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-25);g.citizens.forEach(c=>c.health=Math.max(10,c.health-8));addLog('Doses split. All survive — barely.',0x6abf7a);g.moralGood++;g.credits+=10;}},
+    {t:'Use none. Save the medicine.',cost:'POP −4~6, medicine preserved',moral:'b',cls:'evil',fn:g=>{const n=4+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-2));spawnExplosion(0,0,0xc44030,15);addLog(`${n} died untreated.`,0xc44a3a);g.moralBad+=2;}},
+   ]},
+  {id:'poison_well',cat:'SABOTAGE',cls:'crit',title:'Someone Poisoned the Water',
+   body:'The eastern well is contaminated. Six people are sick. Three suspects have been identified. No proof exists. Your enforcer is waiting.',
+   choices:[
+    {t:'Detain all three until someone confesses',cost:'MORALE −30, likely find culprit',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-30));g.credits+=30;addLog('Three detained. Colony watches.',0xd4973a);}},
+    {t:'Forget it — treat the sick, move on',cost:'MED −20, MORALE +10',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));addLog('Incident buried. People relieved.',0x6abf7a);g.moralGood++;}},
+    {t:'Execute the most likely suspect',cost:'POP −1, MORALE −25, fear spreads',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,1);g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-25));spawnExplosion(0,0,0xc44030,8);addLog('Executed. Fear spreads.',0xc44a3a);g.moralBad+=2;g.credits+=25;}},
+   ]},
+  {id:'food_or_fuel',cat:'RESOURCE CRISIS',cls:'warn',title:'The Generator or the Fields',
+   body:'You have fuel for one system this week. Power the generator, or irrigate the fields. Not both. Each choice costs the other.',
+   choices:[
+    {t:'Power the generator — fields go dry',cost:'FOOD −60, ENERGY stable',moral:'n',cls:'',fn:g=>{g.food-=60;spawnSmoke(0,-8);addLog('Fields dried. Generator holds.',0xd4973a);}},
+    {t:'Irrigate — fields first, grid suffers',cost:'ENERGY −55, FOOD +35',moral:'n',cls:'good',fn:g=>{g.energy-=55;g.food+=35;addLog('Fields watered. Grid strained.',0x5a8ab0);g.credits+=12;}},
+    {t:'Split the fuel — both degrade',cost:'FOOD −30, ENERGY −28',moral:'n',cls:'',fn:g=>{g.food-=30;g.energy-=28;addLog('Fuel split. Neither system stable.',0x888888);}},
+   ]},
+  {id:'the_offer',cat:'OUTSIDE CONTACT',cls:'warn',title:'They Want Your Doctor',
+   body:'A powerful faction offers two months of food for your colony\'s only medic. She has not been asked. They are waiting for your answer.',
+   choices:[
+    {t:'Refuse. She is not a commodity.',cost:'Nothing, doctor stays',moral:'g',cls:'good',fn:g=>{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+12));addLog('Refused. Doctor stays.',0x6abf7a);g.credits+=15;}},
+    {t:'Send her. Take the food.',cost:'FOOD +130, MED destroyed, POP −1',moral:'b',cls:'evil',fn:g=>{g.food+=130;g.medicine=0;g.citizens.splice(0,1);spawnExplosion(0,0,0xd4973a,10);addLog('She\'s gone. Food is here.',0xc44a3a);g.moralBad+=2;}},
+    {t:'Ask her. Her choice.',cost:'45% she leaves (FOOD +70), 55% stays',moral:'g',cls:'good',fn:g=>{if(Math.random()<0.45){g.food+=70;g.citizens.splice(0,1);addLog('She chose to go.',0xd4973a);}else{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('She chose to stay.',0x6abf7a);}g.credits+=20;}},
+   ]},
+  {id:'collapse_neighbor',cat:'INCOMING CRISIS',cls:'crit',title:'The Harrow Colony Fell',
+   body:'Fires lit the eastern sky at midnight. Forty survivors are walking toward you. Opening the gates will strain everything. The colony is watching what you do.',
+   choices:[
+    {t:'Open the gates. Take them all.',cost:'FOOD −80, POP +40% (huge strain)',moral:'g',cls:'good',fn:g=>{g.food-=80;const n=Math.floor(g.citizens.length*0.4)+3;for(let i=0;i<n;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,25);addLog(`${n} survivors admitted.`,0x6abf7a);g.moralGood+=2;g.credits+=40;}},
+    {t:'Take their strongest. Close the gate.',cost:'FOOD −25, POP +4, MORALE −18',moral:'n',cls:'',fn:g=>{g.food-=25;for(let i=0;i<4;i++){g.citizens.push(new Citizen());if(citizenObjs.length<55)makeCitizen(g.citizens.length);}g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));addLog('Four admitted. Gate closed.',0xd4973a);}},
+    {t:'Bar the gate. We cannot survive this.',cost:'MORALE −45',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-45));spawnExplosion(0,0,0xc44030,12);addLog('Gate held. Forty turned away.',0xc44a3a);g.moralBad+=3;}},
+   ]},
+  {id:'medicine_trade',cat:'BLACK MARKET',cls:'warn',title:'Medicine for Information',
+   body:'A smuggler has real medicine — proper doses, not diluted rations. She only accepts one form of payment: the supply routes used by the outer colonies. That information could get people killed.',
+   choices:[
+    {t:'Refuse. We don\'t sell routes.',cost:'Nothing gained',moral:'g',cls:'good',fn:g=>{g.moralGood++;addLog('Refused. People still sick.',0x6abf7a);g.credits+=10;}},
+    {t:'Give her the routes. Take the medicine.',cost:'MED +40, someone else pays',moral:'b',cls:'evil',fn:g=>{g.medicine+=40;spawnGain(-4,4,0x40c0a0,15);addLog('Medicine in hand. Routes sold.',0xc44a3a);g.moralBad++;g.credits+=20;}},
+    {t:'Give false routes. Take the medicine.',cost:'MED +22, 35% she finds out',moral:'n',cls:'',fn:g=>{if(Math.random()<0.35){g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-20));addLog('She found out. Retribution coming.',0xc44a3a);g.moralBad++;}else{g.medicine+=22;addLog('False routes sold. She left satisfied.',0xd4973a);}g.credits+=15;}},
+   ]},
+  {id:'betrayal',cat:'INTERNAL CRISIS',cls:'crit',title:'Someone Is Selling Us Out',
+   body:'Your supplies have been disappearing. A council member has evidence it\'s one of your senior staff — the logistics officer, who also coordinates food distribution. Removing them will cripple operations for weeks.',
+   choices:[
+    {t:'Confront them privately. Give one chance.',cost:'FOOD −25 more losses, maybe they stop',moral:'g',cls:'good',fn:g=>{if(Math.random()<0.5){addLog('They stopped. Quietly.',0x4a9a8a);g.moralGood++;}else{g.food-=25;addLog('They didn\'t stop.',0xc44a3a);}g.credits+=15;}},
+    {t:'Remove them immediately and publicly.',cost:'POP −1, PROD −25% for 5d',moral:'n',cls:'',fn:g=>{g.citizens.splice(0,1);g.quarantine=5;spawnExplosion(0,0,0xd4973a,8);addLog('Officer removed. Operations disrupted.',0xd4973a);g.credits+=30;}},
+    {t:'Use them. Feed them false supply routes.',cost:'Potential leverage, complex risk',moral:'b',cls:'evil',fn:g=>{if(Math.random()<0.6){g.credits+=60;addLog('Double agent exploited. Intel gathered.',0xd4973a);}else{g.food-=40;g.energy-=30;addLog('Scheme backfired. Severe losses.',0xc44a3a);g.moralBad++;}g.credits+=10;}},
+   ]},
+  {id:'child_labor',cat:'PRODUCTION CRISIS',cls:'warn',title:'The Youngest Are Willing to Work',
+   body:'Three families have volunteered their children to help in the fields. Food is scarce. The children are old enough to be useful. The colony has not reached this point before.',
+   choices:[
+    {t:'Refuse absolutely. Find another way.',cost:'MORALE +8, still hungry',moral:'g',cls:'good',fn:g=>{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Children kept out. Colony respects this.',0x6abf7a);g.credits+=15;}},
+    {t:'Light tasks only — supervised, limited.',cost:'FOOD +30, slow morale decay',moral:'n',cls:'',fn:g=>{g.food+=30;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-5));addLog('Children work light shifts.',0xd4973a);}},
+    {t:'Full shifts. We need the output.',cost:'FOOD +65, MORALE −25, long-term damage',moral:'b',cls:'evil',fn:g=>{g.food+=65;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-25));spawnExplosion(0,0,0xc44030,5);addLog('Children work full shifts.',0xc44a3a);g.moralBad+=2;}},
    ]},
   {id:'boss_wave',cat:'⚠ FINAL TRIAL',cls:'crit',title:'The Collapse Front',forced:true,
    body:'Every failing colony in a hundred miles is collapsing toward yours. The desperate, the dying, the dangerous — all of them coming here because you\'re the last light they can see. This is what survival looks like from the outside.',
@@ -1408,13 +1473,15 @@ function updateDebug(){
   const infraBuilt=Object.values(G.infra).filter(Boolean).length;
   const syn=infraBuilt>0?getInfraSynergy(G.infra).toFixed(2):'—';
   d.innerHTML=[
+    `<span>difficulty</span>   ${G.difficulty}`,
     `<span>diffScale</span>    ${G.diffScale.toFixed(3)}`,
+    `<span>diffInc/day</span>  ${G.baseDiffInc}`,
     `<span>eventCD</span>      ${G.eventCooldown}d`,
     `<span>prod/day</span>     ${prod}`,
     `<span>moraleTier</span>   ${md.tier} (×${md.prodMult.toFixed(2)})`,
     `<span>broken%</span>      ${Math.round(md.brokenPct*100)}% &lt;20`,
     `<span>heroic%</span>      ${Math.round(md.heroicPct*100)}% &gt;80`,
-    `<span>evtFreqMult</span>  ×${md.eventFreqMult.toFixed(2)}`,
+    `<span>evtFreqMult</span>  ×${(md.eventFreqMult*G.eventFreqMod).toFixed(2)}`,
     `<span>energyMult</span>   ×${energyMult.toFixed(2)} → food`,
     `<span>raidPressure</span> ${(G.raidPressure*100).toFixed(0)}%`,
     `<span>spoilageRate</span> ×${G.spoilageRate.toFixed(2)}`,
@@ -1547,22 +1614,23 @@ function tickDay(){
   const foodMoralePenalty=getFoodMoralePenalty(G.food,pop);
   const medEff=getMedEfficiency(G.medicine,pop);
 
-  // ── CONDITIONAL DIFFICULTY (nonlinear) ──
-  const diffMult={easy:0.7,hard:1.0,impossible:1.5,endless:1.0}[G.difficulty]||1.0;
-  G.diffScale+=0.015*diffMult;
-  if(pop>25) G.diffScale+=0.005*diffMult;
-  G.raidPressure=Math.min(1,G.credits/1500);
+  // ── CONDITIONAL DIFFICULTY (nonlinear, param-driven per diff level) ──
+  G.diffScale+=G.baseDiffInc;
+  if(pop>20) G.diffScale+=G.baseDiffInc*0.3; // overpopulation penalty
+  if(G.endlessMode) G.diffScale+=0.010; // extra ramp in endless
+  G.raidPressure=Math.min(1,G.credits/1200+(G.day/200));
   G.spoilageRate=G.infra.granary ? 1+(Math.max(0,G.food-300)/600)*0.3 : 1+(Math.max(0,G.food-200)/400)*0.6;
-  if(G.endlessMode) G.diffScale+=0.008;
 
   // ── PRODUCTION with all multipliers ──
   const qF=G.quarantine>0?0.7:1;
   const wF=G.winterPenalty>0?0.7:1;
   const strikeF=G.strikeActive>0?0.4:1;
-  const infraProdMult=getInfraProdMult(G.infra);  // diminishing returns
-  const prod=Math.floor(pop*3*G.diffScale*qF*wF*strikeF*infraProdMult*md.prodMult*energyFoodMult);
+  const infraProdMult=getInfraProdMult(G.infra);
+  // diffScale now REDUCES production (inverse: higher = harder = less output)
+  const diffProdFactor=1/(G.diffScale);
+  const prod=Math.floor(pop*3*diffProdFactor*qF*wF*strikeF*infraProdMult*md.prodMult*energyFoodMult);
   G.food+=prod;
-  G.energy+=Math.floor(prod*0.5*G.energyPenalty);
+  G.energy+=Math.floor(prod*0.45*G.energyPenalty);
 
   // Passive medicine (hospital efficiency gated by supply)
   G.medicine+=Math.floor(pop*(G.infra.hospital?0.22:0.08)*medEff);
@@ -1571,21 +1639,26 @@ function tickDay(){
   // Walls energy drain
   if(G.infra.walls) G.energy-=3;
 
-  // ── CONSUMPTION ──
-  G.food-=G.citizens.length*(G.rationMode?1:2);
+  // ── CONSUMPTION (difficulty-scaled) ──
+  G.food-=Math.floor(G.citizens.length*(G.rationMode?G.baseFoodConsume*0.6:G.baseFoodConsume));
   G.rationMode=false;
   // Spoilage on surplus
   if(G.food>200){const spoil=Math.floor((G.food-200)*0.05*G.spoilageRate);if(spoil>5){G.food-=spoil;if(spoil>20)addLog(`Spoilage: −${spoil} food wasted.`,0xd4973a);}}
   G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
 
   // ── CREDITS ──
-  G.credits+=pop;
-  if(G.endlessMode)G.endlessDayBonus++;
+  G.credits+=Math.floor(pop*0.8); // slightly lower per-day than before
 
-  // ── BACKGROUND HAZARDS ──
+  // ── BACKGROUND HAZARDS (difficulty-scaled) ──
   const r=Math.random();
-  if(r<0.2){const l=8+Math.floor(Math.random()*28);G.energy-=l;spawnSmoke(10,0);if(l>18)addLog(`Power spike: −${l} energy`,0xc44a3a);}
-  else if(r<0.38){const l=8+Math.floor(Math.random()*22);G.food-=l;if(l>14)addLog(`Spoilage: −${l} food`,0xd4973a);}
+  const hc=G.baseHazardChance;
+  if(r<hc*0.55){
+    const l=Math.floor(10+Math.random()*35*G.diffScale);G.energy-=l;
+    spawnSmoke(10,0);if(l>18)addLog(`Power failure: −${l} energy`,0xc44a3a);
+  } else if(r<hc){
+    const l=Math.floor(10+Math.random()*30*G.diffScale);G.food-=l;
+    if(l>14)addLog(`Blight: −${l} food lost`,0xd4973a);
+  }
 
   // ── FOOD MORALE PRESSURE (cross-resource loop) ──
   if(foodMoralePenalty>0){
@@ -1648,15 +1721,14 @@ function tickDay(){
     return;
   }
 
-  // ── ENDLESS MODE ──
-  // Only auto-trigger endless if difficulty==='endless'; otherwise goalDay triggers ending
+  // ── WIN CONDITION — specific modes only ──
   if(G.goalDay>0&&G.day>=G.goalDay&&G.citizens.length>0&&!G.endgameTriggered){
-    // Win condition reached — trigger ending
     G.endgameTriggered=true;
     setTimeout(()=>endGame(true),800);
     return checkAchievements(),updateHUD(),updateDebug();
   }
-  if(G.difficulty==='endless'&&(G.day-60)%20===0&&G.day>60){
+  // Endless: periodic mega-crises but no win state
+  if(G.endlessMode&&G.day>60&&(G.day-60)%25===0){
     setTimeout(()=>{
       const boss=EVENTS.find(e=>e.id==='boss_wave');
       G.pendingEvent=boss;G.paused=true;showEvent(boss);
@@ -1667,7 +1739,7 @@ function tickDay(){
   // ── EVENT SELECTION (morale-distribution-weighted, includes chains) ──
   if(G.eventCooldown>0){G.eventCooldown--;}
   else if(!G.pendingEvent&&!activeChain){
-    const baseChance=0.18*md.eventFreqMult;
+    const baseChance=0.16*md.eventFreqMult*G.eventFreqMod;
 
     // Raid event elevated by wealth
     if(G.raidPressure>0.5&&Math.random()<G.raidPressure*0.12&&!usedEvtIds.has('raiders_chain')){
@@ -2079,25 +2151,49 @@ function tutNav(d){tutStep=Math.max(0,Math.min(STEPS.length-1,tutStep+d));render
 function chooseDiff(mode){
   document.getElementById('diff-menu').classList.add('hidden');
   G.difficulty=mode;
-  // Apply difficulty settings
+
   if(mode==='easy'){
-    G.food=300;G.energy=220;G.medicine=50;G.credits=80;
-    G.diffScale=0.82;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=5000;
+    // Generous: more resources, slow ramp, 60 days
+    G.food=320;G.energy=250;G.medicine=60;G.credits=100;
+    G.diffScale=0.65;G.goalDay=60;G.endlessMode=false;
+    G.dayMs=60000; // 60s per day
+    G.baseDiffInc=0.008; // very slow ramp
+    G.baseFoodConsume=1.5; // cheaper food upkeep
+    G.baseHazardChance=0.12; // fewer random hazards
+    G.eventFreqMod=0.7;
   } else if(mode==='hard'){
-    G.food=200;G.energy=150;G.medicine=30;G.credits=40;
+    // Standard: tight margins, meaningful ramp, 60 days
+    G.food=180;G.energy=130;G.medicine=25;G.credits=30;
     G.diffScale=1.0;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=4200;
+    G.dayMs=60000;
+    G.baseDiffInc=0.018;
+    G.baseFoodConsume=2;
+    G.baseHazardChance=0.22;
+    G.eventFreqMod=1.0;
   } else if(mode==='impossible'){
-    G.food=100;G.energy=80;G.medicine=15;G.credits=10;
-    G.diffScale=1.2;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=3800;
-    // Brutal start: low morale, some citizens already sick
-    G.citizens.forEach(c=>{c.morale=20+Math.floor(Math.random()*30);c.health=50+Math.floor(Math.random()*30);});
+    // Brutal: starts already failing, savage ramp, barely survivable
+    G.food=80;G.energy=55;G.medicine=8;G.credits=0;
+    G.diffScale=1.4;G.goalDay=60;G.endlessMode=false;
+    G.dayMs=60000;
+    G.baseDiffInc=0.032; // 2× hard ramp
+    G.baseFoodConsume=2.5; // 25% more hunger
+    G.baseHazardChance=0.38; // constant disasters
+    G.eventFreqMod=1.6; // crises fire very often
+    // Brutal start: most citizens already broken
+    G.citizens.forEach(c=>{
+      c.morale=8+Math.floor(Math.random()*22);
+      c.health=30+Math.floor(Math.random()*28);
+    });
+    // Start with 4 fewer citizens
+    G.citizens.splice(0,4);
   } else if(mode==='endless'){
-    G.food=200;G.energy=150;G.medicine=30;G.credits=40;
+    G.food=180;G.energy=130;G.medicine=25;G.credits=30;
     G.diffScale=1.0;G.goalDay=0;G.endlessMode=true;
-    G.dayMs=4200;
+    G.dayMs=60000;
+    G.baseDiffInc=0.018;
+    G.baseFoodConsume=2;
+    G.baseHazardChance=0.22;
+    G.eventFreqMod=1.0;
     document.getElementById('endless-badge').classList.add('show');
   }
   document.getElementById('tutorial').style.display='flex';
@@ -2118,62 +2214,119 @@ document.getElementById('tutorial').style.display='none';
 
 /* ═══════════════════════ RENDER LOOP ═══════════════════════ */
 let lastT=0;
-// Day/night cycle — period = dayMs, synced to G.dayTimer
+// Day/night: SEPARATE from game days. Real-time 60s cycle independent of game speed.
+// t_real = real elapsed ms (not game-speed-scaled)
+let realElapsed=0;
+const DN_PERIOD=60000; // 60 real seconds per full cycle
 let riotEmberTO=null;
-function updateDayNight(t){
-  // t = normalized 0..1 within the day (0=dawn, 0.5=noon, 1=dusk)
-  const dn=document.getElementById('daynight');
-  const md=getMoraleDist(G.citizens);
-  // Base sky tint: dark blue at night, amber-tinted at dawn/dusk, clear at day
-  const isNight=t<0.15||t>0.85;
-  const isDawn=t>=0.15&&t<0.28;
-  const isDusk=t>=0.72&&t<=0.85;
-  let skyColor,skyOpacity;
-  if(isNight){skyColor='rgba(0,5,15,0.55)';skyOpacity=1;}
-  else if(isDawn){skyColor='rgba(80,30,5,0.25)';skyOpacity=1;}
-  else if(isDusk){skyColor='rgba(70,25,5,0.3)';skyOpacity=1;}
-  else{skyColor='rgba(0,0,0,0)';skyOpacity=0;}
-  dn.style.background=skyColor;
-  // Moonlight dimmer at night
-  moon.intensity=isNight?0.5:isDawn||isDusk?1.0:1.4;
-  const ambientIntensity=isNight?0.4:0.8;
-  scene.children.filter(c=>c.isAmbientLight).forEach(l=>l.intensity=ambientIntensity);
 
-  // Riot overlay — active when strike or high broken%
+// Collect all lamp lights so we can switch them on/off
+const lampLights=[]; // populated after scene build (see below)
+// Street lamp light refs stored globally after makeLamp calls
+
+function updateDayNight(t_real_ms){
+  // t = 0..1 through real-time day/night cycle, independent of game speed
+  const t=((t_real_ms%DN_PERIOD)/DN_PERIOD);
+  // Phase breakdown: 0=midnight, 0.25=dawn, 0.5=noon, 0.75=dusk, 1=midnight
+  const isNight=t<0.18||t>0.82;
+  const isDawn=t>=0.18&&t<0.32;
+  const isDay=t>=0.32&&t<0.68;
+  const isDusk=t>=0.68&&t<=0.82;
+
+  // ── SKY OVERLAY ──
+  const dn=document.getElementById('daynight');
+  let skyBg;
+  if(isNight){
+    // Deep night — heavy blue-black overlay
+    const nightDepth=t<0.18?0.18-t:t>0.82?t-0.82:0;
+    const alpha=Math.min(0.75,0.55+nightDepth*1.5);
+    skyBg=`rgba(0,2,18,${alpha.toFixed(2)})`;
+  } else if(isDawn){
+    // Dawn — amber-rose gradient fading in
+    const prog=(t-0.18)/0.14; // 0..1
+    skyBg=`linear-gradient(to bottom, rgba(12,8,40,${(0.5*(1-prog)).toFixed(2)}) 0%, rgba(120,55,10,${(0.35*prog).toFixed(2)}) 60%, rgba(200,100,20,${(0.2*prog).toFixed(2)}) 100%)`;
+  } else if(isDay){
+    // Full day — near-transparent, bright scene shows through
+    const prog=(t-0.32)/0.36; // 0..1 peak at 0.5
+    const noon=1-Math.abs(prog-0.5)*2; // peaks at 1
+    skyBg=`rgba(180,220,255,${(noon*0.04).toFixed(2)})`; // barely-there blue tint
+  } else {
+    // Dusk — deep orange-red
+    const prog=(t-0.68)/0.14;
+    skyBg=`linear-gradient(to bottom, rgba(15,5,30,${(0.4*prog).toFixed(2)}) 0%, rgba(140,50,10,${(0.4*(1-prog)).toFixed(2)}) 60%, rgba(220,90,10,${(0.25*(1-prog)).toFixed(2)}) 100%)`;
+  }
+  dn.style.background=skyBg;
+
+  // ── THREE.JS LIGHTING ──
+  if(isNight){
+    // Dark and gloomy — only point lights visible
+    moon.intensity=0.15+Math.random()*0.02; // moonlight flicker
+    moon.color.setHex(0x8090c8); // cold blue-grey
+    scene.background.setHex(0x050810);
+    scene.fog.color.setHex(0x050810);
+    renderer.toneMappingExposure=0.55;
+    warmFill.intensity=0; // fire pits handle warm light
+  } else if(isDawn){
+    const p=(t-0.18)/0.14;
+    moon.intensity=0.15+p*1.2;
+    moon.color.setHex(0xe09050); // warm amber sunrise
+    scene.background.setHex(0x1a1208);
+    scene.fog.color.setHex(0x1a1208);
+    renderer.toneMappingExposure=0.7+p*0.3;
+  } else if(isDay){
+    const p=(t-0.32)/0.36;
+    const noon=Math.sin(p*Math.PI); // peaks at midday
+    moon.intensity=1.4+noon*1.2; // SUPER BRIGHT at noon
+    moon.color.setHex(0xfff8e8); // warm white sunlight
+    scene.background.setHex(0x2a4030); // bright greenish sky
+    scene.fog.color.setHex(0x2a4030);
+    renderer.toneMappingExposure=1.0+noon*0.5;
+    warmFill.intensity=0.2; // barely needed in daylight
+  } else {
+    const p=(t-0.68)/0.14;
+    moon.intensity=1.4-p*1.2;
+    moon.color.setHex(0xe07030); // orange dusk
+    scene.background.setHex(0x150e08);
+    scene.fog.color.setHex(0x150e08);
+    renderer.toneMappingExposure=1.0-p*0.45;
+  }
+
+  // ── LAMP LIGHTS: ON at night/dusk, OFF at day ──
+  const lampsOn=isNight||isDusk||(isDawn&&(t<0.25));
+  lampLights.forEach(l=>{l.intensity=lampsOn?(0.8+Math.sin(realElapsed*0.003+l._phase)*0.15):0;});
+
+  // ── FIRE PITS: brighter at night ──
+  const fireBright=isNight?3.5:isDay?1.2:2.0;
+  firePits.forEach(f=>{f._nightBase=fireBright;});
+
+  // ── AMBIENT: very low at night ──
+  scene.children.forEach(c=>{if(c.isAmbientLight){c.intensity=isNight?0.08:isDawn||isDusk?0.35:0.7;}});
+
+  // ── RIOT OVERLAY ──
+  const md=getMoraleDist(G.citizens);
   const riotActive=G.strikeActive>0||md.brokenPct>=0.35;
   const ro=document.getElementById('riot-overlay');
   const sv=document.getElementById('smoke-veil');
   if(riotActive){
-    ro.classList.add('active');
-    sv.classList.add('show');
-    // Spawn ember particles if not already flooding
+    ro.classList.add('active');sv.classList.add('show');
     if(!riotEmberTO){
       const spawnEmbers=()=>{
         if(!(G.strikeActive>0||getMoraleDist(G.citizens).brokenPct>=0.35)){riotEmberTO=null;return;}
-        const ember=document.createElement('div');
-        ember.className='riot-ember';
+        const ember=document.createElement('div');ember.className='riot-ember';
         const size=3+Math.random()*5;
         ember.style.cssText=`width:${size}px;height:${size}px;left:${10+Math.random()*80}%;top:${40+Math.random()*45}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*2}s;--dx:${(Math.random()-0.5)*80}px;--dy:${-(80+Math.random()*100)}px;`;
-        ro.appendChild(ember);
-        setTimeout(()=>ember.remove(),5000);
+        ro.appendChild(ember);setTimeout(()=>ember.remove(),5000);
         riotEmberTO=setTimeout(spawnEmbers,150+Math.random()*250);
-      };
-      spawnEmbers();
+      };spawnEmbers();
     }
   } else {
-    ro.classList.remove('active');
-    sv.classList.remove('show');
+    ro.classList.remove('active');sv.classList.remove('show');
     if(riotEmberTO){clearTimeout(riotEmberTO);riotEmberTO=null;}
-    // Clear existing embers
     ro.querySelectorAll('.riot-ember').forEach(e=>e.remove());
   }
-
-  // hazardLight surges during riots
-  if(riotActive){
-    hazardLight.intensity=2.0+Math.sin(t*31)*1.0;
-  } else if(isNight){
-    hazardLight.intensity=0;
-  }
+  if(riotActive) hazardLight.intensity=2.0+Math.sin(realElapsed*0.008)*1.0;
+  else if(isNight) hazardLight.intensity=0;
+  else hazardLight.intensity=0;
 }
 
 function animate(ts){
@@ -2182,9 +2335,9 @@ function animate(ts){
   const sm=[0,1,2,4][G.speed]||1,t=ts*0.001;
   if(G.alive&&!G.paused){G.dayTimer+=dt*sm;if(G.dayTimer>=G.dayMs){G.dayTimer=0;tickDay();}}
 
-  // Day/night cycle — t_day = position within current day (0..1)
-  const t_day=G.dayMs>0?(G.dayTimer/G.dayMs):0.5;
-  updateDayNight(t_day);
+  // Day/night uses REAL elapsed time — never affected by game speed
+  if(!G.paused) realElapsed+=dt;
+  updateDayNight(realElapsed);
 
   // Camera
   if(!G.paused)camAngle+=0.0003;
@@ -2214,12 +2367,14 @@ function animate(ts){
     }
   });
 
-  // Fire pits flicker around morale-reactive base (set by updateHUD)
+  // Fire pits: brightness scales with night cycle (set by updateDayNight) + morale base
   firePits.forEach((f,i)=>{
-    const base=f._moraleBase||1.2;
-    f.intensity=base+(Math.sin(t*7+i*2.1)+1)*0.5;
+    const moraleBase=f._moraleBase||1.2;
+    const nightBase=f._nightBase||1.5;
+    const combined=moraleBase*0.5+nightBase*0.5;
+    f.intensity=combined+(Math.sin(t*7+i*2.1)+1)*0.5;
   });
-  warmFill.intensity=(warmFill._moraleBase||1.2)+Math.sin(t*0.9)*0.2;
+  warmFill.intensity=(warmFill._moraleBase||0.5)+Math.sin(t*0.9)*0.15;
 
   // Particles
   for(let i=particles.length-1;i>=0;i--){
