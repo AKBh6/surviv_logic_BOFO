@@ -2084,26 +2084,28 @@ function chooseDiff(mode){
   if(mode==='easy'){
     G.food=300;G.energy=220;G.medicine=50;G.credits=80;
     G.diffScale=0.82;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=5000;
-  } else if(mode==='hard'){
+    G.dayMs=60000; // 1 minute
+} else if(mode==='hard'){
     G.food=200;G.energy=150;G.medicine=30;G.credits=40;
     G.diffScale=1.0;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=4200;
-  } else if(mode==='impossible'){
+    G.dayMs=180000; // 3 minutes
+} else if(mode==='impossible'){
     G.food=100;G.energy=80;G.medicine=15;G.credits=10;
     G.diffScale=1.2;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=3800;
+    G.dayMs=180000; // 3 minutes
     // Brutal start: low morale, some citizens already sick
-    G.citizens.forEach(c=>{c.morale=20+Math.floor(Math.random()*30);c.health=50+Math.floor(Math.random()*30);});
-  } else if(mode==='endless'){
+    G.citizens.forEach(c=>{
+        c.morale=20+Math.floor(Math.random()*30);
+        c.health=50+Math.floor(Math.random()*30);
+    });
+} else if(mode==='endless'){
     G.food=200;G.energy=150;G.medicine=30;G.credits=40;
     G.diffScale=1.0;G.goalDay=0;G.endlessMode=true;
-    G.dayMs=4200;
+    G.dayMs=180000; // 3 minutes
     document.getElementById('endless-badge').classList.add('show');
-  }
-  document.getElementById('tutorial').style.display='flex';
-  renderTut();
 }
+document.getElementById('tutorial').style.display='flex';
+renderTut();
 
 function startGame(){
   document.getElementById('tutorial').style.display='none';
