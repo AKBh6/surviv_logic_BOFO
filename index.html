@@ -1476,24 +1476,23 @@ function doAction(type){
       } else if(roll<0.65){const s=15+Math.floor(Math.random()*25);G.food+=s;floatPop(`🔭 FOUND +${s} FOOD`,0x6abf7a,50,50);addLog(`Scout found ${s} food.`,0x6abf7a);}
       else{floatPop('🔭 EMPTY HANDED',0x888888,50,50);addLog('Scouts returned empty.',0x888888);}
       G.streak++;break;}
-    case 'trade':
+    case 'trade':{
       if(G.credits<50){showPop('NEED 50 CREDITS',0xc44a3a);return;}
       G.credits-=50;
-      // moralBad degrades trade yield: each ruthless choice costs 5% up to 50%
       const tradePen=Math.min(0.5,G.moralBad*0.05);
       const tg=Math.floor((55+Math.floor(Math.random()*45))*(1-tradePen));
       G.food+=tg;
       spawnGain(0,0,0x80a040,12);
       floatPop(`⚙50 → +${tg} FOOD${tradePen>0?' (rep penalty)':''}`,0xd4973a,50,50);
       addLog(`Trade: +${tg} food.${tradePen>0.2?' Merchants distrust you.':''}`,0xd4973a);
-      break;
-    case 'conscript':
+      break;}
+    case 'conscript':{
       if(G.citizens.length<=3){showPop('TOO FEW CITIZENS',0xc44a3a);return;}
       G.food+=35;G.energy+=15;G.citizens.splice(0,1);
       G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));
       G.moralBad++;G.streak=0;
       spawnExplosion(0,0,0xff4020,8);floatPop('⚠ FORCED LABOR',0xc44a3a,50,50);
-      addLog('Conscription: one lost, streak reset.',0xc44a3a);break;
+      addLog('Conscription: one lost, streak reset.',0xc44a3a);break;}
   }
   if(G.streak>0&&G.streak%5===0){const b=20+G.streak*2;G.credits+=b;showStreakBanner(G.streak);floatPop(`🔥 STREAK BONUS +${b}⚙`,0xe8c060,50,42);}
   checkAchievements();updateHUD();
@@ -2084,28 +2083,26 @@ function chooseDiff(mode){
   if(mode==='easy'){
     G.food=300;G.energy=220;G.medicine=50;G.credits=80;
     G.diffScale=0.82;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=60000; // 1 minute
-} else if(mode==='hard'){
+    G.dayMs=5000;
+  } else if(mode==='hard'){
     G.food=200;G.energy=150;G.medicine=30;G.credits=40;
     G.diffScale=1.0;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=180000; // 3 minutes
-} else if(mode==='impossible'){
+    G.dayMs=4200;
+  } else if(mode==='impossible'){
     G.food=100;G.energy=80;G.medicine=15;G.credits=10;
     G.diffScale=1.2;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=180000; // 3 minutes
+    G.dayMs=3800;
     // Brutal start: low morale, some citizens already sick
-    G.citizens.forEach(c=>{
-        c.morale=20+Math.floor(Math.random()*30);
-        c.health=50+Math.floor(Math.random()*30);
-    });
-} else if(mode==='endless'){
+    G.citizens.forEach(c=>{c.morale=20+Math.floor(Math.random()*30);c.health=50+Math.floor(Math.random()*30);});
+  } else if(mode==='endless'){
     G.food=200;G.energy=150;G.medicine=30;G.credits=40;
     G.diffScale=1.0;G.goalDay=0;G.endlessMode=true;
-    G.dayMs=180000; // 3 minutes
+    G.dayMs=4200;
     document.getElementById('endless-badge').classList.add('show');
+  }
+  document.getElementById('tutorial').style.display='flex';
+  renderTut();
 }
-document.getElementById('tutorial').style.display='flex';
-renderTut();
 
 function startGame(){
   document.getElementById('tutorial').style.display='none';
