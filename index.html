@@ -17,22 +17,9 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#0e120f;}
 
-/* Safe area insets for iPhone notch / Dynamic Island */
-#game-root {
-  padding-top: env(safe-area-inset-top);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* Prevent text selection and callouts on touch */
-* { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-button { touch-action: manipulation; } /* prevents 300ms delay */
-
 #portrait-warn{display:none;position:fixed;inset:0;z-index:9999;background:#0e120f;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:'Cinzel',serif;color:var(--text);text-align:center;padding:30px;}
 .pw-icon{font-size:60px;animation:rotate90 2s ease infinite;}
 @keyframes rotate90{0%{transform:rotate(0)}50%{transform:rotate(90deg)}100%{transform:rotate(0)}}
-/* Portrait gate: only for small screens (phones), not portrait desktop */
 @media (orientation: portrait) and (max-width: 768px) {
   #portrait-warn { display: flex !important; }
   #game-root     { display: none !important; }
@@ -52,20 +39,18 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .day-sub{font-size:8px;color:var(--text3);letter-spacing:2px;margin-top:2px;}
 
 #credits-block{display:flex;align-items:center;gap:8px;background:rgba(212,151,58,0.08);border:1px solid rgba(212,151,58,0.25);border-radius:3px;padding:5px 12px;position:relative;overflow:hidden;pointer-events:auto;cursor:help;margin:6px;}
-#credits-block::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,151,58,0.06),transparent);animation:shimmer 3s linear infinite;}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .credits-icon{font-size:15px;}
-#credits-val{font-family:'Cinzel',serif;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--gold);text-shadow:0 0 12px var(--glow-a);}
+#credits-val{font-family:'Cinzel',serif;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--gold);}
 .credits-label{font-size:8px;color:var(--amber);letter-spacing:2px;opacity:0.7;}
 
 #res-bar{flex:1;display:flex;}
 .res-item{flex:1;display:flex;flex-direction:column;justify-content:center;padding:5px 10px;border-right:1px solid var(--border);position:relative;overflow:hidden;cursor:default;transition:background 0.2s;}
 .res-item:hover{background:rgba(140,170,120,0.05);}
 .res-item::after{content:'';position:absolute;bottom:0;left:0;height:2px;background:var(--ri-color,var(--teal));width:calc(var(--fill,0.5)*100%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 6px var(--ri-color,var(--teal));}
-.ri-label{font-size:8px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:2px;}
+.ri-label{font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:2px;}
 .ri-row{display:flex;align-items:baseline;gap:5px;}
-.ri-val{font-family:'Cinzel',serif;font-size:clamp(12px,1.4vw,16px);font-weight:700;color:var(--text);transition:color 0.3s;}
-.ri-delta{font-size:9px;color:var(--text3);}
+.ri-val{font-family:'Cinzel',serif;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--text);transition:color 0.3s;}
+.ri-delta{font-size:10px;color:var(--text3);}
 .ri-delta.pos{color:var(--green);}.ri-delta.neg{color:var(--red);}
 
 #speed-ctrl{display:flex;align-items:center;gap:3px;padding:0 10px;}
@@ -84,21 +69,21 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .act-btn:disabled{opacity:0.3;cursor:not-allowed;}
 
 #log-strip{flex:1;overflow:hidden;padding:4px 12px;display:flex;flex-direction:column;gap:2px;max-height:52px;border-right:1px solid var(--border);}
-.log-line{font-size:10px;color:var(--text3);animation:log-appear 0.3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.log-line{font-size:11px;color:var(--text3);animation:log-appear 0.3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .log-line span{color:var(--li-color,var(--teal));}
 @keyframes log-appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 #morale-panel{padding:6px 14px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--border);min-width:120px;}
-.mp-label{font-size:8px;letter-spacing:2px;color:var(--text3);}
+.mp-label{font-size:9px;letter-spacing:2px;color:var(--text3);}
 .mp-track{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
-.mp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 40%,var(--green) 100%);background-size:200px 100%;transition:width 0.5s ease;box-shadow:0 0 8px rgba(106,191,122,0.3);}
-.mp-val{font-size:10px;color:var(--text2);}
+.mp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 40%,var(--green) 100%);background-size:200px 100%;transition:width 0.5s ease;}
+.mp-val{font-size:11px;color:var(--text2);}
 
 #popup-layer{position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden;}
-.float-pop{position:absolute;font-family:'Cinzel',serif;font-size:clamp(11px,1.3vw,15px);font-weight:700;color:var(--fp-color,#fff);text-shadow:0 2px 8px rgba(0,0,0,0.8);animation:float-up 2.2s ease forwards;white-space:nowrap;pointer-events:none;filter:drop-shadow(0 0 4px var(--fp-color,#fff));}
+.float-pop{position:absolute;font-family:'Cinzel',serif;font-size:clamp(11px,1.3vw,15px);font-weight:700;color:var(--fp-color,#fff);text-shadow:0 2px 8px rgba(0,0,0,0.8);animation:float-up 2.2s ease forwards;white-space:nowrap;pointer-events:none;}
 @keyframes float-up{0%{opacity:0;transform:translateY(0) scale(0.7);}15%{opacity:1;transform:translateY(-10px) scale(1.1);}40%{opacity:1;transform:translateY(-25px) scale(1);}100%{opacity:0;transform:translateY(-60px) scale(0.9);}}
 
-#combo-banner{position:absolute;top:65px;right:20px;z-index:25;font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,20px);font-weight:900;color:var(--gold);text-shadow:0 0 20px var(--glow-a);opacity:0;transform:scale(0.8);transition:opacity 0.3s,transform 0.3s;pointer-events:none;}
+#combo-banner{position:absolute;top:65px;right:20px;z-index:25;font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,20px);font-weight:900;color:var(--gold);opacity:0;transform:scale(0.8);transition:opacity 0.3s,transform 0.3s;pointer-events:none;}
 #combo-banner.show{opacity:1;transform:scale(1);}
 
 #loot-overlay{position:absolute;inset:0;z-index:50;pointer-events:none;display:flex;align-items:center;justify-content:center;}
@@ -106,13 +91,12 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .loot-box.show{display:block;}
 @keyframes loot-pop{from{opacity:0;transform:scale(0.6) rotate(-5deg)}to{opacity:1;transform:scale(1) rotate(0)}}
 .loot-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--amber);margin-bottom:12px;}
-.loot-icon{font-size:48px;margin:8px 0;animation:spin-in 0.5s ease 0.1s both;}
-@keyframes spin-in{from{transform:rotate(-180deg) scale(0)}to{transform:rotate(0) scale(1)}}
+.loot-icon{font-size:48px;margin:8px 0;}
 .loot-name{font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,18px);font-weight:700;color:#fff;margin:8px 0 4px;}
-.loot-value{font-family:'Cinzel',serif;font-size:clamp(22px,2.8vw,30px);font-weight:900;color:var(--gold);text-shadow:0 0 20px var(--glow-a);}
+.loot-value{font-family:'Cinzel',serif;font-size:clamp(22px,2.8vw,30px);font-weight:900;color:var(--gold);}
 .loot-sub{font-size:10px;color:var(--text3);letter-spacing:2px;margin-top:8px;}
 
-#evt-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.96);z-index:40;width:min(460px,86vw);background:rgba(16,20,14,0.97);border:1px solid rgba(140,170,120,0.3);border-radius:4px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 40px rgba(106,191,122,0.05);display:none;pointer-events:auto;backdrop-filter:blur(16px);}
+#evt-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.96);z-index:40;width:min(460px,86vw);background:rgba(16,20,14,0.97);border:1px solid rgba(140,170,120,0.3);border-radius:4px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.7);display:none;pointer-events:auto;backdrop-filter:blur(16px);}
 #evt-panel.open{display:block;animation:evt-in 0.25s cubic-bezier(0.2,0,0,1) forwards;}
 @keyframes evt-in{from{opacity:0;transform:translate(-50%,-50%) scale(0.94);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
 .evt-tag{font-size:8px;letter-spacing:4px;color:var(--teal);margin-bottom:8px;text-transform:uppercase;}
@@ -122,238 +106,49 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .evt-choices{display:flex;flex-direction:column;gap:7px;}
 .ev-btn{background:rgba(24,30,22,0.8);border:1px solid rgba(140,170,120,0.15);border-radius:2px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left;width:100%;transition:all 0.18s;}
 .ev-btn:hover{background:rgba(140,170,120,0.07);border-color:rgba(140,170,120,0.35);transform:translateX(3px);}
-.ev-btn.evil{border-color:rgba(196,74,58,0.2);}.ev-btn.evil:hover{background:rgba(196,74,58,0.06);border-color:rgba(196,74,58,0.4);}
-.ev-btn.good{border-color:rgba(106,191,122,0.2);}.ev-btn.good:hover{background:rgba(106,191,122,0.06);border-color:rgba(106,191,122,0.4);}
+.ev-btn.evil{border-color:rgba(196,74,58,0.2);}.ev-btn.evil:hover{background:rgba(196,74,58,0.06);}
+.ev-btn.good{border-color:rgba(106,191,122,0.2);}.ev-btn.good:hover{background:rgba(106,191,122,0.06);}
 .ev-key{font-family:'Cinzel',serif;font-size:11px;color:var(--text3);min-width:16px;padding-top:1px;}
-.ev-btn.evil .ev-key{color:var(--red);}.ev-btn.good .ev-key{color:var(--green);}
 .ev-text{font-family:'Crimson Pro',serif;font-size:clamp(12px,1.3vw,14px);color:var(--text);line-height:1.4;}
 .ev-cost{font-size:9px;color:var(--text3);letter-spacing:1px;margin-top:2px;font-family:'JetBrains Mono',monospace;}
 
 #tutorial{position:absolute;inset:0;z-index:80;background:rgba(10,14,10,0.93);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;}
-.tut-card{background:rgba(18,24,16,0.98);border:1px solid rgba(140,170,120,0.3);border-radius:6px;padding:28px 32px;max-width:min(500px,88vw);width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.8);}
+.tut-card{background:rgba(18,24,16,0.98);border:1px solid rgba(140,170,120,0.3);border-radius:6px;padding:28px 32px;max-width:min(500px,88vw);width:100%;}
 .tut-step{font-size:9px;letter-spacing:4px;color:var(--teal);margin-bottom:8px;}
 .tut-title{font-family:'Cinzel',serif;font-size:clamp(16px,2.2vw,24px);font-weight:900;color:#fff;margin-bottom:12px;line-height:1.2;}
 .tut-body{font-family:'Crimson Pro',serif;font-size:clamp(13px,1.4vw,15px);color:rgba(180,200,160,0.85);line-height:1.8;margin-bottom:16px;}
 .tut-body strong{color:var(--gold);font-weight:600;}
-.tut-tip{background:rgba(90,138,176,0.08);border-left:2px solid var(--blue);padding:9px 12px;margin-bottom:16px;border-radius:0 2px 2px 0;font-family:'Crimson Pro',serif;font-size:clamp(11px,1.2vw,13px);color:rgba(160,190,220,0.8);line-height:1.6;}
+.tut-tip{background:rgba(90,138,176,0.08);border-left:2px solid var(--blue);padding:9px 12px;margin-bottom:16px;font-family:'Crimson Pro',serif;font-size:clamp(11px,1.2vw,13px);color:rgba(160,190,220,0.8);line-height:1.6;}
 .tut-icons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
 .tut-icon-item{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(140,170,120,0.1);border-radius:3px;padding:4px 9px;font-size:10px;color:var(--text2);}
-.tut-icon-item span:first-child{font-size:14px;}
 .tut-nav{display:flex;gap:10px;justify-content:space-between;align-items:center;}
 .tut-dots{display:flex;gap:5px;}
 .tut-dot{width:6px;height:6px;border-radius:50%;background:rgba(140,170,120,0.2);transition:background 0.2s;}
 .tut-dot.on{background:var(--teal);}
 .tut-btn{background:rgba(74,154,138,0.15);border:1px solid rgba(74,154,138,0.4);color:var(--teal);padding:8px 20px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;border-radius:2px;transition:all 0.2s;}
 .tut-btn:hover{background:rgba(74,154,138,0.25);color:#fff;}
-.tut-btn.primary{background:rgba(74,154,138,0.25);border-color:var(--teal);}
 
 #notif-zone{position:absolute;top:62px;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:5px;}
-.notif{font-family:'Cinzel',serif;font-size:clamp(9px,1.1vw,12px);letter-spacing:2px;padding:6px 18px;background:rgba(14,18,12,0.96);border:1px solid var(--n-color,var(--teal));color:var(--n-color,var(--teal));text-shadow:0 0 10px var(--n-color,var(--teal));box-shadow:0 0 20px rgba(0,0,0,0.4);animation:notif-life 3s ease forwards;white-space:nowrap;}
+.notif{font-family:'Cinzel',serif;font-size:clamp(9px,1.1vw,12px);letter-spacing:2px;padding:6px 18px;background:rgba(14,18,12,0.96);border:1px solid var(--n-color,var(--teal));color:var(--n-color,var(--teal));animation:notif-life 3s ease forwards;white-space:nowrap;}
 @keyframes notif-life{0%{opacity:0;transform:translateY(-8px);}12%{opacity:1;transform:translateY(0);}70%{opacity:1;}100%{opacity:0;}}
 
 #end-screen{position:absolute;inset:0;z-index:90;background:rgba(8,10,8,0.88);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
 #end-screen.open{display:flex;animation:fade-in 1.2s ease;}
 @keyframes fade-in{from{opacity:0}to{opacity:1}}
 .end-h{font-family:'Cinzel',serif;font-size:clamp(24px,4.5vw,56px);font-weight:900;text-align:center;letter-spacing:6px;line-height:1;}
-.end-h.lose{color:var(--red);text-shadow:0 0 40px var(--glow-r);}
-.end-h.win{color:var(--gold);text-shadow:0 0 40px var(--glow-a);}
+.end-h.lose{color:var(--red);}
+.end-h.win{color:var(--gold);}
 .end-quote{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(13px,1.6vw,17px);color:var(--text2);text-align:center;max-width:420px;line-height:1.6;}
-.end-stats{font-size:clamp(10px,1.3vw,13px);color:var(--text3);text-align:center;line-height:2;letter-spacing:1px;}
-.restart-btn{margin-top:10px;background:rgba(74,154,138,0.12);border:1px solid rgba(74,154,138,0.4);color:var(--teal);padding:10px 28px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;border-radius:2px;transition:all 0.2s;text-transform:uppercase;}
+.end-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 28px;font-size:clamp(10px,1.2vw,12px);color:var(--text3);line-height:1.9;letter-spacing:1px;}
+.end-stat-grid span{color:var(--text2);}
+.restart-btn{margin-top:10px;background:rgba(74,154,138,0.12);border:1px solid rgba(74,154,138,0.4);color:var(--teal);padding:10px 28px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;border-radius:2px;transition:all 0.2s;}
 .restart-btn:hover{background:rgba(74,154,138,0.22);color:#fff;}
 
-.achievement{position:absolute;right:14px;background:rgba(14,18,12,0.97);border:1px solid var(--gold);border-left:3px solid var(--gold);border-radius:3px;padding:9px 13px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 20px rgba(212,151,58,0.1);animation:achieve-in 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards,achieve-out 0.4s ease 4s forwards;z-index:35;pointer-events:none;max-width:240px;}
-.ach-icon{font-size:18px;}.ach-label{font-size:7px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:2px;}.ach-name{font-family:'Cinzel',serif;font-size:11px;color:#fff;font-weight:700;}
+.achievement{position:absolute;right:14px;background:rgba(14,18,12,0.98);border:1px solid var(--gold);border-left:3px solid var(--gold);border-radius:3px;padding:11px 15px;display:flex;align-items:center;gap:12px;animation:achieve-in 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards,achieve-out 0.4s ease 4.5s forwards;z-index:35;pointer-events:none;max-width:270px;}
+.ach-icon{font-size:22px;}.ach-label{font-size:8px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;}.ach-name{font-family:'Cinzel',serif;font-size:13px;color:#fff;font-weight:700;}
 @keyframes achieve-in{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
 @keyframes achieve-out{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
 
-/* ═══════════════════════════════════════════
-   MOBILE LANDSCAPE OVERRIDES
-   Targets phones in landscape (≤900px wide, ≤500px tall)
-   and small tablets. Desktop untouched.
-═══════════════════════════════════════════ */
-@media (max-height: 500px) and (orientation: landscape),
-       (max-width: 900px) and (max-height: 520px) {
-
-  /* ── TOP BAR: compress everything into one tight strip ── */
-  #top-bar {
-    padding: 0;
-    flex-wrap: nowrap;
-    overflow: hidden;
-  }
-  .top-section {
-    padding: 4px 8px;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .game-wordmark { font-size: 8px; letter-spacing: 2px; }
-  #day-block { font-size: 16px; }
-  .day-sub { display: none; }
-
-  /* Credits pill — minimal */
-  #credits-block {
-    padding: 3px 8px;
-    margin: 3px 4px;
-    flex-shrink: 0;
-  }
-  #credits-val { font-size: 13px; }
-  .credits-label { display: none; }
-  .credits-icon { font-size: 12px; }
-
-  /* Resource bar: 2×2 grid instead of horizontal strip */
-  #res-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    flex: 1;
-    min-width: 0;
-  }
-  .res-item {
-    padding: 2px 6px;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .res-item:nth-child(odd) { border-right: 1px solid var(--border); }
-  .ri-label { font-size: 7px; letter-spacing: 1px; margin-bottom: 0; }
-  .ri-val   { font-size: 13px; }
-  .ri-delta { font-size: 8px; }
-
-  /* Speed buttons — smaller */
-  #speed-ctrl { padding: 0 6px; gap: 2px; }
-  .spd { font-size: 9px; padding: 3px 5px; }
-
-  /* ── BOTTOM BAR: 2 rows of action buttons, full width thumb zone ── */
-  #bottom-bar {
-    flex-wrap: wrap;
-    max-height: 88px;          /* fixed height so it doesn't collapse */
-    overflow: hidden;
-  }
-
-  /* Each action button fills 1/3 of first row */
-  .act-btn {
-    flex: 1 0 calc(33.333% - 1px);
-    min-width: 0;
-    padding: 6px 4px;
-    font-size: 8px;
-    letter-spacing: 0.5px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .act-btn .ab-icon { font-size: 15px; }
-  .act-btn .ab-cost { display: none; }   /* hide cost hints — space too tight */
-
-  /* Log strip: now 1 line, sits in bottom row */
-  #log-strip {
-    flex: 1 0 60%;
-    max-height: 30px;
-    padding: 2px 8px;
-    overflow: hidden;
-    border-bottom: none;
-  }
-  .log-line { font-size: 9px; }
-
-  /* Morale: compact horizontal pill in same bottom row */
-  #morale-panel {
-    flex: 0 0 auto;
-    min-width: 90px;
-    max-width: 110px;
-    padding: 3px 8px;
-    justify-content: center;
-    border-bottom: none;
-  }
-  .mp-label { font-size: 7px; letter-spacing: 1px; }
-  .mp-val   { font-size: 9px; }
-  .mp-track { height: 3px; }
-
-  /* ── EVENT PANEL: full-screen slide-up sheet on mobile ── */
-  #evt-panel {
-    /* reset desktop centering */
-    top: auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    border-radius: 8px 8px 0 0;
-    padding: 14px 16px 16px;
-    /* slide up animation */
-    display: none;
-  }
-  #evt-panel.open {
-    display: block;
-    animation: mob-sheet-up 0.3s cubic-bezier(0.2,0,0,1) forwards !important;
-  }
-  @keyframes mob-sheet-up {
-    from { opacity: 0.6; transform: translateY(60px); }
-    to   { opacity: 1;   transform: translateY(0); }
-  }
-  .evt-tag  { font-size: 8px; letter-spacing: 3px; margin-bottom: 4px; }
-  .evt-h    { font-size: 15px; margin-bottom: 6px; line-height: 1.2; }
-  .evt-body { font-size: 12px; line-height: 1.5; margin-bottom: 10px; padding-left: 8px; }
-
-  /* Choices: horizontal row on mobile so they all fit */
-  .evt-choices {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 5px;
-  }
-  .ev-btn {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 8px 8px;
-    gap: 3px;
-    transform: none !important; /* disable hover slide on touch */
-  }
-  .ev-btn:active { background: rgba(140,170,120,0.12); }
-  .ev-key  { font-size: 9px; }
-  .ev-text { font-size: 11px; line-height: 1.3; }
-  .ev-cost { font-size: 9px; margin-top: 1px; }
-
-  /* ── TUTORIAL: compact modal ── */
-  .tut-card {
-    padding: 16px 18px;
-    max-width: 94vw;
-  }
-  .tut-step  { font-size: 8px; margin-bottom: 4px; }
-  .tut-title { font-size: 16px; margin-bottom: 6px; }
-  .tut-body  { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
-  .tut-tip   { font-size: 11px; padding: 6px 10px; margin-bottom: 8px; }
-  .tut-icons { gap: 5px; margin-bottom: 10px; }
-  .tut-icon-item { font-size: 9px; padding: 3px 7px; }
-  .tut-btn   { font-size: 9px; padding: 6px 14px; }
-
-  /* ── LOOT BOX: smaller, center ── */
-  .loot-box { padding: 16px 22px; }
-  .loot-icon { font-size: 36px; margin: 4px 0; }
-  .loot-name { font-size: 14px; }
-  .loot-value { font-size: 22px; }
-  .loot-title { font-size: 9px; letter-spacing: 3px; }
-
-  /* ── NOTIFICATIONS: top-center, smaller ── */
-  #notif-zone { top: 46px; }
-  .notif { font-size: 9px; padding: 5px 12px; letter-spacing: 1px; }
-
-  /* ── FLOAT POPS ── */
-  .float-pop { font-size: 12px !important; }
-
-  /* ── COMBO BANNER ── */
-  #combo-banner { font-size: 14px; top: 50px; right: 10px; }
-
-  /* ── ACHIEVEMENT TOASTS: slide from bottom on mobile ── */
-  .achievement { right: 8px; padding: 7px 10px; max-width: 180px; }
-  .ach-name    { font-size: 10px; }
-
-  /* ── END SCREEN: tighten ── */
-  .end-h     { font-size: clamp(22px, 7vw, 36px); }
-  .end-quote { font-size: 12px; max-width: 90vw; }
-  .end-stats { font-size: 10px; line-height: 1.8; }
-
-  /* ── ACH LAYER: reposition ── */
-  #ach-layer { right: 8px; top: 52px; }
-}
-
-/* ── MORALE TIER BADGE (live indicator next to morale bar) ── */
 #morale-tier{font-size:8px;letter-spacing:2px;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;transition:all 0.4s;white-space:nowrap;}
 #morale-tier.tier-heroic{background:rgba(106,191,122,0.2);color:var(--green);border:1px solid rgba(106,191,122,0.4);}
 #morale-tier.tier-strong{background:rgba(74,154,138,0.15);color:var(--teal);border:1px solid rgba(74,154,138,0.3);}
@@ -362,7 +157,6 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 #morale-tier.tier-strike{background:rgba(196,74,58,0.2);color:var(--red);border:1px solid rgba(196,74,58,0.4);animation:crit-pulse 0.8s ease-in-out infinite;}
 @keyframes crit-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-/* ── INFRASTRUCTURE PANEL ── */
 #infra-panel{position:absolute;right:14px;top:68px;z-index:30;width:200px;pointer-events:auto;}
 #infra-toggle{background:rgba(14,18,12,0.92);border:1px solid var(--border);border-radius:3px;padding:6px 12px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text2);width:100%;text-align:left;transition:all 0.2s;}
 #infra-toggle:hover{color:var(--text);border-color:var(--border2);}
@@ -378,53 +172,27 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .infra-buy:disabled{opacity:0.3;cursor:not-allowed;}
 .infra-built{font-size:9px;color:var(--green);letter-spacing:1px;}
 
-/* ── DEBUG / TELEMETRY PANEL ── */
-#debug-panel{position:absolute;left:14px;bottom:80px;z-index:30;width:220px;pointer-events:auto;display:none;}
-#debug-panel.open{display:block;}
-#debug-inner{background:rgba(10,14,10,0.97);border:1px solid rgba(140,170,120,0.2);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:9px;line-height:1.9;color:var(--text3);}
-#debug-inner span{color:var(--teal);}
-#debug-toggle{background:rgba(14,18,12,0.85);border:none;border-top:1px solid rgba(140,170,120,0.15);color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;padding:3px 8px;cursor:pointer;position:fixed;left:14px;bottom:60px;z-index:31;}
-
-/* ── SAVE/LOAD BAR ── */
 #saveload-bar{position:absolute;left:14px;top:68px;z-index:30;display:flex;gap:4px;}
 .sl-btn{background:rgba(14,18,12,0.88);border:1px solid var(--border);color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;padding:4px 9px;cursor:pointer;transition:all 0.2s;border-radius:2px;}
 .sl-btn:hover{color:var(--text);border-color:var(--border2);}
 .sl-btn.save-pulse{animation:save-flash 0.6s ease;}
 @keyframes save-flash{0%,100%{border-color:var(--border)}50%{border-color:var(--green);color:var(--green);}}
 
-/* ── ENDGAME BOSS WAVE ── */
 #boss-overlay{position:absolute;inset:0;z-index:75;pointer-events:none;display:flex;align-items:center;justify-content:center;}
-#boss-warning{font-family:'Cinzel',serif;font-size:clamp(18px,3vw,32px);font-weight:900;color:var(--red);text-shadow:0 0 30px var(--glow-r),0 0 60px rgba(196,74,58,0.2);letter-spacing:6px;text-align:center;opacity:0;pointer-events:none;}
+#boss-warning{font-family:'Cinzel',serif;font-size:clamp(18px,3vw,32px);font-weight:900;color:var(--red);letter-spacing:6px;text-align:center;opacity:0;pointer-events:none;}
 #boss-warning.show{animation:boss-in 4s ease forwards;}
 @keyframes boss-in{0%{opacity:0;transform:scale(1.3);}20%{opacity:1;transform:scale(1);}75%{opacity:1;}100%{opacity:0;}}
 
-/* ── ENDLESS MODE BADGE ── */
 #endless-badge{position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:25;pointer-events:none;display:none;}
 #endless-badge.show{display:block;animation:badge-pulse 2s ease-in-out infinite;}
 @keyframes badge-pulse{0%,100%{opacity:0.7}50%{opacity:1}}
 .eb-inner{background:rgba(212,151,58,0.12);border:1px solid var(--amber);padding:3px 14px;font-family:'Cinzel',serif;font-size:10px;color:var(--amber);letter-spacing:3px;}
 
-/* ── STRIKE EVENT VISUAL ── */
 .strike-dim{filter:brightness(0.7);transition:filter 0.8s;}
 
-/* ── SITUATION PANEL (live pressure indicators for player) ── */
-#situation-bar{
-  display:flex;align-items:center;gap:0;
-  background:rgba(14,18,12,0.82);
-  border-bottom:1px solid var(--border);
-  border-top:none;
-  overflow:hidden;
-  pointer-events:none;
-  height:0;
-  transition:height 0.3s ease;
-}
+#situation-bar{display:flex;align-items:center;gap:0;background:rgba(14,18,12,0.82);border-bottom:1px solid var(--border);overflow:hidden;pointer-events:none;height:0;transition:height 0.3s ease;}
 #situation-bar.active{height:22px;pointer-events:auto;}
-.sit-item{
-  display:flex;align-items:center;gap:5px;
-  padding:0 10px;border-right:1px solid var(--border);
-  font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;
-  white-space:nowrap;
-}
+.sit-item{display:flex;align-items:center;gap:5px;padding:0 10px;border-right:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;white-space:nowrap;}
 .sit-label{color:var(--text3);}
 .sit-val{font-weight:600;}
 .sit-val.warn{color:var(--amber);}
@@ -433,64 +201,41 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .sit-bar{width:50px;height:3px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;flex-shrink:0;}
 .sit-bar-fill{height:100%;border-radius:1px;transition:width 0.5s ease;}
 
-/* ── MORALE DISTRIBUTION BAR (shows spread, not just average) ── */
 #morale-dist{height:3px;width:100%;border-radius:1px;overflow:hidden;background:rgba(255,255,255,0.04);margin-top:3px;display:flex;}
 .md-broken{height:100%;background:var(--red);}
 .md-low{height:100%;background:var(--amber);}
 .md-ok{height:100%;background:var(--teal);}
 .md-heroic{height:100%;background:var(--green);}
 
-/* ── CHAIN EVENT step indicator ── */
-#chain-progress{
-  display:none;position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  z-index:41;pointer-events:none;
-  font-family:'JetBrains Mono',monospace;font-size:8px;
-  letter-spacing:3px;color:var(--red);
-  text-shadow:0 0 10px var(--glow-r);
-}
-#chain-progress.show{display:block;}
 .evt-chain-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
 .evt-chain-step{font-size:8px;letter-spacing:3px;color:var(--red);background:rgba(196,74,58,0.12);border:1px solid rgba(196,74,58,0.3);padding:2px 8px;border-radius:2px;}
 .evt-chain-dots{display:flex;gap:4px;}
 .evt-chain-dot{width:5px;height:5px;border-radius:50%;background:rgba(196,74,58,0.2);}
 .evt-chain-dot.done{background:var(--red);}
-.evt-chain-dot.active{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.evt-chain-dot.active{background:var(--amber);}
 
-/* ── ENERGY→FOOD feedback indicator ── */
-.ri-penalty{font-size:7px;color:var(--red);letter-spacing:1px;margin-top:1px;}
-
-/* Mobile: hide situation bar on tiny screens */
-@media (max-height: 500px) and (orientation: landscape),
-       (max-width: 900px) and (max-height: 520px) {
-  #situation-bar.active{height:0;pointer-events:none;}
-}
-
-/* ── DAY/NIGHT OVERLAY ── */
-#daynight{position:absolute;inset:0;pointer-events:none;z-index:4;transition:background 6s ease;}
-
-/* ── RIOT / FIRE OVERLAY ── */
 #riot-overlay{position:absolute;inset:0;pointer-events:none;z-index:6;display:none;}
 #riot-overlay.active{display:block;}
-.riot-ember{position:absolute;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red),0 0 14px var(--amber);pointer-events:none;animation:ember-rise var(--dur,3s) ease-out var(--delay,0s) infinite;}
+.riot-ember{position:absolute;border-radius:50%;background:var(--red);pointer-events:none;animation:ember-rise var(--dur,3s) ease-out var(--delay,0s) infinite;}
 @keyframes ember-rise{0%{opacity:0;transform:translate(0,0) scale(1);}20%{opacity:1;}75%{opacity:0.7;}100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-140px)) scale(0.2);}}
 #riot-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 25%,rgba(160,30,10,0.3) 100%);animation:riot-pulse 1.1s ease-in-out infinite;}
 @keyframes riot-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
-#smoke-veil{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(20,12,4,0.55) 0%,transparent 55%),radial-gradient(ellipse at 72% 38%,rgba(15,10,3,0.45) 0%,transparent 50%);opacity:0;transition:opacity 2.5s;}
+#smoke-veil{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(20,12,4,0.55) 0%,transparent 55%);opacity:0;transition:opacity 2.5s;}
 #smoke-veil.show{opacity:1;}
 
-/* ── DIFFICULTY MENU ── */
+#daynight{position:absolute;inset:0;pointer-events:none;z-index:4;transition:background 6s ease;}
+
 #diff-menu{position:absolute;inset:0;z-index:95;background:rgba(6,8,6,0.98);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-direction:column;}
 #diff-menu.hidden{display:none;}
-.dm-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,54px);font-weight:900;color:#fff;letter-spacing:8px;text-align:center;margin-bottom:6px;text-shadow:0 0 50px rgba(200,212,184,0.25);}
+.dm-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,54px);font-weight:900;color:#fff;letter-spacing:8px;text-align:center;margin-bottom:6px;}
 .dm-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:var(--text3);letter-spacing:2px;margin-bottom:36px;text-align:center;}
 .dm-cards{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;max-width:900px;padding:0 20px;}
-.dm-card{flex:1;min-width:155px;max-width:195px;background:rgba(16,22,14,0.95);border:1px solid var(--border);border-radius:4px;padding:22px 16px;cursor:pointer;transition:all 0.22s;text-align:center;position:relative;overflow:hidden;}
+.dm-card{flex:1;min-width:155px;max-width:195px;background:rgba(16,22,14,0.95);border:1px solid var(--border);border-radius:4px;padding:22px 16px;cursor:pointer;transition:all 0.22s;text-align:center;}
 .dm-card:hover{transform:translateY(-5px);}
-.dm-card.easy:hover{border-color:var(--green);box-shadow:0 12px 30px rgba(106,191,122,0.15);}
-.dm-card.hard:hover{border-color:var(--amber);box-shadow:0 12px 30px rgba(212,151,58,0.15);}
-.dm-card.impossible:hover{border-color:var(--red);box-shadow:0 12px 30px rgba(196,74,58,0.2);}
-.dm-card.endless:hover{border-color:var(--blue);box-shadow:0 12px 30px rgba(90,138,176,0.15);}
+.dm-card.easy:hover{border-color:var(--green);}
+.dm-card.hard:hover{border-color:var(--amber);}
+.dm-card.impossible:hover{border-color:var(--red);}
+.dm-card.endless:hover{border-color:var(--blue);}
 .dm-icon{font-size:36px;margin-bottom:12px;}
 .dm-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.5vw,17px);font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:2px;}
 .dm-desc{font-family:'Crimson Pro',serif;font-size:clamp(11px,1.2vw,13px);color:var(--text3);line-height:1.6;margin-bottom:12px;}
@@ -500,23 +245,14 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 .dm-tag.impossible{background:rgba(196,74,58,0.12);color:var(--red);border:1px solid rgba(196,74,58,0.3);}
 .dm-tag.endless{background:rgba(90,138,176,0.12);color:var(--blue);border:1px solid rgba(90,138,176,0.3);}
 
-/* ── RICHER END SCREEN ── */
-.end-ending-label{font-family:'Cinzel',serif;font-size:clamp(10px,1.3vw,13px);letter-spacing:4px;margin-bottom:10px;text-align:center;text-transform:uppercase;opacity:0.7;}
-.end-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 28px;font-size:clamp(10px,1.2vw,12px);color:var(--text3);line-height:1.9;letter-spacing:1px;}
-.end-stat-grid span{color:var(--text2);}
+.end-ending-label{font-family:'Cinzel',serif;font-size:clamp(10px,1.3vw,13px);letter-spacing:4px;margin-bottom:10px;text-align:center;opacity:0.7;}
 .end-badge{display:inline-block;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;padding:3px 12px;border-radius:2px;}
 
-/* ── ACHIEVEMENT — bigger ── */
-.achievement{position:absolute;right:14px;background:rgba(14,18,12,0.98);border:1px solid var(--gold);border-left:3px solid var(--gold);border-radius:3px;padding:11px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6),0 0 24px rgba(212,151,58,0.12);animation:achieve-in 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards,achieve-out 0.4s ease 4.5s forwards;z-index:35;pointer-events:none;max-width:270px;}
-.ach-icon{font-size:22px;}.ach-label{font-size:8px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;}.ach-name{font-family:'Cinzel',serif;font-size:13px;color:#fff;font-weight:700;}
-
-/* ── HUD FONT SIZE BUMPS ── */
-.ri-label{font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:2px;}
-.ri-val{font-family:'Cinzel',serif;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--text);transition:color 0.3s;}
-.ri-delta{font-size:10px;color:var(--text3);}
-.mp-val{font-size:11px;color:var(--text2);}
-.mp-label{font-size:9px;letter-spacing:2px;color:var(--text3);}
-.log-line{font-size:11px;color:var(--text3);animation:log-appear 0.3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#debug-panel{position:absolute;left:14px;bottom:80px;z-index:30;width:220px;pointer-events:auto;display:none;}
+#debug-panel.open{display:block;}
+#debug-inner{background:rgba(10,14,10,0.97);border:1px solid rgba(140,170,120,0.2);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:9px;line-height:1.9;color:var(--text3);}
+#debug-inner span{color:#9a7ad8;}
+#debug-toggle{background:rgba(14,18,12,0.85);border:none;border-top:1px solid rgba(140,170,120,0.15);color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;padding:3px 8px;cursor:pointer;position:fixed;left:14px;bottom:60px;z-index:31;}
 </style>
 </head>
 <body>
@@ -531,7 +267,6 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   <div id="atmo"></div><div id="grain"></div>
   <div id="daynight"></div>
 
-  <!-- Riot / fire visual overlay -->
   <div id="riot-overlay">
     <div id="riot-vignette"></div>
     <div id="smoke-veil"></div>
@@ -576,7 +311,6 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
       </div>
     </div>
 
-    <!-- Situation bar: live pressure indicators, appears when things are notable -->
     <div id="situation-bar">
       <div class="sit-item" id="sit-raid" style="display:none">
         <span class="sit-label">⚔ RAID RISK</span>
@@ -644,29 +378,22 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
   <div id="notif-zone"></div>
   <div id="ach-layer" style="position:absolute;right:14px;top:68px;z-index:35;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
 
-  <!-- Infrastructure / Build panel -->
   <div id="infra-panel">
     <button id="infra-toggle" onclick="toggleInfra()">🏗 BUILD &amp; INVEST ▾</button>
-    <div id="infra-body" id="infra-body"></div>
+    <div id="infra-body"></div>
   </div>
 
-  <!-- Save / Load -->
   <div id="saveload-bar">
-    <button class="sl-btn" onclick="saveGame()" title="Save colony state">💾 SAVE</button>
-    <button class="sl-btn" onclick="loadGame()" title="Load last save">📂 LOAD</button>
+    <button class="sl-btn" onclick="saveGame()">💾 SAVE</button>
+    <button class="sl-btn" onclick="loadGame()">📂 LOAD</button>
   </div>
 
-  <!-- Debug / Telemetry -->
   <button id="debug-toggle" onclick="toggleDebug()">⚙ TELEMETRY</button>
   <div id="debug-panel"><div id="debug-inner">loading…</div></div>
 
-  <!-- Endgame boss wave warning -->
   <div id="boss-overlay"><div id="boss-warning">THE FINAL TRIAL BEGINS</div></div>
-
-  <!-- Endless mode badge -->
   <div id="endless-badge"><div class="eb-inner">✦ ENDLESS MODE</div></div>
 
-  <!-- Difficulty select menu (pre-game) -->
   <div id="diff-menu">
     <div class="dm-title">COLONY ZERO</div>
     <div class="dm-sub">Choose your mandate. The colony does not forgive weakness.</div>
@@ -674,19 +401,19 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
       <div class="dm-card easy" onclick="chooseDiff('easy')">
         <div class="dm-icon">🌿</div>
         <div class="dm-name">SURVIVOR</div>
-        <div class="dm-desc">More starting resources. Slower pressure. Survive 60 days. Good for learning the systems.</div>
+        <div class="dm-desc">More starting resources. Slower pressure. Survive 60 days.</div>
         <span class="dm-tag easy">FORGIVING</span>
       </div>
       <div class="dm-card hard" onclick="chooseDiff('hard')">
         <div class="dm-icon">⚔</div>
         <div class="dm-name">WARDEN</div>
-        <div class="dm-desc">Tight margins from day one. Every choice costs something real. 60 days to prove yourself.</div>
+        <div class="dm-desc">Tight margins from day one. Every choice costs something real.</div>
         <span class="dm-tag hard">STANDARD</span>
       </div>
       <div class="dm-card impossible" onclick="chooseDiff('impossible')">
         <div class="dm-icon">💀</div>
         <div class="dm-name">TYRANT</div>
-        <div class="dm-desc">Starting broken. 16 citizens, near-zero resources. Crises every few days. Perfect play barely survives.</div>
+        <div class="dm-desc">Starting broken. Near-zero resources. Crises every few days.</div>
         <span class="dm-tag impossible">LETHAL</span>
       </div>
       <div class="dm-card endless" onclick="chooseDiff('endless')">
@@ -707,7 +434,7 @@ button { touch-action: manipulation; } /* prevents 300ms delay */
 const W=()=>window.innerWidth,H=()=>window.innerHeight;
 const canvas=document.getElementById('c');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio, window.innerWidth < 900 ? 1.5 : 2));
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(W(),H());
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -721,7 +448,6 @@ scene.fog=new THREE.FogExp2(0x111815,0.02);
 const camera=new THREE.PerspectiveCamera(52,W()/H(),0.1,400);
 camera.position.set(0,34,48);camera.lookAt(0,0,0);
 
-/* Lighting */
 scene.add(new THREE.AmbientLight(0x223322,1.0));
 const moon=new THREE.DirectionalLight(0xc8d4e8,1.4);
 moon.position.set(-30,60,20);moon.castShadow=true;
@@ -740,20 +466,17 @@ for(let i=0;i<n;i++){const r=150+Math.random()*100,t=Math.random()*Math.PI*2,p=M
 geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
 scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0xaac0b8,size:0.28,sizeAttenuation:true})));}
 
-/* Ground */
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:0x1a2418,roughness:1}));
 ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
 
-/* Dirt paths */
 function addPath(x1,z1,x2,z2,w=1.8){
   const len=Math.sqrt((x2-x1)**2+(z2-z1)**2);
   const m=new THREE.Mesh(new THREE.PlaneGeometry(w,len),new THREE.MeshStandardMaterial({color:0x2a3028,roughness:1}));
   m.rotation.x=-Math.PI/2;m.position.set((x1+x2)/2,0.02,(z1+z2)/2);
   m.rotation.z=-Math.atan2(x2-x1,z2-z1);m.receiveShadow=true;scene.add(m);
 }
-[[0,0,0,-21],[0,0,0,21],[0,0,-21,0],[0,0,21,0],[0,0,-13,-13],[0,0,13,13],[0,0,-13,13],[0,0,13,-13]].forEach(p=>addPath(p[0],p[1],p[2],p[3]));
+[[0,0,0,-21],[0,0,0,21],[0,0,-21,0],[0,0,21,0]].forEach(p=>addPath(p[0],p[1],p[2],p[3]));
 
-/* Materials */
 const MAT={
   stone:new THREE.MeshStandardMaterial({color:0x3a4838,roughness:0.9,metalness:0.05}),
   brick:new THREE.MeshStandardMaterial({color:0x4a3e30,roughness:0.95,metalness:0}),
@@ -761,173 +484,84 @@ const MAT={
   roof:new THREE.MeshStandardMaterial({color:0x2a3830,roughness:0.9,metalness:0.1}),
   metal:new THREE.MeshStandardMaterial({color:0x4a5848,roughness:0.6,metalness:0.5}),
   wall:new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9,metalness:0.1}),
-  thatch:new THREE.MeshStandardMaterial({color:0x4a3e20,roughness:1,metalness:0}),
 };
 
-/* Building factory — creates proper village structures */
 function makeBuilding(cfg){
   const g=new THREE.Group();
   const base=new THREE.Mesh(new THREE.BoxGeometry(cfg.w,cfg.h,cfg.d),cfg.mat||MAT.stone);
   base.position.y=cfg.h/2;base.castShadow=true;base.receiveShadow=true;g.add(base);
-
-  // Foundation/base strip
   const found=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+0.2,0.3,cfg.d+0.2),MAT.wall);
-  found.position.y=0.15;found.receiveShadow=true;g.add(found);
-
-  // Roof
+  found.position.y=0.15;g.add(found);
   if(cfg.roof!==false){
     const rh=cfg.roofH||cfg.w*0.45;
-    const shape=cfg.flatRoof?
-      new THREE.BoxGeometry(cfg.w+0.3,0.25,cfg.d+0.3):
-      new THREE.ConeGeometry(Math.max(cfg.w,cfg.d)*0.74,rh,4);
-    const roof=new THREE.Mesh(shape,cfg.roofMat||(cfg.flatRoof?MAT.metal:MAT.roof));
+    const shape=cfg.flatRoof?new THREE.BoxGeometry(cfg.w+0.3,0.25,cfg.d+0.3):new THREE.ConeGeometry(Math.max(cfg.w,cfg.d)*0.74,rh,4);
+    const roof=new THREE.Mesh(shape,cfg.flatRoof?MAT.metal:MAT.roof);
     roof.position.y=cfg.h+(cfg.flatRoof?0.12:rh/2);
     if(!cfg.flatRoof)roof.rotation.y=Math.PI/4;
     roof.castShadow=true;g.add(roof);
-    // Roof overhang
-    if(!cfg.flatRoof){
-      const ovh=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+0.4,0.15,cfg.d+0.4),MAT.wood);
-      ovh.position.y=cfg.h+0.07;ovh.castShadow=true;g.add(ovh);
-    }
   }
-
-  // Chimney
   if(cfg.chimney){
     const ch=new THREE.Mesh(new THREE.BoxGeometry(0.5,1.8,0.5),MAT.brick);
     ch.position.set(cfg.w*0.22,cfg.h+0.6,cfg.d*0.22);ch.castShadow=true;g.add(ch);
-    // chimney cap
-    const cap=new THREE.Mesh(new THREE.BoxGeometry(0.65,0.12,0.65),MAT.stone);
-    cap.position.set(cfg.w*0.22,cfg.h+1.52,cfg.d*0.22);g.add(cap);
-    // smoke point
-    g.userData.smokeX=cfg.x+(cfg.w*0.22);
-    g.userData.smokeZ=(cfg.z||0)+(cfg.d*0.22);
   }
-
-  // Windows (warm glow)
-  const wRows=Math.max(1,Math.floor(cfg.h/2));
   const wCols=Math.max(1,Math.floor(cfg.w/1.5));
-  for(let wr=0;wr<Math.min(wRows,3);wr++){
+  for(let wr=0;wr<Math.min(2,Math.floor(cfg.h/2));wr++){
     for(let wc=0;wc<Math.min(wCols,4);wc++){
       if(Math.random()<0.65){
         const isLit=Math.random()<0.8;
-        const wm=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.38,0.06),
-          new THREE.MeshBasicMaterial({color:isLit?0x9a7a38:0x202820}));
+        const wm=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.38,0.06),new THREE.MeshBasicMaterial({color:isLit?0x9a7a38:0x202820}));
         wm.position.set((wc-(Math.min(wCols,4)-1)/2)*1.2,0.9+wr*1.5,cfg.d/2+0.03);g.add(wm);
         if(isLit){const wl=new THREE.PointLight(0x8a6030,0.25,3);wl.position.copy(wm.position);wl.position.z+=0.3;g.add(wl);}
-        // Shutters
-        const sl=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.38,0.04),MAT.wood);
-        sl.position.set(wm.position.x-0.22,wm.position.y,wm.position.z);g.add(sl);
-        const sr=sl.clone();sr.position.x=wm.position.x+0.22;g.add(sr);
       }
     }
   }
-
-  // Door
   const dm=new THREE.Mesh(new THREE.BoxGeometry(0.65,1.05,0.07),new THREE.MeshStandardMaterial({color:0x251a0e,roughness:1}));
   dm.position.set(0,0.52,cfg.d/2+0.04);g.add(dm);
-  // Doorstep
-  const step=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.12,0.25),MAT.stone);
-  step.position.set(0,0.06,cfg.d/2+0.12);g.add(step);
-
-  // Fence/small wall for larger buildings
-  if(cfg.w>4){
-    const fence=new THREE.Mesh(new THREE.BoxGeometry(cfg.w+1,0.8,0.15),MAT.wood);
-    fence.position.set(0,0.4,cfg.d/2+0.8);fence.receiveShadow=true;g.add(fence);
-  }
-
   g.position.set(cfg.x||0,0,cfg.z||0);
-  scene.add(g);
-  return g;
+  scene.add(g);return g;
 }
 
-/* ─── THE COLONY VILLAGE ─── */
-// Town Hall — center
-makeBuilding({x:0,z:0,w:5.5,h:6.5,d:5.5,mat:MAT.wall,roofMat:MAT.roof,roofH:3.5,chimney:true});
-// Bell tower adjacent
+makeBuilding({x:0,z:0,w:5.5,h:6.5,d:5.5,mat:MAT.wall,roofH:3.5,chimney:true});
 makeBuilding({x:4,z:-4,w:2,h:10,d:2,mat:MAT.stone,roofH:2.5});
+[{x:-7,z:-5,w:3,h:3.5,d:3,chimney:true},{x:7,z:-5,w:2.8,h:4,d:2.8,chimney:true,mat:MAT.brick},{x:-7,z:5,w:3,h:3.2,d:3,chimney:true},{x:7,z:5,w:2.8,h:3.6,d:2.8,mat:MAT.brick},{x:0,z:-9,w:3.5,h:3,d:2.8,chimney:true},{x:0,z:9,w:3.2,h:3.5,d:3,chimney:true},{x:-10,z:0,w:2.5,h:5,d:2,chimney:true},{x:10,z:0,w:2.5,h:5,d:2}].forEach(b=>makeBuilding(b));
+[{x:-14,z:-8,w:4.5,h:5.5,d:3.5,mat:MAT.brick,chimney:true},{x:14,z:-8,w:4.5,h:6,d:3.5,mat:MAT.brick},{x:-14,z:8,w:3.5,h:4,d:3,chimney:true},{x:14,z:8,w:3.5,h:4.5,d:3,mat:MAT.brick,chimney:true},{x:-6,z:-14,w:5.5,h:4.5,d:3.5,mat:MAT.metal,flatRoof:true},{x:6,z:-14,w:4,h:4.5,d:3.5,mat:MAT.stone,chimney:true},{x:-6,z:14,w:3.2,h:3.5,d:3,chimney:true},{x:6,z:14,w:4.5,h:3.2,d:3.5,chimney:true}].forEach(b=>makeBuilding(b));
 
-// Residential houses — inner ring
-[
-  {x:-7,z:-5,w:3,h:3.5,d:3,chimney:true},
-  {x:7,z:-5,w:2.8,h:4,d:2.8,chimney:true,mat:MAT.brick},
-  {x:-7,z:5,w:3,h:3.2,d:3,chimney:true},
-  {x:7,z:5,w:2.8,h:3.6,d:2.8,mat:MAT.brick},
-  {x:0,z:-9,w:3.5,h:3,d:2.8,chimney:true},
-  {x:0,z:9,w:3.2,h:3.5,d:3,chimney:true},
-  {x:-10,z:0,w:2.5,h:5,d:2,chimney:true},
-  {x:10,z:0,w:2.5,h:5,d:2},
-].forEach(b=>makeBuilding(b));
+const wallMat=new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9});
+[{x:0,z:-23,w:46,h:3.5,d:1.5},{x:0,z:23,w:46,h:3.5,d:1.5},{x:-23,z:0,w:1.5,h:3.5,d:46},{x:23,z:0,w:1.5,h:3.5,d:46}].forEach(s=>{const m=new THREE.Mesh(new THREE.BoxGeometry(s.w,s.h,s.d),wallMat);m.position.set(s.x,s.h/2,s.z);m.castShadow=true;scene.add(m);});
+[[-23,-23],[23,-23],[-23,23],[23,23]].forEach(([x,z])=>makeBuilding({x,z,w:3,h:5,d:3,mat:MAT.stone,roofH:2}));
 
-// Outer ring — larger structures
-[
-  {x:-14,z:-8,w:4.5,h:5.5,d:3.5,mat:MAT.brick,chimney:true},
-  {x:14,z:-8,w:4.5,h:6,d:3.5,mat:MAT.brick},
-  {x:-14,z:8,w:3.5,h:4,d:3,chimney:true},
-  {x:14,z:8,w:3.5,h:4.5,d:3,mat:MAT.brick,chimney:true},
-  {x:-6,z:-14,w:5.5,h:4.5,d:3.5,mat:MAT.metal,flatRoof:true},  // factory
-  {x:6,z:-14,w:4,h:4.5,d:3.5,mat:MAT.stone,chimney:true},
-  {x:-6,z:14,w:3.2,h:3.5,d:3,chimney:true},
-  {x:6,z:14,w:4.5,h:3.2,d:3.5,chimney:true},
-  {x:-16,z:0,w:3,h:4,d:4,mat:MAT.stone},                        // barracks
-  {x:16,z:0,w:3,h:4,d:4,mat:MAT.stone,chimney:true},
-].forEach(b=>makeBuilding(b));
-
-/* Colony wall */
-const wallMat=new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9,metalness:0.1});
-[{x:0,z:-23,w:46,h:3.5,d:1.5},{x:0,z:23,w:46,h:3.5,d:1.5},{x:-23,z:0,w:1.5,h:3.5,d:46},{x:23,z:0,w:1.5,h:3.5,d:46}]
-.forEach(s=>{const m=new THREE.Mesh(new THREE.BoxGeometry(s.w,s.h,s.d),wallMat);m.position.set(s.x,s.h/2,s.z);m.castShadow=true;m.receiveShadow=true;scene.add(m);});
-// Battlements
-for(let i=-4;i<=4;i++){
-  [[-23],[23]].forEach(([z])=>{
-    const bm=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.2,1.5),MAT.stone);
-    bm.position.set(i*5,4.1,z);bm.castShadow=true;scene.add(bm);
-  });
-}
-// Corner towers
-[[-23,-23],[23,-23],[-23,23],[23,23]].forEach(([x,z])=>{
-  makeBuilding({x,z,w:3,h:5,d:3,mat:MAT.stone,roofH:2,chimney:false});
-});
-
-/* Trees */
 function makeTree(x,z,h=4){
   const g=new THREE.Group();
   const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.3,h*0.35,6),new THREE.MeshStandardMaterial({color:0x1e1610,roughness:1}));
   trunk.position.y=h*0.35/2;trunk.castShadow=true;g.add(trunk);
-  [[0,0.5,h*0.5,0x1a2e18],[0.3,0.42,h*0.75,0x1e3520],[0.6,0.34,h*0.95,0x223818]].forEach(([frac,r,cy,col])=>{
-    const c=new THREE.Mesh(new THREE.ConeGeometry(h*r,h*0.45,7),new THREE.MeshStandardMaterial({color:col,roughness:0.9}));
-    c.position.y=cy;c.castShadow=true;g.add(c);
+  [[0.5,0.5,h*0.5,0x1a2e18],[0.42,h*0.75,0x1e3520],[0.34,h*0.95,0x223818]].forEach((params,i)=>{
+    const [r,cy,col]=i===0?[0.5,h*0.5,0x1a2e18]:[...params];
+    const c=new THREE.Mesh(new THREE.ConeGeometry(h*(i===0?0.5:params[0]),h*0.45,7),new THREE.MeshStandardMaterial({color:col||params[1],roughness:0.9}));
+    c.position.y=cy||params[0];c.castShadow=true;g.add(c);
   });
   g.position.set(x,0,z);scene.add(g);
 }
 [[-25,-18],[-28,-10],[-27,0],[-26,10],[-24,18],[-20,25],[-10,27],[0,28],[10,27],[20,25],[25,18],[28,10],[27,0],[26,-10],[24,-18],[20,-25],[10,-27],[0,-28],[-10,-27],[-20,-25]].forEach(([x,z])=>makeTree(x,z,3+Math.random()*3));
-for(let i=0;i<16;i++){const a=i/16*Math.PI*2;makeTree(Math.cos(a)*28+(Math.random()-0.5),Math.sin(a)*28+(Math.random()-0.5),2+Math.random()*2.5);}
 
-/* Street lamps */
+const lampLights=[];
 function makeLamp(x,z){
   const g=new THREE.Group();
-  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,4.2,6),MAT.metal);pole.position.y=2.1;pole.castShadow=true;g.add(pole);
-  const arm=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.07,0.07),MAT.metal);arm.position.set(0.3,4.2,0);g.add(arm);
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,4.2,6),MAT.metal);pole.position.y=2.1;g.add(pole);
   const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6),new THREE.MeshBasicMaterial({color:0xb08040}));head.position.set(0.6,4.2,0);g.add(head);
   const pl=new THREE.PointLight(0xffd080,0,10);pl.position.set(0.6,4.0,0);g.add(pl);
-  pl._phase=Math.random()*Math.PI*2; // random flicker offset
-  lampLights.push(pl);
+  pl._phase=Math.random()*Math.PI*2;lampLights.push(pl);
   g.position.set(x,0,z);scene.add(g);
 }
 [[-4,-4],[4,-4],[-4,4],[4,4],[-9,0],[9,0],[0,-9],[0,9],[-12,-12],[12,-12],[-12,12],[12,12],[-18,0],[18,0],[0,-18],[0,18]].forEach(([x,z])=>makeLamp(x,z));
 
-/* Fire pits */
 const firePits=[];
 [[-9,9],[9,-9],[-16,6],[16,-6]].forEach(([x,z])=>{
   const fp=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.55,0.3,8),new THREE.MeshStandardMaterial({color:0x1a1008,roughness:1}));
   fp.position.set(x,0.15,z);scene.add(fp);
   const fl=new THREE.PointLight(0xc06020,2,12);fl.position.set(x,0.9,z);scene.add(fl);
   firePits.push(fl);
-  // Stacked logs
-  const log=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.14,0.7,6),new THREE.MeshStandardMaterial({color:0x1e1408,roughness:1}));
-  log.rotation.z=Math.PI/2;log.position.set(x,0.22,z);scene.add(log);
 });
 
-/* Citizens */
 const citizenGroup=new THREE.Group();scene.add(citizenGroup);
 const citizenObjs=[];
 function makeCitizen(i){
@@ -936,13 +570,6 @@ function makeCitizen(i){
   body.position.y=0.45;body.castShadow=true;g.add(body);
   const head=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),new THREE.MeshStandardMaterial({color:0x6a5540,roughness:0.7}));
   head.position.y=1.06;head.castShadow=true;g.add(head);
-  // Cloak
-  const cloak=new THREE.Mesh(new THREE.ConeGeometry(0.28,0.7,6),new THREE.MeshStandardMaterial({color:0x2a3028,roughness:1}));
-  cloak.position.y=0.55;g.add(cloak);
-  // Lantern
-  const lantern=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.13,0.1),new THREE.MeshBasicMaterial({color:0xc08030}));
-  lantern.position.set(0.28,0.6,0);g.add(lantern);
-  const ll=new THREE.PointLight(0xa06020,0.35,3);ll.position.set(0.28,0.6,0);g.add(ll);
   const angle=(i/20)*Math.PI*2,r=4+Math.random()*10;
   g.position.set(Math.cos(angle)*r,0,Math.sin(angle)*r);
   g.userData={angle,r,speed:0.2+Math.random()*0.3,offset:Math.random()*Math.PI*2,bobPhase:Math.random()*Math.PI*2};
@@ -950,29 +577,16 @@ function makeCitizen(i){
 }
 for(let i=0;i<20;i++) makeCitizen(i);
 
-/* Particles */
 const particles=[];
 function spawnParticle(x,y,z,color,vx,vy,vz,life){
   const m=new THREE.Mesh(new THREE.SphereGeometry(0.07,4,3),new THREE.MeshBasicMaterial({color,transparent:true,opacity:1}));
   m.position.set(x,y,z);m.userData={vx,vy:vy||1,vz:vz||0,life:life||50,maxLife:life||50};
   scene.add(m);particles.push(m);
 }
-function spawnExplosion(x,z,color=0xff4020,count=18){
-  for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.5+Math.random()*2;spawnParticle(x,0.5,z,color,Math.cos(a)*s,1.5+Math.random()*2,Math.sin(a)*s,55);}
-}
-function spawnGain(x,z,color=0x60c050,count=12){
-  for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.3+Math.random();spawnParticle(x,0.3,z,color,Math.cos(a)*s,1+Math.random()*1.5,Math.sin(a)*s,40);}
-}
-function spawnSmoke(x,z){
-  for(let i=0;i<6;i++){
-    const m=new THREE.Mesh(new THREE.SphereGeometry(0.18+Math.random()*0.22,5,4),new THREE.MeshBasicMaterial({color:0x3a4038,transparent:true,opacity:0.35}));
-    m.position.set(x+(Math.random()-0.5),0.8,z+(Math.random()-0.5));
-    m.userData={vx:(Math.random()-0.5)*0.02,vy:0.05+Math.random()*0.04,vz:(Math.random()-0.5)*0.02,life:90,maxLife:90,smoke:true};
-    scene.add(m);particles.push(m);
-  }
-}
+function spawnExplosion(x,z,color=0xff4020,count=18){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.5+Math.random()*2;spawnParticle(x,0.5,z,color,Math.cos(a)*s,1.5+Math.random()*2,Math.sin(a)*s,55);}}
+function spawnGain(x,z,color=0x60c050,count=12){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=0.3+Math.random();spawnParticle(x,0.3,z,color,Math.cos(a)*s,1+Math.random()*1.5,Math.sin(a)*s,40);}}
+function spawnSmoke(x,z){for(let i=0;i<4;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(0.18+Math.random()*0.22,5,4),new THREE.MeshBasicMaterial({color:0x3a4038,transparent:true,opacity:0.35}));m.position.set(x+(Math.random()-0.5),0.8,z+(Math.random()-0.5));m.userData={vx:(Math.random()-0.5)*0.02,vy:0.05+Math.random()*0.04,vz:(Math.random()-0.5)*0.02,life:90,maxLife:90,smoke:true};scene.add(m);particles.push(m);}}
 
-/* Camera */
 let camAngle=0,camDist=50,camTargetY=34;
 window.addEventListener('wheel',e=>{camDist=Math.max(20,Math.min(80,camDist+e.deltaY*0.05));});
 
@@ -981,413 +595,113 @@ class Citizen{
   constructor(){this.health=70+Math.floor(Math.random()*31);this.morale=50+Math.floor(Math.random()*31);}
   update(food,moraleBonus=0){
     const decayScale=G?Math.max(0.8,G.diffScale):1;
-    if(food<1){
-      this.health-=Math.floor((8+Math.floor(Math.random()*14))*decayScale);
-      this.morale-=6+Math.floor(Math.random()*6);
-    } else {
-      this.health-=Math.max(0,Math.floor((1+Math.floor(Math.random()*3)-moraleBonus)*decayScale));
-    }
-    this.health=Math.max(0,Math.min(100,this.health));
-    this.morale=Math.max(0,Math.min(100,this.morale));
+    if(food<1){this.health-=Math.floor((8+Math.floor(Math.random()*14))*decayScale);this.morale-=6+Math.floor(Math.random()*6);}
+    else{this.health-=Math.max(0,Math.floor((1+Math.floor(Math.random()*3)-moraleBonus)*decayScale));}
+    this.health=Math.max(0,Math.min(100,this.health));this.morale=Math.max(0,Math.min(100,this.morale));
     return this.health>0;
   }
 }
 
 const G={
-  // Core
   day:1,food:200,energy:150,medicine:30,credits:0,
   citizens:[],diffScale:1.0,alive:true,paused:true,
   speed:1,dayTimer:0,dayMs:60000,
-  // Difficulty params (set by chooseDiff)
   baseDiffInc:0.018,baseFoodConsume:2,baseHazardChance:0.22,eventFreqMod:1.0,
-  // Status flags
   quarantine:0,rationMode:false,energyPenalty:1,energyPenaltyDays:0,winterPenalty:0,
   strikeActive:0,desertionImmune:0,
-  // Moral memory
   moralGood:0,moralBad:0,
-  // Streak / achievements
   streak:0,achievements:new Set(),
-  // Event state
   pendingEvent:null,eventCooldown:0,
   actionCooldown:{},
-  // ── NEW: Infrastructure ──
-  infra:{
-    workshop:false,      // +12% production permanently
-    walls:false,         // raid damage −50%, energy drain +3/day
-    school:false,        // health decay −1/day, food drain +0.5/citizen/day
-    granary:false,       // spoilage cap reduced, surplus cap +200
-    hospital:false,      // medicine regenerates +0.15/citizen/day
-  },
-  // ── NEW: Conditional difficulty multipliers ──
-  raidPressure:0,        // 0-1, scales with wealth
-  spoilageRate:1.0,      // scales with food surplus
-  // ── NEW: Game mode (set before game start) ──
-  difficulty:'hard',       // 'easy' | 'hard' | 'impossible' | 'endless'
-  goalDay:60,              // win condition day (0 = endless)
-  // ── NEW: Endgame state ──
-  endgameTriggered:false,
-  bossWaveDay:55,
-  endlessMode:false,
-  endlessDayBonus:0,
-  // ── NEW: World memory (affects probabilities) ──
-  refugeesRejected:0,
-  totalDeaths:0,
+  infra:{workshop:false,walls:false,school:false,granary:false,hospital:false},
+  raidPressure:0,spoilageRate:1.0,
+  difficulty:'hard',goalDay:60,
+  endgameTriggered:false,bossWaveDay:55,
+  endlessMode:false,endlessDayBonus:0,
+  refugeesRejected:0,totalDeaths:0,
 };
 for(let i=0;i<20;i++) G.citizens.push(new Citizen());
 
-/* ── MORALE DISTRIBUTION SYSTEM (distribution-based, not average) ── */
-// Returns { tier, label, prodMult, eventFreqMult, healthBonus, desertRisk,
-//           brokenPct, lowPct, okPct, heroicPct, strikeThreshold, heroicThreshold }
 function getMoraleDist(citizens){
   if(!citizens.length) return {tier:'stable',label:'STABLE',prodMult:1,eventFreqMult:1,healthBonus:0,desertRisk:0,brokenPct:0,lowPct:0,okPct:1,heroicPct:0};
-  const n=citizens.length;
-  let broken=0,low=0,ok=0,heroic=0;
-  for(const c of citizens){
-    if(c.morale<20)broken++;
-    else if(c.morale<45)low++;
-    else if(c.morale<80)ok++;
-    else heroic++;
-  }
-  const brokenPct=broken/n, lowPct=low/n, okPct=ok/n, heroicPct=heroic/n;
-
-  // DISTRIBUTION TRIGGERS — not average
-  // Strike if >30% broken
-  // Heroic if >50% heroic
-  // Event freq scales with broken fraction
-  const eventFreqMult=1.0 + brokenPct*1.8 - heroicPct*0.5;
-
+  const n=citizens.length;let broken=0,low=0,ok=0,heroic=0;
+  for(const c of citizens){if(c.morale<20)broken++;else if(c.morale<45)low++;else if(c.morale<80)ok++;else heroic++;}
+  const brokenPct=broken/n,lowPct=low/n,okPct=ok/n,heroicPct=heroic/n;
+  const eventFreqMult=1.0+brokenPct*1.8-heroicPct*0.5;
   let tier,label,prodMult,healthBonus,desertRisk;
-  if(heroicPct>=0.5){
-    tier='heroic';label='HEROIC';prodMult=1.20;healthBonus=2;desertRisk=0;
-  } else if(heroicPct>=0.3&&brokenPct<0.15){
-    tier='strong';label='RESILIENT';prodMult=1.08;healthBonus=1;desertRisk=0;
-  } else if(brokenPct>=0.3){
-    tier='strike';label='BREAKING';prodMult=0.60;healthBonus=0;desertRisk=0.08;
-  } else if(brokenPct>=0.15||lowPct>=0.4){
-    tier='low';label='WEARY';prodMult=0.85;healthBonus=0;desertRisk=0.02;
-  } else {
-    tier='stable';label='STABLE';prodMult=1.00;healthBonus=0;desertRisk=0;
-  }
-
-  return {tier,label,prodMult,eventFreqMult,healthBonus,desertRisk,
-          brokenPct,lowPct,okPct,heroicPct,broken,heroic,n};
+  if(heroicPct>=0.5){tier='heroic';label='HEROIC';prodMult=1.20;healthBonus=2;desertRisk=0;}
+  else if(heroicPct>=0.3&&brokenPct<0.15){tier='strong';label='RESILIENT';prodMult=1.08;healthBonus=1;desertRisk=0;}
+  else if(brokenPct>=0.3){tier='strike';label='BREAKING';prodMult=0.60;healthBonus=0;desertRisk=0.08;}
+  else if(brokenPct>=0.15||lowPct>=0.4){tier='low';label='WEARY';prodMult=0.85;healthBonus=0;desertRisk=0.02;}
+  else{tier='stable';label='STABLE';prodMult=1.00;healthBonus=0;desertRisk=0;}
+  return {tier,label,prodMult,eventFreqMult,healthBonus,desertRisk,brokenPct,lowPct,okPct,heroicPct,broken,heroic,n};
 }
 
-/* ── INFRASTRUCTURE DIMINISHING RETURNS ── */
-// Each additional infra built reduces the marginal benefit of the next
-// Stack bonus: 1 built=1.0x synergy, 2=0.9x, 3=0.8x, 4=0.7x, 5=0.6x
-function getInfraSynergy(infraObj){
-  const built=Object.values(infraObj).filter(Boolean).length;
-  return Math.max(0.5, 1.0 - (built-1)*0.1);
-}
-// Production multiplier from infra (with diminishing returns applied)
-function getInfraProdMult(infraObj){
-  if(!infraObj.workshop) return 1.0;
-  const syn=getInfraSynergy(infraObj);
-  return 1.0 + 0.12*syn; // 12% at 1 built, 10.8% at 2, 9.6% at 3, etc.
-}
+function getInfraSynergy(infraObj){const built=Object.values(infraObj).filter(Boolean).length;return Math.max(0.5,1.0-(built-1)*0.1);}
+function getInfraProdMult(infraObj){if(!infraObj.workshop) return 1.0;return 1.0+0.12*getInfraSynergy(infraObj);}
+function getEnergyFoodMult(energy,pop){const epc=pop>0?energy/pop:10;if(epc<2)return 0.55;if(epc<4)return 0.75;if(epc<7)return 0.90;return 1.0;}
+function getFoodMoralePenalty(food,pop){const fpc=pop>0?food/pop:10;if(fpc<1)return 8;if(fpc<3)return 3;if(fpc<6)return 1;return 0;}
+function getMedEfficiency(medicine,pop){if(pop===0)return 1;const mpp=medicine/pop;if(mpp<0.5)return 0.4;if(mpp<1.5)return 0.7;return 1.0;}
 
-/* ── CROSS-RESOURCE FEEDBACK: Energy → Food Production ── */
-// Low energy reduces food production efficiency
-function getEnergyFoodMult(energy,pop){
-  const energyPerCitizen=pop>0?energy/pop:10;
-  if(energyPerCitizen<2) return 0.55;   // severe blackout: −45%
-  if(energyPerCitizen<4) return 0.75;   // brownout: −25%
-  if(energyPerCitizen<7) return 0.90;   // stressed: −10%
-  return 1.0;                            // sufficient
-}
-// Low food reduces morale (applied per-tick as extra morale drain)
-function getFoodMoralePenalty(food,pop){
-  const foodPerCitizen=pop>0?food/pop:10;
-  if(foodPerCitizen<1) return 8;   // starvation: −8 morale/day
-  if(foodPerCitizen<3) return 3;   // hungry: −3 morale/day
-  if(foodPerCitizen<6) return 1;   // tight: −1 morale/day
-  return 0;
-}
-// Medicine shortage reduces health regen
-function getMedEfficiency(medicine,pop){
-  if(pop===0) return 1;
-  const mpp=medicine/pop;
-  if(mpp<0.5) return 0.4;
-  if(mpp<1.5) return 0.7;
-  return 1.0;
-}
-
-
-/* ── INFRASTRUCTURE CATALOGUE ── */
 const INFRA=[
-  {id:'workshop',icon:'🔧',name:'Workshop',desc:'+12% production forever',longDesc:'Upgrades all farming and energy work. Permanent.',cost:200,drain:null,
-   effect:'prod+12%',built:g=>g.infra.workshop,fn:g=>{g.infra.workshop=true;}},
-  {id:'walls',   icon:'🏰',name:'Reinforced Walls',desc:'−50% raid dmg, +3 energy/day',longDesc:'Better defenses but higher maintenance.',cost:180,drain:'+3 energy/day',
-   effect:'armor+50%',built:g=>g.infra.walls,fn:g=>{g.infra.walls=true;}},
-  {id:'school',  icon:'📚',name:'Colony School',desc:'−1 health decay, +0.5 food/person',longDesc:'Educated citizens last longer. Costs daily feeding.',cost:150,drain:'+0.5 food/citizen',
-   effect:'health−decay',built:g=>g.infra.school,fn:g=>{g.infra.school=true;}},
-  {id:'granary', icon:'🌾',name:'Granary',desc:'−40% spoilage, +200 food cap',longDesc:'Proper storage. Surpluses actually hold.',cost:120,drain:null,
-   effect:'spoilage−40%',built:g=>g.infra.granary,fn:g=>{g.infra.granary=true;}},
-  {id:'hospital',icon:'🏥',name:'Field Hospital',desc:'+0.15 medicine/citizen/day',longDesc:'Passive medicine generation. The colony heals itself.',cost:160,drain:null,
-   effect:'med+passive',built:g=>g.infra.hospital,fn:g=>{g.infra.hospital=true;}},
+  {id:'workshop',icon:'🔧',name:'Workshop',desc:'+12% production forever',cost:200,built:g=>g.infra.workshop,fn:g=>{g.infra.workshop=true;}},
+  {id:'walls',icon:'🏰',name:'Reinforced Walls',desc:'−50% raid dmg, +3 energy/day',cost:180,drain:'+3 energy/day',built:g=>g.infra.walls,fn:g=>{g.infra.walls=true;}},
+  {id:'school',icon:'📚',name:'Colony School',desc:'−1 health decay, +0.5 food/person',cost:150,drain:'+0.5 food/citizen',built:g=>g.infra.school,fn:g=>{g.infra.school=true;}},
+  {id:'granary',icon:'🌾',name:'Granary',desc:'−40% spoilage, +200 food cap',cost:120,built:g=>g.infra.granary,fn:g=>{g.infra.granary=true;}},
+  {id:'hospital',icon:'🏥',name:'Field Hospital',desc:'+0.15 medicine/citizen/day',cost:160,built:g=>g.infra.hospital,fn:g=>{g.infra.hospital=true;}},
 ];
 
 const EVENTS=[
-  {id:'meteor',cat:'CRITICAL ALERT',cls:'crit',title:'Something Falls from the Sky',
-   body:'The watch-fires on the eastern wall are out. Your scouts return pale, saying nothing — only pointing to the horizon. A sound like distant thunder. It is not thunder.',
-   choices:[
-    {t:'Divert all power — hold the grid',cost:'ENERGY −45',moral:'n',cls:'',fn:g=>{g.energy-=45;if(g.energy<0){g.food+=g.energy;g.energy=0;}spawnGain(0,0,0x4080ff);addLog('Grid held. Barely.',0x5a8ab0);g.credits+=25;}},
-    {t:'Everyone together — strength in numbers',cost:'MORALE SHIFT',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+(Math.random()<0.5?12:-4)));addLog('Community rallied. Some found courage.',0x6abf7a);g.credits+=15;}},
-    {t:'Let it come. We have endured worse.',cost:'UNKNOWN COST',moral:'b',cls:'evil',fn:g=>{const loss=40+Math.floor(Math.random()*50);g.food-=loss;g.energy-=30;spawnExplosion(0,0,0xff4020,20);addLog(`Impact. −${loss} food, −30 energy.`,0xc44a3a);g.moralBad++;}},
-   ]},
-  {id:'plague',cat:'MEDICAL ALERT',cls:'warn',title:'The Pale Sickness',
-   body:'Three families in the south quarter stopped coming to work. By evening, more. There\'s no diagnosis — only fear. The healer says she\'s seen this before. She won\'t say where.',
-   choices:[
-    {t:'Seal the quarter. Control information.',cost:'QUARANTINE 5d, MORALE RISK',moral:'n',cls:'',fn:g=>{g.quarantine=5;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-8));addLog('Quarantine. Rumours spread faster than truth.',0x4a9a8a);g.credits+=20;}},
-    {t:'Spend what medicine we have',cost:'MEDICINE −25',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-25);const heal=g.medicine>0?18:8;g.citizens.forEach(c=>c.health=Math.min(100,c.health+heal));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed. Supplies depleted.',0x6abf7a);g.credits+=30;}},
-    {t:'Accelerate the work schedule',cost:'POP RISK',moral:'b',cls:'evil',fn:g=>{const n=1+Math.floor(Math.random()*5);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} fell. The rest work through grief.`,0xc44a3a);g.moralBad++;}},
-   ]},
-  {id:'strangers',cat:'INCOMING SIGNAL',cls:'',title:'People at the Gate',
-   body:'They arrived before dawn — eight of them. Some wounded. They say their village is gone. They say they walked for six days. Your council says you cannot afford mercy. The people say otherwise.',
-   choices:[
-    {t:'Open the gate. It costs us, but we do it.',cost:'FOOD −45, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=45;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls admitted.',0x6abf7a);g.credits+=35;}},
-    {t:'Take the able-bodied. Turn away the rest.',cost:'FOOD −15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted. Five turned away.',0xd4973a);}},
-    {t:'Bar the gate. We cannot risk it.',cost:'MORALE −25',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=25);addLog('Gate barred. Guilt outlasts the winter.',0xc44a3a);g.moralBad++;g.refugeesRejected++;}},
-   ]},
-  {id:'fire',cat:'FIRE EMERGENCY',cls:'crit',title:'The Grain Store Burns',
-   body:'The night shift saw the glow from the east compound. By the time anyone reached it, the roof was gone. You don\'t yet know if it was accident or arson. You might never know.',
-   choices:[
-    {t:'All hands. Every bucket. Now.',cost:'ENERGY −55, saves most',moral:'g',cls:'good',fn:g=>{g.energy-=55;g.food-=20;spawnSmoke(0,-8);spawnGain(0,-8,0x40a0ff,15);addLog('Fire contained. Most grain saved.',0x5a8ab0);g.credits+=18;}},
-    {t:'Controlled burn — sacrifice the compound',cost:'FOOD −70, fire contained',moral:'n',cls:'',fn:g=>{g.food-=70;spawnExplosion(0,-8,0xff6020);addLog('Compound sacrificed. Fire stopped.',0xd4973a);}},
-    {t:'Save the tools, not the food',cost:'FOOD −110, CREDITS +40',moral:'b',cls:'evil',fn:g=>{g.food-=110;g.credits+=40;spawnExplosion(0,-8,0xff2000,30);addLog('Food lost. Equipment saved. Morale shattered.',0xc44a3a);g.moralBad++;}},
-   ]},
-  {id:'trader',cat:'OPPORTUNITY',cls:'',title:'A Stranger With a Cart',
-   body:'She arrived alone, which means either she\'s very skilled or very desperate. Her cart is heavy. Her prices are not posted. She says she doesn\'t deal with "unstable regimes."',
-   choices:[
-    {t:'Trade energy — don\'t ask questions',cost:'ENERGY −65, FOOD +85, MED +22',moral:'n',cls:'good',fn:g=>{g.energy-=65;g.food+=85;g.medicine+=22;spawnGain(0,0,0x80c050,20);addLog('Trade complete. No names exchanged.',0x6abf7a);g.credits+=25;}},
-    {t:'Offer safe passage through your territory',cost:'MORALE +18, goodwill built',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+18));addLog('Passage granted. Allies made.',0x6abf7a);g.credits+=12;}},
-    {t:'Detain and take the cart',cost:'FOOD +130, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.food+=130;g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,10);addLog('Cart seized. Word will spread.',0xc44a3a);g.moralBad+=2;}},
-   ]},
-  {id:'uprising',cat:'SOCIAL CRISIS',cls:'crit',title:'The East Quarter Won\'t Work',
-   body:'You can hear them from the council chamber. Chanting, then silence, then chanting again. They aren\'t asking for much. They\'re asking for everything. Your enforcers are waiting for your signal.',
-   choices:[
-    {t:'Meet with the ringleaders. Negotiate.',cost:'FOOD −55, MORALE +28',moral:'g',cls:'good',fn:g=>{g.food-=55;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+28));spawnGain(0,0,0x60c050,12);addLog('Deal struck. Uneasy peace.',0x6abf7a);g.credits+=30;}},
-    {t:'Address the crowd. Promise without specifics.',cost:'MORALE +8, trust fragile',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Words bought time. Not much.',0xd4973a);}},
-    {t:'Make an example.',cost:'POP −2, MORALE −40',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=40);spawnExplosion(0,0,0xff2233,15);addLog('Two made examples. The rest remembered.',0xc44a3a);g.moralBad+=2;}},
-   ]},
-  {id:'winter',cat:'SEASONAL SHIFT',cls:'warn',title:'The Frost Comes Early',
-   body:'The fields went grey overnight. The outer farmers reported it first — the soil is already frozen three inches down. Your meteorologist (also your carpenter) says this is a bad sign.',
-   choices:[
-    {t:'Emergency harvest — exhaust everyone',cost:'MORALE −12, FOOD +65',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=12);g.food+=65;spawnGain(0,0,0x80a040,15);addLog('Harvest done. People are bone-tired.',0x6abf7a);g.credits+=20;}},
-    {t:'Buy insulation. Spend the energy reserves.',cost:'ENERGY −45',moral:'n',cls:'',fn:g=>{g.energy-=45;g.diffScale-=0.04;addLog('Colony insulated. Scarcity blunted.',0x5a8ab0);g.credits+=15;}},
-    {t:'Ration everything. We\'ve done it before.',cost:'FOOD DRAIN +40% for 10d, but costs nothing',moral:'b',cls:'evil',fn:g=>{g.winterPenalty=10;addLog('Rations enforced. Morale will suffer.',0xc44a3a);}},
-   ]},
-  {id:'raiders',cat:'RAID WARNING',cls:'crit',title:'They\'ve Been Watching You',
-   body:'Your walls are good. Your wealth is visible. Those two facts are now someone else\'s opportunity. The perimeter guard counted three dozen campfires last night. They\'re not trying to hide.',
-   choices:[
-    {t:'Send payment. This is cheaper than blood.',cost:'CREDITS −150 (or food if broke)',moral:'n',cls:'',fn:g=>{if(g.credits>=150){g.credits-=150;addLog('Payment sent. They left.',0xd4973a);}else{g.food-=90;spawnExplosion(0,0,0xff2000,20);addLog('No credits. Paid in food instead.',0xc44a3a);}}},
-    {t:'Defend. Let them test our walls.',cost:'POP −1~3, MORALE +12 if we win',moral:'n',cls:'good',fn:g=>{const n=1+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-1));g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+12));spawnExplosion(0,0,0xff6020,15);addLog(`${n} lost. Colony held.`,0x6abf7a);g.credits+=35;}},
-    {t:'Open a hidden gate — absorb some of them',cost:'FOOD −45, POP +4, MORALE RISK',moral:'g',cls:'good',fn:g=>{g.food-=45;for(let i=0;i<4;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-5));spawnGain(0,0,0x80c060,12);addLog('Four absorbed. Loyalties uncertain.',0x6abf7a);g.moralGood++;}},
-   ]},
-  {id:'heroic_harvest',cat:'MOMENT OF GRACE',cls:'',title:'They Worked Through the Night',heroicOnly:true,
-   body:'Nobody asked them to. They simply did it — the entire colony, working in shifts, singing in the dark. By morning the granary was full and nobody could explain why they felt so certain everything would be alright.',
-   choices:[
-    {t:'Declare a feast. Share everything equally.',cost:'FOOD +130, MORALE +8',moral:'g',cls:'good',fn:g=>{g.food+=130;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));spawnGain(0,-8,0x80c040,25);addLog('Feast held. The colony remembers this night.',0x6abf7a);g.credits+=55;}},
-    {t:'Store half, sell half. Be practical.',cost:'FOOD +65, CREDITS +100',moral:'n',cls:'',fn:g=>{g.food+=65;g.credits+=100;spawnGain(0,0,0xe8c060,18);addLog('Harvest divided. Wisely, perhaps.',0xd4973a);}},
-    {t:'Pour it all back into the colony.',cost:'FOOD +45, DIFFICULTY −0.08',moral:'g',cls:'good',fn:g=>{g.food+=45;g.diffScale=Math.max(0.8,g.diffScale-0.08);spawnGain(0,0,0x80c050,20);addLog('Momentum redirected. Colony strengthened.',0x6abf7a);g.moralGood++;}},
-   ]},
-  {id:'heroic_envoy',cat:'MOMENT OF GRACE',cls:'',title:'Word Has Reached the Outside',heroicOnly:true,
-   body:'An envoy arrived this morning from a colony three days north. They\'d heard about you. How you treat your people. They want to help, and they have the means. This is what a good reputation looks like.',
-   choices:[
-    {t:'Accept everything. We earned this.',cost:'MED +45, CREDITS +90, FOOD +65',moral:'g',cls:'good',fn:g=>{g.medicine+=45;g.credits+=90;g.food+=65;spawnGain(0,0,0x80c0a0,22);addLog('Full aid received. Alliance forged.',0x6abf7a);g.moralGood++;}},
-    {t:'Accept knowledge and medicine only.',cost:'MED +35, DIFFICULTY −0.05',moral:'g',cls:'good',fn:g=>{g.medicine+=35;g.diffScale=Math.max(0.8,g.diffScale-0.05);addLog('Knowledge shared. Colony grows wiser.',0x4a9a8a);g.credits+=28;}},
-    {t:'Decline graciously. We stand alone.',cost:'MORALE +18, dignity preserved',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+18));addLog('Aid declined. Colony stands proud.',0x6abf7a);g.credits+=12;}},
-   ]},
-  {id:'triage',cat:'MEDICAL CRISIS',cls:'crit',title:'Not Enough Medicine for Everyone',
-   body:'Seven citizens are critically ill. You have medicine for three. The healer has ranked them by likelihood of recovery. The others will likely not survive the week without treatment.',
-   choices:[
-    {t:'Treat the most likely to survive',cost:'MED −18, save 3, lose ~4',moral:'n',cls:'',fn:g=>{g.medicine=Math.max(0,g.medicine-18);g.citizens.splice(0,Math.min(4,g.citizens.length-3));g.citizens.forEach(c=>c.health=Math.min(100,c.health+10));addLog('Triage applied. Four untreated.',0xd4973a);g.credits+=20;}},
-    {t:'Spread it thin — small doses for all seven',cost:'MED −25, all survive but weakened',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-25);g.citizens.forEach(c=>c.health=Math.max(10,c.health-8));addLog('Doses split. All survive — barely.',0x6abf7a);g.moralGood++;g.credits+=10;}},
-    {t:'Use none. Save the medicine.',cost:'POP −4~6, medicine preserved',moral:'b',cls:'evil',fn:g=>{const n=4+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-2));spawnExplosion(0,0,0xc44030,15);addLog(`${n} died untreated.`,0xc44a3a);g.moralBad+=2;}},
-   ]},
-  {id:'poison_well',cat:'SABOTAGE',cls:'crit',title:'Someone Poisoned the Water',
-   body:'The eastern well is contaminated. Six people are sick. Three suspects have been identified. No proof exists. Your enforcer is waiting.',
-   choices:[
-    {t:'Detain all three until someone confesses',cost:'MORALE −30, likely find culprit',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-30));g.credits+=30;addLog('Three detained. Colony watches.',0xd4973a);}},
-    {t:'Forget it — treat the sick, move on',cost:'MED −20, MORALE +10',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));addLog('Incident buried. People relieved.',0x6abf7a);g.moralGood++;}},
-    {t:'Execute the most likely suspect',cost:'POP −1, MORALE −25, fear spreads',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,1);g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-25));spawnExplosion(0,0,0xc44030,8);addLog('Executed. Fear spreads.',0xc44a3a);g.moralBad+=2;g.credits+=25;}},
-   ]},
-  {id:'food_or_fuel',cat:'RESOURCE CRISIS',cls:'warn',title:'The Generator or the Fields',
-   body:'You have fuel for one system this week. Power the generator, or irrigate the fields. Not both. Each choice costs the other.',
-   choices:[
-    {t:'Power the generator — fields go dry',cost:'FOOD −60, ENERGY stable',moral:'n',cls:'',fn:g=>{g.food-=60;spawnSmoke(0,-8);addLog('Fields dried. Generator holds.',0xd4973a);}},
-    {t:'Irrigate — fields first, grid suffers',cost:'ENERGY −55, FOOD +35',moral:'n',cls:'good',fn:g=>{g.energy-=55;g.food+=35;addLog('Fields watered. Grid strained.',0x5a8ab0);g.credits+=12;}},
-    {t:'Split the fuel — both degrade',cost:'FOOD −30, ENERGY −28',moral:'n',cls:'',fn:g=>{g.food-=30;g.energy-=28;addLog('Fuel split. Neither system stable.',0x888888);}},
-   ]},
-  {id:'the_offer',cat:'OUTSIDE CONTACT',cls:'warn',title:'They Want Your Doctor',
-   body:'A powerful faction offers two months of food for your colony\'s only medic. She has not been asked. They are waiting for your answer.',
-   choices:[
-    {t:'Refuse. She is not a commodity.',cost:'Nothing, doctor stays',moral:'g',cls:'good',fn:g=>{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+12));addLog('Refused. Doctor stays.',0x6abf7a);g.credits+=15;}},
-    {t:'Send her. Take the food.',cost:'FOOD +130, MED destroyed, POP −1',moral:'b',cls:'evil',fn:g=>{g.food+=130;g.medicine=0;g.citizens.splice(0,1);spawnExplosion(0,0,0xd4973a,10);addLog('She\'s gone. Food is here.',0xc44a3a);g.moralBad+=2;}},
-    {t:'Ask her. Her choice.',cost:'45% she leaves (FOOD +70), 55% stays',moral:'g',cls:'good',fn:g=>{if(Math.random()<0.45){g.food+=70;g.citizens.splice(0,1);addLog('She chose to go.',0xd4973a);}else{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('She chose to stay.',0x6abf7a);}g.credits+=20;}},
-   ]},
-  {id:'collapse_neighbor',cat:'INCOMING CRISIS',cls:'crit',title:'The Harrow Colony Fell',
-   body:'Fires lit the eastern sky at midnight. Forty survivors are walking toward you. Opening the gates will strain everything. The colony is watching what you do.',
-   choices:[
-    {t:'Open the gates. Take them all.',cost:'FOOD −80, POP +40% (huge strain)',moral:'g',cls:'good',fn:g=>{g.food-=80;const n=Math.floor(g.citizens.length*0.4)+3;for(let i=0;i<n;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,25);addLog(`${n} survivors admitted.`,0x6abf7a);g.moralGood+=2;g.credits+=40;}},
-    {t:'Take their strongest. Close the gate.',cost:'FOOD −25, POP +4, MORALE −18',moral:'n',cls:'',fn:g=>{g.food-=25;for(let i=0;i<4;i++){g.citizens.push(new Citizen());if(citizenObjs.length<55)makeCitizen(g.citizens.length);}g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));addLog('Four admitted. Gate closed.',0xd4973a);}},
-    {t:'Bar the gate. We cannot survive this.',cost:'MORALE −45',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-45));spawnExplosion(0,0,0xc44030,12);addLog('Gate held. Forty turned away.',0xc44a3a);g.moralBad+=3;}},
-   ]},
-  {id:'medicine_trade',cat:'BLACK MARKET',cls:'warn',title:'Medicine for Information',
-   body:'A smuggler has real medicine — proper doses, not diluted rations. She only accepts one form of payment: the supply routes used by the outer colonies. That information could get people killed.',
-   choices:[
-    {t:'Refuse. We don\'t sell routes.',cost:'Nothing gained',moral:'g',cls:'good',fn:g=>{g.moralGood++;addLog('Refused. People still sick.',0x6abf7a);g.credits+=10;}},
-    {t:'Give her the routes. Take the medicine.',cost:'MED +40, someone else pays',moral:'b',cls:'evil',fn:g=>{g.medicine+=40;spawnGain(-4,4,0x40c0a0,15);addLog('Medicine in hand. Routes sold.',0xc44a3a);g.moralBad++;g.credits+=20;}},
-    {t:'Give false routes. Take the medicine.',cost:'MED +22, 35% she finds out',moral:'n',cls:'',fn:g=>{if(Math.random()<0.35){g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-20));addLog('She found out. Retribution coming.',0xc44a3a);g.moralBad++;}else{g.medicine+=22;addLog('False routes sold. She left satisfied.',0xd4973a);}g.credits+=15;}},
-   ]},
-  {id:'betrayal',cat:'INTERNAL CRISIS',cls:'crit',title:'Someone Is Selling Us Out',
-   body:'Your supplies have been disappearing. A council member has evidence it\'s one of your senior staff — the logistics officer, who also coordinates food distribution. Removing them will cripple operations for weeks.',
-   choices:[
-    {t:'Confront them privately. Give one chance.',cost:'FOOD −25 more losses, maybe they stop',moral:'g',cls:'good',fn:g=>{if(Math.random()<0.5){addLog('They stopped. Quietly.',0x4a9a8a);g.moralGood++;}else{g.food-=25;addLog('They didn\'t stop.',0xc44a3a);}g.credits+=15;}},
-    {t:'Remove them immediately and publicly.',cost:'POP −1, PROD −25% for 5d',moral:'n',cls:'',fn:g=>{g.citizens.splice(0,1);g.quarantine=5;spawnExplosion(0,0,0xd4973a,8);addLog('Officer removed. Operations disrupted.',0xd4973a);g.credits+=30;}},
-    {t:'Use them. Feed them false supply routes.',cost:'Potential leverage, complex risk',moral:'b',cls:'evil',fn:g=>{if(Math.random()<0.6){g.credits+=60;addLog('Double agent exploited. Intel gathered.',0xd4973a);}else{g.food-=40;g.energy-=30;addLog('Scheme backfired. Severe losses.',0xc44a3a);g.moralBad++;}g.credits+=10;}},
-   ]},
-  {id:'child_labor',cat:'PRODUCTION CRISIS',cls:'warn',title:'The Youngest Are Willing to Work',
-   body:'Three families have volunteered their children to help in the fields. Food is scarce. The children are old enough to be useful. The colony has not reached this point before.',
-   choices:[
-    {t:'Refuse absolutely. Find another way.',cost:'MORALE +8, still hungry',moral:'g',cls:'good',fn:g=>{g.moralGood++;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Children kept out. Colony respects this.',0x6abf7a);g.credits+=15;}},
-    {t:'Light tasks only — supervised, limited.',cost:'FOOD +30, slow morale decay',moral:'n',cls:'',fn:g=>{g.food+=30;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-5));addLog('Children work light shifts.',0xd4973a);}},
-    {t:'Full shifts. We need the output.',cost:'FOOD +65, MORALE −25, long-term damage',moral:'b',cls:'evil',fn:g=>{g.food+=65;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-25));spawnExplosion(0,0,0xc44030,5);addLog('Children work full shifts.',0xc44a3a);g.moralBad+=2;}},
-   ]},
-  {id:'boss_wave',cat:'⚠ FINAL TRIAL',cls:'crit',title:'The Collapse Front',forced:true,
-   body:'Every failing colony in a hundred miles is collapsing toward yours. The desperate, the dying, the dangerous — all of them coming here because you\'re the last light they can see. This is what survival looks like from the outside.',
-   choices:[
-    {t:'Seal the walls. Endure.',cost:'ENERGY −90, FOOD −70',moral:'n',cls:'',fn:g=>{g.energy-=90;g.food-=70;if(g.infra.walls){g.energy+=35;addLog('Walls held. Damage reduced by fortifications.',0x5a8ab0);}spawnExplosion(0,0,0xff4020,25);addLog('The wave broke on your walls.',0x6abf7a);g.credits+=75;}},
-    {t:'Open the gates. All of them.',cost:'FOOD −130, POP +15',moral:'g',cls:'good',fn:g=>{g.food-=130;for(let i=0;i<15;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,30);addLog('Fifteen souls absorbed. The colony swells.',0x6abf7a);g.moralGood+=2;g.credits+=55;}},
-    {t:'Fragment the colony. Scatter to survive.',cost:'POP −10, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(10,g.citizens.length-3));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xc44030,20);addLog('Colony fractured. Survivors scattered.',0xc44a3a);g.moralBad+=2;}},
-   ]},
+  {id:'meteor',cat:'CRITICAL ALERT',cls:'crit',title:'Something Falls from the Sky',body:'The watch-fires on the eastern wall are out. Your scouts return pale, saying nothing — only pointing to the horizon. A sound like distant thunder. It is not thunder.',choices:[{t:'Divert all power — hold the grid',cost:'ENERGY −45',moral:'n',cls:'',fn:g=>{g.energy-=45;if(g.energy<0){g.food+=g.energy;g.energy=0;}spawnGain(0,0,0x4080ff);addLog('Grid held. Barely.',0x5a8ab0);g.credits+=25;}},{t:'Everyone together — strength in numbers',cost:'MORALE SHIFT',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+(Math.random()<0.5?12:-4)));addLog('Community rallied.',0x6abf7a);g.credits+=15;}},{t:'Let it come. We have endured worse.',cost:'UNKNOWN COST',moral:'b',cls:'evil',fn:g=>{const loss=40+Math.floor(Math.random()*50);g.food-=loss;g.energy-=30;spawnExplosion(0,0,0xff4020,20);addLog(`Impact. −${loss} food, −30 energy.`,0xc44a3a);g.moralBad++;}}]},
+  {id:'plague',cat:'MEDICAL ALERT',cls:'warn',title:'The Pale Sickness',body:"Three families in the south quarter stopped coming to work. By evening, more. The healer says she's seen this before.",choices:[{t:'Seal the quarter. Quarantine.',cost:'QUARANTINE 5d, MORALE RISK',moral:'n',cls:'',fn:g=>{g.quarantine=5;g.citizens.forEach(c=>c.morale=Math.max(0,c.morale-8));addLog('Quarantine declared.',0x4a9a8a);g.credits+=20;}},{t:'Spend what medicine we have',cost:'MEDICINE −25',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-25);g.citizens.forEach(c=>c.health=Math.min(100,c.health+18));spawnGain(-4,4,0x60c0a0);addLog('Treatment distributed.',0x6abf7a);g.credits+=30;}},{t:'Accelerate the work schedule',cost:'POP RISK',moral:'b',cls:'evil',fn:g=>{const n=1+Math.floor(Math.random()*5);g.citizens.splice(0,Math.min(n,g.citizens.length-1));spawnExplosion(-4,-4,0xc44030,8);addLog(`${n} fell. The rest work through grief.`,0xc44a3a);g.moralBad++;}}]},
+  {id:'strangers',cat:'INCOMING SIGNAL',cls:'',title:'People at the Gate',body:"They arrived before dawn — eight of them. Some wounded. They say their village is gone. Your council says you cannot afford mercy.",choices:[{t:'Open the gate.',cost:'FOOD −45, POP +8',moral:'g',cls:'good',fn:g=>{g.food-=45;for(let i=0;i<8;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,15);addLog('Eight souls admitted.',0x6abf7a);g.credits+=35;}},{t:'Take the able-bodied only.',cost:'FOOD −15, POP +3',moral:'n',cls:'',fn:g=>{g.food-=15;for(let i=0;i<3;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}addLog('Three workers admitted.',0xd4973a);}},{t:'Bar the gate.',cost:'MORALE −25',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=25);addLog('Gate barred. Guilt outlasts the winter.',0xc44a3a);g.moralBad++;g.refugeesRejected++;}}]},
+  {id:'fire',cat:'FIRE EMERGENCY',cls:'crit',title:'The Grain Store Burns',body:'The night shift saw the glow from the east compound. By the time anyone reached it, the roof was gone.',choices:[{t:'All hands — every bucket.',cost:'ENERGY −55',moral:'g',cls:'good',fn:g=>{g.energy-=55;g.food-=20;spawnSmoke(0,-8);addLog('Fire contained. Most grain saved.',0x5a8ab0);g.credits+=18;}},{t:'Controlled burn — sacrifice the compound',cost:'FOOD −70',moral:'n',cls:'',fn:g=>{g.food-=70;spawnExplosion(0,-8,0xff6020);addLog('Compound sacrificed.',0xd4973a);}},{t:'Save the tools, not the food',cost:'FOOD −110, CREDITS +40',moral:'b',cls:'evil',fn:g=>{g.food-=110;g.credits+=40;spawnExplosion(0,-8,0xff2000,30);addLog('Food lost. Equipment saved.',0xc44a3a);g.moralBad++;}}]},
+  {id:'trader',cat:'OPPORTUNITY',cls:'',title:'A Stranger With a Cart',body:"She arrived alone, which means either she's very skilled or very desperate. Her prices are not posted.",choices:[{t:'Trade energy for food and medicine',cost:'ENERGY −65, FOOD +85, MED +22',moral:'n',cls:'good',fn:g=>{g.energy-=65;g.food+=85;g.medicine+=22;spawnGain(0,0,0x80c050,20);addLog('Trade complete.',0x6abf7a);g.credits+=25;}},{t:'Offer safe passage through territory',cost:'MORALE +18',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+18));addLog('Passage granted. Allies made.',0x6abf7a);g.credits+=12;}},{t:'Detain and take the cart',cost:'FOOD +130, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.food+=130;g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xff2233,10);addLog('Cart seized. Word will spread.',0xc44a3a);g.moralBad+=2;}}]},
+  {id:'uprising',cat:'SOCIAL CRISIS',cls:'crit',title:'The East Quarter Won\'t Work',body:"You can hear them from the council chamber. They aren't asking for much. They're asking for everything.",choices:[{t:'Meet with the ringleaders.',cost:'FOOD −55, MORALE +28',moral:'g',cls:'good',fn:g=>{g.food-=55;g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+28));spawnGain(0,0,0x60c050,12);addLog('Deal struck. Uneasy peace.',0x6abf7a);g.credits+=30;}},{t:'Address the crowd. Promise.',cost:'MORALE +8',moral:'n',cls:'',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));addLog('Words bought time.',0xd4973a);}},{t:'Make an example.',cost:'POP −2, MORALE −40',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(2,g.citizens.length-1));g.citizens.forEach(c=>c.morale-=40);spawnExplosion(0,0,0xff2233,15);addLog('Two made examples.',0xc44a3a);g.moralBad+=2;}}]},
+  {id:'winter',cat:'SEASONAL SHIFT',cls:'warn',title:'The Frost Comes Early',body:'The fields went grey overnight. The soil is already frozen three inches down.',choices:[{t:'Emergency harvest',cost:'MORALE −12, FOOD +65',moral:'n',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale-=12);g.food+=65;spawnGain(0,0,0x80a040,15);addLog('Harvest done.',0x6abf7a);g.credits+=20;}},{t:'Buy insulation — spend energy',cost:'ENERGY −45',moral:'n',cls:'',fn:g=>{g.energy-=45;g.diffScale-=0.04;addLog('Colony insulated.',0x5a8ab0);g.credits+=15;}},{t:'Ration everything.',cost:'FOOD DRAIN +40% for 10d',moral:'b',cls:'evil',fn:g=>{g.winterPenalty=10;addLog('Rations enforced.',0xc44a3a);}}]},
+  {id:'raiders',cat:'RAID WARNING',cls:'crit',title:'They\'ve Been Watching You',body:'Your walls are good. Your wealth is visible. Those two facts are now someone else\'s opportunity.',choices:[{t:'Send payment.',cost:'CREDITS −150',moral:'n',cls:'',fn:g=>{if(g.credits>=150){g.credits-=150;addLog('Payment sent. They left.',0xd4973a);}else{g.food-=90;spawnExplosion(0,0,0xff2000,20);addLog('No credits. Paid in food.',0xc44a3a);}}},{t:'Defend. Let them test our walls.',cost:'POP −1~3, MORALE +12 if win',moral:'n',cls:'good',fn:g=>{const n=1+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-1));g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+12));spawnExplosion(0,0,0xff6020,15);addLog(`${n} lost. Colony held.`,0x6abf7a);g.credits+=35;}},{t:'Open a hidden gate — absorb some',cost:'FOOD −45, POP +4',moral:'g',cls:'good',fn:g=>{g.food-=45;for(let i=0;i<4;i++){g.citizens.push(new Citizen());if(citizenObjs.length<50)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,12);addLog('Four absorbed.',0x6abf7a);g.moralGood++;}}]},
+  {id:'triage',cat:'MEDICAL CRISIS',cls:'crit',title:'Not Enough Medicine for Everyone',body:'Seven citizens are critically ill. You have medicine for three.',choices:[{t:'Treat the most likely to survive',cost:'MED −18, save 3, lose ~4',moral:'n',cls:'',fn:g=>{g.medicine=Math.max(0,g.medicine-18);g.citizens.splice(0,Math.min(4,g.citizens.length-3));addLog('Triage applied.',0xd4973a);g.credits+=20;}},{t:'Spread it thin — small doses for all',cost:'MED −25, all survive weakened',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-25);g.citizens.forEach(c=>c.health=Math.max(10,c.health-8));addLog('Doses split. All survive — barely.',0x6abf7a);g.moralGood++;g.credits+=10;}},{t:'Use none. Save the medicine.',cost:'POP −4~6',moral:'b',cls:'evil',fn:g=>{const n=4+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-2));spawnExplosion(0,0,0xc44030,15);addLog(`${n} died untreated.`,0xc44a3a);g.moralBad+=2;}}]},
+  {id:'boss_wave',cat:'⚠ FINAL TRIAL',cls:'crit',title:'The Collapse Front',forced:true,body:'Every failing colony in a hundred miles is collapsing toward yours. This is what survival looks like from the outside.',choices:[{t:'Seal the walls. Endure.',cost:'ENERGY −90, FOOD −70',moral:'n',cls:'',fn:g=>{g.energy-=90;g.food-=70;if(g.infra.walls){g.energy+=35;addLog('Walls reduced damage.',0x5a8ab0);}spawnExplosion(0,0,0xff4020,25);addLog('The wave broke on your walls.',0x6abf7a);g.credits+=75;}},{t:'Open the gates. All of them.',cost:'FOOD −130, POP +15',moral:'g',cls:'good',fn:g=>{g.food-=130;for(let i=0;i<15;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}spawnGain(0,0,0x80c060,30);addLog('Fifteen souls absorbed.',0x6abf7a);g.moralGood+=2;g.credits+=55;}},{t:'Fragment the colony. Scatter.',cost:'POP −10, MORALE −35',moral:'b',cls:'evil',fn:g=>{g.citizens.splice(0,Math.min(10,g.citizens.length-3));g.citizens.forEach(c=>c.morale-=35);spawnExplosion(0,0,0xc44030,20);addLog('Colony fractured.',0xc44a3a);g.moralBad+=2;}}]},
 ];
 let usedEvtIds=new Set();
 
-/* ── CHAIN EVENTS ── multi-step crisis sequences ── */
-// Each chain is an array of event steps. Player's choice in step N
-// sets flags that gate or modify step N+1.
 const CHAINS={
   plague_chain:[
-    {id:'plague_c1',cat:'MEDICAL ALERT',cls:'warn',title:'The Coughing Sickness',
-     body:'It started in the east quarter. Fever, fatigue, hollow eyes. The healer\'s hut is overwhelmed. Three days in and it shows no sign of stopping.',
-     choices:[
-      {t:'Full quarantine immediately',cost:'PROD −30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;g._chainFlag='quarantine';g.credits+=15;}},
-      {t:'Burn medicine to treat',cost:'MEDICINE −20, HEALTH +15',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));g._chainFlag='treated';g.credits+=20;}},
-      {t:'Continue working — push through',cost:'MORALE −10, spreads further',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g._chainFlag='ignored';g.moralBad++;}},
-     ]},
-    {id:'plague_c2',cat:'MEDICAL ALERT — FOLLOW-UP',cls:'warn',title:'The Fever Breaks (Or Doesn\'t)',
-     body:(g)=>g._chainFlag==='quarantine'
-       ?'The quarantine held. Half the sick have recovered. But workers report the isolation has broken something in the community spirit.'
-       :g._chainFlag==='treated'
-       ?'Medicine worked — but you\'re nearly out. A second wave has hit the southern quarter. You have almost nothing left to fight it.'
-       :'The sickness spread unchecked. Two died overnight. The rest are frightened. There is almost no medicine left.',
-     choices:[
-      {t:'Lift quarantine, celebrate recovery',cost:'MORALE +20, risk of relapse',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+20));if(Math.random()<0.3){g.citizens.forEach(c=>c.health-=8);addLog('Relapse struck after celebrations.',0xc44a3a);}g.credits+=30;}},
-      {t:'Emergency medicine run — send scouts',cost:'ENERGY −20, MEDICINE +15 (if lucky)',moral:'n',cls:'',fn:g=>{g.energy-=20;if(Math.random()<0.5){g.medicine+=15;addLog('Scout found medicine cache.',0x4a9a8a);}else addLog('Scout returned empty.',0x888888);}},
-      {t:'Triage — let the weakest go',cost:'POP −1~3, MEDICINE +8 (recovered)',moral:'b',cls:'evil',fn:g=>{const n=1+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-1));g.medicine+=8;g.moralBad++;addLog(`${n} left untreated. Died.`,0xc44a3a);}},
-     ]},
+    {id:'plague_c1',cat:'MEDICAL ALERT',cls:'warn',title:'The Coughing Sickness',body:'It started in the east quarter. Fever, fatigue, hollow eyes. Three days in and it shows no sign of stopping.',choices:[{t:'Full quarantine immediately',cost:'PROD −30% for 5 days',moral:'g',cls:'good',fn:g=>{g.quarantine=5;g._chainFlag='quarantine';g.credits+=15;}},{t:'Burn medicine to treat',cost:'MEDICINE −20',moral:'g',cls:'good',fn:g=>{g.medicine=Math.max(0,g.medicine-20);g.citizens.forEach(c=>c.health=Math.min(100,c.health+15));g._chainFlag='treated';g.credits+=20;}},{t:'Continue working — push through',cost:'MORALE −10',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=10);g._chainFlag='ignored';g.moralBad++;}}]},
+    {id:'plague_c2',cat:'MEDICAL ALERT — FOLLOW-UP',cls:'warn',title:'The Fever Breaks (Or Doesn\'t)',body:g=>g._chainFlag==='quarantine'?'The quarantine held. Half the sick have recovered. But the isolation has broken something in community spirit.':g._chainFlag==='treated'?'Medicine worked — but a second wave has hit the southern quarter.':'The sickness spread unchecked. Two died overnight.',choices:[{t:'Lift quarantine, celebrate recovery',cost:'MORALE +20, risk of relapse',moral:'g',cls:'good',fn:g=>{g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+20));if(Math.random()<0.3){g.citizens.forEach(c=>c.health-=8);addLog('Relapse struck.',0xc44a3a);}g.credits+=30;}},{t:'Emergency medicine run',cost:'ENERGY −20, MEDICINE +15 (if lucky)',moral:'n',cls:'',fn:g=>{g.energy-=20;if(Math.random()<0.5){g.medicine+=15;addLog('Scout found medicine cache.',0x4a9a8a);}else addLog('Scout returned empty.',0x888888);}},{t:'Triage — let the weakest go',cost:'POP −1~3',moral:'b',cls:'evil',fn:g=>{const n=1+Math.floor(Math.random()*3);g.citizens.splice(0,Math.min(n,g.citizens.length-1));g.medicine+=8;g.moralBad++;addLog(`${n} left untreated.`,0xc44a3a);}}]},
   ],
   drought_chain:[
-    {id:'drought_c1',cat:'ENVIRONMENTAL CRISIS',cls:'warn',title:'The Wells Are Running Low',
-     body:'Water reserves have dropped by half. The eastern fields are already yellowing. This is the beginning of something, not the end.',
-     choices:[
-      {t:'Ration water strictly — reduce farm output',cost:'FOOD PROD −25% for 6 days',moral:'n',cls:'',fn:g=>{g.quarantine=6;g._chainFlag='rationed';g.credits+=10;}},
-      {t:'Dig emergency irrigation — spend energy',cost:'ENERGY −50, FOOD +30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food+=30;g._chainFlag='irrigation';g.credits+=20;}},
-      {t:'Push workers harder — exhaust the reserves',cost:'FOOD +40 now, FOOD −80 in 3 days',moral:'b',cls:'evil',fn:g=>{g.food+=40;g._chainFlag='overworked';g.moralBad++;setTimeout(()=>{G.food=Math.max(0,G.food-80);addLog('Drought debt came due. −80 food.',0xc44a3a);},3*G.dayMs);}},
-     ]},
-    {id:'drought_c2',cat:'ENVIRONMENTAL CRISIS — RESOLUTION',cls:'warn',title:'Forty Days Without Rain',
-     body:(g)=>g._chainFlag==='rationed'
-       ?'The rationing paid off. The colony is hungry but the wells have refilled slightly. Morale is low but the fields will survive.'
-       :g._chainFlag==='irrigation'
-       ?'The irrigation channels held. Crops survived. But the energy cost left the grid fragile — one more spike and the lights go out.'
-       :'The overworking cracked. Three workers collapsed. The rest are refusing orders. The fields need tending and nobody will go.',
-     choices:[
-      {t:'Declare a Day of Rest — feast what you have',cost:'FOOD −40, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food=Math.max(0,g.food-40);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));g.credits+=40;}},
-      {t:'Resume normal operations',cost:'Nothing. Just survival.',moral:'n',cls:'',fn:g=>{addLog('Colony returns to work. Grimly.',0x888888);}},
-      {t:'Conscript the resisters',cost:'MORALE −20, FOOD +20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);g.food+=20;g.moralBad++;addLog('Forced labor resumed. Resentment builds.',0xc44a3a);}},
-     ]},
-  ],
-  raiders_chain:[
-    {id:'raiders_c1',cat:'RAID WARNING',cls:'crit',title:'Scouts at the Perimeter',
-     body:'Your scouts spotted movement in the treeline. Dozens. Armed. They\'ve been watching the colony for two days before you noticed.',
-     choices:[
-      {t:'Send a diplomatic envoy to talk',cost:'ENERGY −15, maybe peaceful',moral:'g',cls:'good',fn:g=>{g.energy-=15;g._chainFlag=Math.random()<0.55?'peace':'fail';g.credits+=10;}},
-      {t:'Fortify immediately, prepare for siege',cost:'ENERGY −30, FOOD −20',moral:'n',cls:'',fn:g=>{g.energy-=30;g.food-=20;g._chainFlag='fortress';}},
-      {t:'Bribe them — leave credits at the gate',cost:'CREDITS −100',moral:'n',cls:'',fn:g=>{if(g.credits>=100){g.credits-=100;g._chainFlag='bribed';}else{g._chainFlag='fail';addLog('Not enough credits. They advance.',0xc44a3a);}}},
-     ]},
-    {id:'raiders_c2',cat:'RAID — CONCLUSION',cls:'crit',title:'The Morning After',
-     body:(g)=>g._chainFlag==='peace'
-       ?'The envoy returned. The raider leader, a gaunt woman named Voss, agreed to trade rather than raid. She wants a route map and medicines.'
-       :g._chainFlag==='fortress'
-       ?'They tested your walls at dawn. The fortifications held. Three of yours were wounded, none killed. The raiders withdrew at midday.'
-       :g._chainFlag==='bribed'
-       ?'The credits bought you one night. By morning, half the raider band left. The rest returned two days later, demanding more.'
-       :'They breached the eastern wall before sunrise. What they took cannot be replaced.',
-     choices:[
-      {t:'Honor the agreement (food + medicine)',cost:g=>g._chainFlag==='peace'?'FOOD −40, MED −15, gain ally':'FOOD −60, ENERGY −30',moral:'g',cls:'good',fn:g=>{if(g._chainFlag==='peace'){g.food-=40;g.medicine-=15;g.moralGood++;g.credits+=50;spawnGain(0,0,0x80c060,12);addLog('Voss alliance forged.',0x6abf7a);}else{g.food-=60;g.energy-=30;spawnExplosion(0,0,0xff4020,15);}}},
-      {t:'Refuse — drive them off again',cost:'POP −1, MORALE +10',moral:'n',cls:'',fn:g=>{const n=Math.min(1,g.citizens.length-1);g.citizens.splice(0,n);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+10));addLog('Second defense. One more casualty.',0xd4973a);}},
-      {t:'Recruit them — merge the groups',cost:'FOOD −60, POP +6',moral:'g',cls:'good',fn:g=>{g.food-=60;for(let i=0;i<6;i++){g.citizens.push(new Citizen());if(citizenObjs.length<60)makeCitizen(g.citizens.length);}g.moralGood++;spawnGain(0,0,0x80c060,18);addLog('Former raiders joined the colony.',0x6abf7a);}},
-     ]},
+    {id:'drought_c1',cat:'ENVIRONMENTAL CRISIS',cls:'warn',title:'The Wells Are Running Low',body:'Water reserves have dropped by half. The eastern fields are already yellowing.',choices:[{t:'Ration water — reduce farm output',cost:'PROD −25% for 6 days',moral:'n',cls:'',fn:g=>{g.quarantine=6;g._chainFlag='rationed';g.credits+=10;}},{t:'Dig emergency irrigation',cost:'ENERGY −50, FOOD +30',moral:'g',cls:'good',fn:g=>{g.energy-=50;g.food+=30;g._chainFlag='irrigation';g.credits+=20;}},{t:'Push workers harder',cost:'FOOD +40 now, FOOD −80 later',moral:'b',cls:'evil',fn:g=>{g.food+=40;g._chainFlag='overworked';g.moralBad++;setTimeout(()=>{G.food=Math.max(0,G.food-80);addLog('Drought debt came due. −80 food.',0xc44a3a);},3*G.dayMs);}}]},
+    {id:'drought_c2',cat:'ENVIRONMENTAL CRISIS — RESOLUTION',cls:'warn',title:'Forty Days Without Rain',body:g=>g._chainFlag==='rationed'?'The rationing paid off. The wells have refilled slightly.':g._chainFlag==='irrigation'?'The irrigation channels held. Crops survived. Energy cost left the grid fragile.':'The overworking cracked. Workers are refusing orders.',choices:[{t:'Declare a Day of Rest',cost:'FOOD −40, MORALE +25',moral:'g',cls:'good',fn:g=>{g.food=Math.max(0,g.food-40);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+25));g.credits+=40;}},{t:'Resume normal operations',cost:'Just survival.',moral:'n',cls:'',fn:g=>{addLog('Colony returns to work.',0x888888);}},{t:'Conscript the resisters',cost:'MORALE −20, FOOD +20',moral:'b',cls:'evil',fn:g=>{g.citizens.forEach(c=>c.morale-=20);g.food+=20;g.moralBad++;addLog('Forced labor resumed.',0xc44a3a);}}]},
   ],
 };
-// Active chain state
 let activeChain=null,activeChainStep=0;
 
-function startChain(chainId){
-  if(activeChain)return; // don't interrupt
-  activeChain=CHAINS[chainId];
-  activeChainStep=0;
-  showChainStep();
-}
+function startChain(chainId){if(activeChain)return;activeChain=CHAINS[chainId];activeChainStep=0;showChainStep();}
 function showChainStep(){
   if(!activeChain)return;
-  const step=activeChain[activeChainStep];
-  const total=activeChain.length;
-  // Inject chain header
+  const step=activeChain[activeChainStep];const total=activeChain.length;
   const header=document.getElementById('evt-chain-header');
   header.style.display='flex';
   header.innerHTML=`<span class="evt-chain-step">PART ${activeChainStep+1}/${total}</span><div class="evt-chain-dots">${activeChain.map((_,i)=>`<div class="evt-chain-dot${i<activeChainStep?' done':i===activeChainStep?' active':''}"></div>`).join('')}</div>`;
-  // Resolve dynamic body
   const body=typeof step.body==='function'?step.body(G):step.body;
-  // Show event panel
   const p=document.getElementById('evt-panel');
-  document.getElementById('etag').textContent=step.cat;
-  document.getElementById('etag').className=`evt-tag ${step.cls}`;
-  document.getElementById('etitle').textContent=step.title;
-  document.getElementById('ebody').textContent=body;
+  document.getElementById('etag').textContent=step.cat;document.getElementById('etag').className=`evt-tag ${step.cls}`;
+  document.getElementById('etitle').textContent=step.title;document.getElementById('ebody').textContent=body;
   const ch=document.getElementById('echoices');ch.innerHTML='';
   ['A','B','C'].forEach((l,i)=>{
     const c=step.choices[i];if(!c)return;
     const costText=typeof c.cost==='function'?c.cost(G):c.cost;
     const btn=document.createElement('button');btn.className=`ev-btn ${c.cls}`;
     btn.innerHTML=`<span class="ev-key">${l}</span><div><div class="ev-text">${c.t}</div><div class="ev-cost">${costText}</div></div>`;
-    btn.onclick=()=>{
-      c.fn(G);
-      if(c.moral==='g')G.moralGood++;
-      if(c.moral==='b')G.moralBad++;
-      activeChainStep++;
-      if(activeChainStep<activeChain.length){
-        // Advance to next step — brief pause then show next
-        p.classList.remove('open');
-        setTimeout(()=>showChainStep(),400);
-      } else {
-        // Chain complete
-        p.classList.remove('open');
-        header.style.display='none';
-        activeChain=null;activeChainStep=0;
-        G.pendingEvent=null;G.paused=false;
-        updateHUD();
-      }
-    };
+    btn.onclick=()=>{c.fn(G);if(c.moral==='g')G.moralGood++;if(c.moral==='b')G.moralBad++;activeChainStep++;
+      if(activeChainStep<activeChain.length){p.classList.remove('open');setTimeout(()=>showChainStep(),400);}
+      else{p.classList.remove('open');header.style.display='none';activeChain=null;activeChainStep=0;G.pendingEvent=null;G.paused=false;updateHUD();}};
     ch.appendChild(btn);
   });
-  p.classList.add('open');
-  G.paused=true;G.pendingEvent=step;
+  p.classList.add('open');G.paused=true;G.pendingEvent=step;
   hazardLight.intensity=4;setTimeout(()=>hazardLight.intensity=0,1500);
 }
-
 
 function toggleInfra(){
   const body=document.getElementById('infra-body');
@@ -1397,117 +711,51 @@ function toggleInfra(){
 function renderInfra(){
   const body=document.getElementById('infra-body');
   body.innerHTML=INFRA.map(item=>{
-    const built=item.built(G);
-    const canAfford=G.credits>=item.cost;
-    return `<div class="infra-item">
-      <div class="infra-left">
-        <div class="infra-name">${item.icon} ${item.name}</div>
-        <div class="infra-desc">${built?item.effect:item.desc}</div>
-        ${item.drain?`<div class="infra-desc" style="color:#c44a3a">▼ ${item.drain}</div>`:''}
-      </div>
-      ${built
-        ? `<span class="infra-built">✓ BUILT</span>`
-        : `<button class="infra-buy" ${canAfford?'':'disabled'} onclick="buyInfra('${item.id}')">${item.cost}⚙</button>`
-      }
-    </div>`;
+    const built=item.built(G);const canAfford=G.credits>=item.cost;
+    return `<div class="infra-item"><div class="infra-left"><div class="infra-name">${item.icon} ${item.name}</div><div class="infra-desc">${item.desc}</div>${item.drain?`<div class="infra-desc" style="color:#c44a3a">▼ ${item.drain}</div>`:''}</div>${built?`<span class="infra-built">✓ BUILT</span>`:`<button class="infra-buy" ${canAfford?'':'disabled'} onclick="buyInfra('${item.id}')">${item.cost}⚙</button>`}</div>`;
   }).join('');
 }
 function buyInfra(id){
-  const item=INFRA.find(i=>i.id===id);
-  if(!item||item.built(G)||G.credits<item.cost)return;
-  G.credits-=item.cost;
-  item.fn(G);
-  addLog(`${item.icon} ${item.name} constructed.`,0xe8c060);
-  floatPop(`🏗 ${item.name.toUpperCase()} BUILT`,0xe8c060,50,45);
-  spawnGain(0,0,0xe8c060,14);
-  checkAchievements();updateHUD();renderInfra();
+  const item=INFRA.find(i=>i.id===id);if(!item||item.built(G)||G.credits<item.cost)return;
+  G.credits-=item.cost;item.fn(G);addLog(`${item.icon} ${item.name} constructed.`,0xe8c060);
+  floatPop(`🏗 ${item.name.toUpperCase()} BUILT`,0xe8c060,50,45);spawnGain(0,0,0xe8c060,14);checkAchievements();updateHUD();renderInfra();
 }
 
-/* ── SAVE / LOAD ── */
 function saveGame(){
-  const state={
-    day:G.day,food:G.food,energy:G.energy,medicine:G.medicine,credits:G.credits,
-    citizens:G.citizens.map(c=>({health:c.health,morale:c.morale})),
-    diffScale:G.diffScale,infra:{...G.infra},
-    moralGood:G.moralGood,moralBad:G.moralBad,
-    streak:G.streak,totalDeaths:G.totalDeaths,
-    achievements:[...G.achievements],
-    endlessMode:G.endlessMode,endlessDayBonus:G.endlessDayBonus,
-  };
+  const state={day:G.day,food:G.food,energy:G.energy,medicine:G.medicine,credits:G.credits,citizens:G.citizens.map(c=>({health:c.health,morale:c.morale})),diffScale:G.diffScale,infra:{...G.infra},moralGood:G.moralGood,moralBad:G.moralBad,streak:G.streak,totalDeaths:G.totalDeaths,achievements:[...G.achievements],endlessMode:G.endlessMode};
   localStorage.setItem('colonyzero_save',JSON.stringify(state));
-  const btn=document.querySelector('.sl-btn');
-  btn.classList.add('save-pulse');
-  setTimeout(()=>btn.classList.remove('save-pulse'),700);
+  document.querySelector('.sl-btn').classList.add('save-pulse');
+  setTimeout(()=>document.querySelector('.sl-btn').classList.remove('save-pulse'),700);
   notify('COLONY SAVED',0x6abf7a);
 }
 function loadGame(){
   try{
-    const raw=localStorage.getItem('colonyzero_save');
-    if(!raw){notify('NO SAVE FOUND',0xc44a3a);return;}
+    const raw=localStorage.getItem('colonyzero_save');if(!raw){notify('NO SAVE FOUND',0xc44a3a);return;}
     const s=JSON.parse(raw);
     G.day=s.day;G.food=s.food;G.energy=s.energy;G.medicine=s.medicine;G.credits=s.credits;
     G.citizens=s.citizens.map(c=>{const n=new Citizen();n.health=c.health;n.morale=c.morale;return n;});
-    G.diffScale=s.diffScale;Object.assign(G.infra,s.infra);
-    G.moralGood=s.moralGood;G.moralBad=s.moralBad;
-    G.streak=s.streak;G.totalDeaths=s.totalDeaths||0;
-    G.achievements=new Set(s.achievements||[]);
-    G.endlessMode=s.endlessMode||false;G.endlessDayBonus=s.endlessDayBonus||0;
-    // Sync 3D citizens
+    G.diffScale=s.diffScale;Object.assign(G.infra,s.infra);G.moralGood=s.moralGood;G.moralBad=s.moralBad;G.streak=s.streak;G.totalDeaths=s.totalDeaths||0;G.achievements=new Set(s.achievements||[]);G.endlessMode=s.endlessMode||false;
     while(citizenObjs.length>G.citizens.length){const m=citizenObjs.pop();citizenGroup.remove(m);}
     while(citizenObjs.length<G.citizens.length&&citizenObjs.length<50)makeCitizen(citizenObjs.length);
-    notify('SAVE LOADED — DAY '+G.day,0x6abf7a);
-    updateHUD();
+    notify('SAVE LOADED — DAY '+G.day,0x6abf7a);updateHUD();
   }catch(e){notify('LOAD FAILED',0xc44a3a);}
 }
 
-/* ── DEBUG / TELEMETRY ── */
 function toggleDebug(){document.getElementById('debug-panel').classList.toggle('open');updateDebug();}
 function updateDebug(){
   const d=document.getElementById('debug-inner');
   if(!d||!document.getElementById('debug-panel').classList.contains('open'))return;
-  const pop=G.citizens.length;
-  const md=getMoraleDist(G.citizens);
-  const infraProd=getInfraProdMult(G.infra);
-  const energyMult=getEnergyFoodMult(G.energy,pop);
-  const prod=Math.floor(pop*3*G.diffScale*infraProd*md.prodMult*energyMult);
-  const infraBuilt=Object.values(G.infra).filter(Boolean).length;
-  const syn=infraBuilt>0?getInfraSynergy(G.infra).toFixed(2):'—';
-  d.innerHTML=[
-    `<span>difficulty</span>   ${G.difficulty}`,
-    `<span>diffScale</span>    ${G.diffScale.toFixed(3)}`,
-    `<span>diffInc/day</span>  ${G.baseDiffInc}`,
-    `<span>eventCD</span>      ${G.eventCooldown}d`,
-    `<span>prod/day</span>     ${prod}`,
-    `<span>moraleTier</span>   ${md.tier} (×${md.prodMult.toFixed(2)})`,
-    `<span>broken%</span>      ${Math.round(md.brokenPct*100)}% &lt;20`,
-    `<span>heroic%</span>      ${Math.round(md.heroicPct*100)}% &gt;80`,
-    `<span>evtFreqMult</span>  ×${(md.eventFreqMult*G.eventFreqMod).toFixed(2)}`,
-    `<span>energyMult</span>   ×${energyMult.toFixed(2)} → food`,
-    `<span>raidPressure</span> ${(G.raidPressure*100).toFixed(0)}%`,
-    `<span>spoilageRate</span> ×${G.spoilageRate.toFixed(2)}`,
-    `<span>tradePenalty</span> −${Math.min(50,G.moralBad*5)}%`,
-    `<span>infraSynergy</span> ×${syn} (${infraBuilt}/5)`,
-    `<span>strikeActive</span> ${G.strikeActive}d`,
-    `<span>moralG/B</span>     ${G.moralGood}/${G.moralBad}`,
-    `<span>chainActive</span>  ${activeChain?'YES step'+activeChainStep:'no'}`,
-    `<span>endless</span>      ${G.endlessMode}`,
-  ].join('<br>');
+  const pop=G.citizens.length;const md=getMoraleDist(G.citizens);
+  const infraProd=getInfraProdMult(G.infra);const energyMult=getEnergyFoodMult(G.energy,pop);
+  d.innerHTML=[`<span>difficulty</span>   ${G.difficulty}`,`<span>diffScale</span>    ${G.diffScale.toFixed(3)}`,`<span>moraleTier</span>   ${md.tier} (×${md.prodMult.toFixed(2)})`,`<span>broken%</span>      ${Math.round(md.brokenPct*100)}%`,`<span>heroic%</span>      ${Math.round(md.heroicPct*100)}%`,`<span>energyMult</span>   ×${energyMult.toFixed(2)}`,`<span>raidPressure</span> ${(G.raidPressure*100).toFixed(0)}%`,`<span>moralG/B</span>     ${G.moralGood}/${G.moralBad}`,`<span>chainActive</span>  ${activeChain?'YES':'no'}`,`<span>credits</span>      ${G.credits}`,].join('<br>');
 }
 
-/* ── BOSS WAVE ── */
 function triggerBossWave(){
   G.endgameTriggered=true;
-  const warn=document.getElementById('boss-warning');
-  warn.classList.add('show');
-  hazardLight.intensity=8;
+  const warn=document.getElementById('boss-warning');warn.classList.add('show');hazardLight.intensity=8;
   setTimeout(()=>{hazardLight.intensity=0;warn.classList.remove('show');},4200);
-  setTimeout(()=>{
-    const boss=EVENTS.find(e=>e.id==='boss_wave');
-    G.pendingEvent=boss;G.paused=true;showEvent(boss);
-    hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);
-  },4500);
+  setTimeout(()=>{const boss=EVENTS.find(e=>e.id==='boss_wave');G.pendingEvent=boss;G.paused=true;showEvent(boss);hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);},4500);
 }
-
 
 function doAction(type){
   if(!G.alive||G.pendingEvent) return;
@@ -1515,327 +763,105 @@ function doAction(type){
   if(now<cd){showPop('⏳ COOLDOWN',0xc44a3a);return;}
   G.actionCooldown[type]=now+1800;
   switch(type){
-    case 'farm':{
-      const gain=25+Math.floor(Math.random()*22);G.food+=gain;
-      spawnGain(0,-8,0x60c050);floatPop(`+${gain} FOOD 🌾`,0x6abf7a,50,55);
-      addLog(`Fields worked hard. +${gain} food.`,0x6abf7a);G.streak++;break;}
-    case 'power':{
-      const gain=20+Math.floor(Math.random()*18);G.energy+=gain;
-      spawnGain(8,0,0x4080ff);floatPop(`+${gain} ENERGY ⚡`,0x5a8ab0,60,50);
-      addLog(`Cells recharged. +${gain} energy.`,0x5a8ab0);G.streak++;break;}
-    case 'heal':
-      if(G.medicine<10){showPop('NO MEDICINE LEFT',0xc44a3a);return;}
-      G.medicine-=10;G.citizens.forEach(c=>c.health=Math.min(100,c.health+15));
-      spawnGain(-4,4,0x40c0a0);floatPop('+15 HEALTH 💊',0x4a9a8a,40,48);
-      addLog('Medic team deployed. Health +15.',0x4a9a8a);G.streak++;break;
-    case 'scout':{
-      G.energy-=8;const roll=Math.random();
-      if(roll<0.30){
-        const lootTable=[
-          {icon:'🥩',name:'FOOD CACHE',val:'+60 FOOD',fn:g=>{g.food+=60;}},
-          {icon:'⚡',name:'ENERGY CACHE',val:'+45 ENERGY',fn:g=>{g.energy+=45;}},
-          {icon:'💊',name:'MEDICINE STASH',val:'+28 MEDICINE',fn:g=>{g.medicine+=28;}},
-          {icon:'⚙',name:'CREDIT CHEST',val:'+90 CREDITS',fn:g=>{g.credits+=90;}},
-          {icon:'📜',name:'ANCIENT MAP',val:'DIFFICULTY −0.06',fn:g=>{g.diffScale=Math.max(1,g.diffScale-0.06);}},
-          {icon:'🗡',name:'WEAPONS CACHE',val:'CONSCRIPT REMOVED',fn:g=>{g.moralBad=Math.max(0,g.moralBad-1);g.citizens.forEach(c=>c.morale=Math.min(100,c.morale+8));}},
-        ];
-        showLoot(lootTable[Math.floor(Math.random()*lootTable.length)]);
-      } else if(roll<0.65){const s=15+Math.floor(Math.random()*25);G.food+=s;floatPop(`🔭 FOUND +${s} FOOD`,0x6abf7a,50,50);addLog(`Scout found ${s} food.`,0x6abf7a);}
-      else{floatPop('🔭 EMPTY HANDED',0x888888,50,50);addLog('Scouts returned empty.',0x888888);}
-      G.streak++;break;}
-    case 'trade':{
-      if(G.credits<50){showPop('NEED 50 CREDITS',0xc44a3a);return;}
-      G.credits-=50;
-      const tradePen=Math.min(0.5,G.moralBad*0.05);
-      const tg=Math.floor((55+Math.floor(Math.random()*45))*(1-tradePen));
-      G.food+=tg;
-      spawnGain(0,0,0x80a040,12);
-      floatPop(`⚙50 → +${tg} FOOD${tradePen>0?' (rep penalty)':''}`,0xd4973a,50,50);
-      addLog(`Trade: +${tg} food.${tradePen>0.2?' Merchants distrust you.':''}`,0xd4973a);
-      break;}
-    case 'conscript':{
-      if(G.citizens.length<=3){showPop('TOO FEW CITIZENS',0xc44a3a);return;}
-      G.food+=35;G.energy+=15;G.citizens.splice(0,1);
-      G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));
-      G.moralBad++;G.streak=0;
-      spawnExplosion(0,0,0xff4020,8);floatPop('⚠ FORCED LABOR',0xc44a3a,50,50);
-      addLog('Conscription: one lost, streak reset.',0xc44a3a);break;}
+    case 'farm':{const gain=25+Math.floor(Math.random()*22);G.food+=gain;spawnGain(0,-8,0x60c050);floatPop(`+${gain} FOOD 🌾`,0x6abf7a,50,55);addLog(`+${gain} food.`,0x6abf7a);G.streak++;break;}
+    case 'power':{const gain=20+Math.floor(Math.random()*18);G.energy+=gain;spawnGain(8,0,0x4080ff);floatPop(`+${gain} ENERGY ⚡`,0x5a8ab0,60,50);addLog(`+${gain} energy.`,0x5a8ab0);G.streak++;break;}
+    case 'heal':if(G.medicine<10){showPop('NO MEDICINE LEFT',0xc44a3a);return;}G.medicine-=10;G.citizens.forEach(c=>c.health=Math.min(100,c.health+15));spawnGain(-4,4,0x40c0a0);floatPop('+15 HEALTH 💊',0x4a9a8a,40,48);addLog('Medic deployed. Health +15.',0x4a9a8a);G.streak++;break;
+    case 'scout':{G.energy-=8;const roll=Math.random();
+      if(roll<0.30){const lootTable=[{icon:'🥩',name:'FOOD CACHE',val:'+60 FOOD',fn:g=>{g.food+=60;}},{icon:'⚡',name:'ENERGY CACHE',val:'+45 ENERGY',fn:g=>{g.energy+=45;}},{icon:'💊',name:'MEDICINE STASH',val:'+28 MEDICINE',fn:g=>{g.medicine+=28;}},{icon:'⚙',name:'CREDIT CHEST',val:'+90 CREDITS',fn:g=>{g.credits+=90;}}];showLoot(lootTable[Math.floor(Math.random()*lootTable.length)]);}
+      else if(roll<0.65){const s=15+Math.floor(Math.random()*25);G.food+=s;floatPop(`🔭 FOUND +${s} FOOD`,0x6abf7a,50,50);}
+      else floatPop('🔭 EMPTY HANDED',0x888888,50,50);G.streak++;break;}
+    case 'trade':if(G.credits<50){showPop('NEED 50 CREDITS',0xc44a3a);return;}G.credits-=50;{const tradePen=Math.min(0.5,G.moralBad*0.05);const tg=Math.floor((55+Math.floor(Math.random()*45))*(1-tradePen));G.food+=tg;spawnGain(0,0,0x80a040,12);floatPop(`⚙50 → +${tg} FOOD`,0xd4973a,50,50);addLog(`Trade: +${tg} food.`,0xd4973a);}break;
+    case 'conscript':if(G.citizens.length<=3){showPop('TOO FEW CITIZENS',0xc44a3a);return;}G.food+=35;G.energy+=15;G.citizens.splice(0,1);G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-18));G.moralBad++;G.streak=0;spawnExplosion(0,0,0xff4020,8);floatPop('⚠ FORCED LABOR',0xc44a3a,50,50);addLog('Conscription. Streak reset.',0xc44a3a);break;
   }
   if(G.streak>0&&G.streak%5===0){const b=20+G.streak*2;G.credits+=b;showStreakBanner(G.streak);floatPop(`🔥 STREAK BONUS +${b}⚙`,0xe8c060,50,42);}
   checkAchievements();updateHUD();
 }
 
 function showLoot(loot){
-  const overlay=document.getElementById('loot-overlay');
-  const box=document.getElementById('loot-box');
-  document.getElementById('loot-icon').textContent=loot.icon;
-  document.getElementById('loot-name').textContent=loot.name;
-  document.getElementById('loot-val').textContent=loot.val;
-  box.classList.add('show');G.paused=true;
-  // Make the whole overlay tappable (better mobile UX)
-  overlay.style.pointerEvents='auto';
-  overlay.style.cursor='pointer';
-  const collect=()=>{
-    loot.fn(G);box.classList.remove('show');G.paused=false;
-    overlay.style.pointerEvents='none';overlay.style.cursor='';
-    overlay.removeEventListener('click',collect);
-    spawnGain(0,0,0xe8c060,22);notify('SUPPLY DROP COLLECTED!',0xe8c060);updateHUD();
-  };
+  const overlay=document.getElementById('loot-overlay');const box=document.getElementById('loot-box');
+  document.getElementById('loot-icon').textContent=loot.icon;document.getElementById('loot-name').textContent=loot.name;document.getElementById('loot-val').textContent=loot.val;
+  box.classList.add('show');G.paused=true;overlay.style.pointerEvents='auto';
+  const collect=()=>{loot.fn(G);box.classList.remove('show');G.paused=false;overlay.style.pointerEvents='none';overlay.removeEventListener('click',collect);spawnGain(0,0,0xe8c060,22);notify('SUPPLY DROP COLLECTED!',0xe8c060);updateHUD();};
   overlay.addEventListener('click',collect);
 }
 
 let comboTO;
-function showStreakBanner(n){
-  const b=document.getElementById('combo-banner');
-  document.getElementById('combo-n').textContent=n;
-  b.classList.add('show');clearTimeout(comboTO);comboTO=setTimeout(()=>b.classList.remove('show'),2400);
-}
+function showStreakBanner(n){const b=document.getElementById('combo-banner');document.getElementById('combo-n').textContent=n;b.classList.add('show');clearTimeout(comboTO);comboTO=setTimeout(()=>b.classList.remove('show'),2400);}
 
-/* ─── DAY TICK ─── */
 function tickDay(){
-  if(!G.alive)return;
-  G.day++;
-
-  // Decrement counters
-  if(G.quarantine>0)G.quarantine--;
-  if(G.energyPenaltyDays>0){G.energyPenaltyDays--;if(G.energyPenaltyDays<=0)G.energyPenalty=1;}
-  if(G.winterPenalty>0)G.winterPenalty--;
-  if(G.strikeActive>0)G.strikeActive--;
-  if(G.desertionImmune>0)G.desertionImmune--;
-
+  if(!G.alive)return;G.day++;
+  if(G.quarantine>0)G.quarantine--;if(G.energyPenaltyDays>0){G.energyPenaltyDays--;if(G.energyPenaltyDays<=0)G.energyPenalty=1;}
+  if(G.winterPenalty>0)G.winterPenalty--;if(G.strikeActive>0)G.strikeActive--;if(G.desertionImmune>0)G.desertionImmune--;
   const pop=G.citizens.length;
-
-  // ── DISTRIBUTION-BASED MORALE ──
   const md=getMoraleDist(G.citizens);
   const avg=pop>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
-
-  // ── CROSS-RESOURCE FEEDBACK ──
   const energyFoodMult=getEnergyFoodMult(G.energy,pop);
   const foodMoralePenalty=getFoodMoralePenalty(G.food,pop);
   const medEff=getMedEfficiency(G.medicine,pop);
-
-  // ── CONDITIONAL DIFFICULTY (nonlinear, param-driven per diff level) ──
-  G.diffScale+=G.baseDiffInc;
-  if(pop>20) G.diffScale+=G.baseDiffInc*0.3; // overpopulation penalty
-  if(G.endlessMode) G.diffScale+=0.010; // extra ramp in endless
+  G.diffScale+=G.baseDiffInc;if(pop>20)G.diffScale+=G.baseDiffInc*0.3;if(G.endlessMode)G.diffScale+=0.010;
   G.raidPressure=Math.min(1,G.credits/1200+(G.day/200));
-  G.spoilageRate=G.infra.granary ? 1+(Math.max(0,G.food-300)/600)*0.3 : 1+(Math.max(0,G.food-200)/400)*0.6;
-
-  // ── PRODUCTION with all multipliers ──
-  const qF=G.quarantine>0?0.7:1;
-  const wF=G.winterPenalty>0?0.7:1;
-  const strikeF=G.strikeActive>0?0.4:1;
-  const infraProdMult=getInfraProdMult(G.infra);
-  // diffScale now REDUCES production (inverse: higher = harder = less output)
-  const diffProdFactor=1/(G.diffScale);
+  G.spoilageRate=G.infra.granary?1+(Math.max(0,G.food-300)/600)*0.3:1+(Math.max(0,G.food-200)/400)*0.6;
+  const qF=G.quarantine>0?0.7:1,wF=G.winterPenalty>0?0.7:1,strikeF=G.strikeActive>0?0.4:1;
+  const infraProdMult=getInfraProdMult(G.infra);const diffProdFactor=1/(G.diffScale);
   const prod=Math.floor(pop*3*diffProdFactor*qF*wF*strikeF*infraProdMult*md.prodMult*energyFoodMult);
-  G.food+=prod;
-  G.energy+=Math.floor(prod*0.45*G.energyPenalty);
-
-  // Passive medicine (hospital efficiency gated by supply)
+  G.food+=prod;G.energy+=Math.floor(prod*0.45*G.energyPenalty);
   G.medicine+=Math.floor(pop*(G.infra.hospital?0.22:0.08)*medEff);
-  // School food drain
-  if(G.infra.school) G.food-=Math.floor(pop*0.5);
-  // Walls energy drain
-  if(G.infra.walls) G.energy-=3;
-
-  // ── CONSUMPTION (difficulty-scaled) ──
-  G.food-=Math.floor(G.citizens.length*(G.rationMode?G.baseFoodConsume*0.6:G.baseFoodConsume));
-  G.rationMode=false;
-  // Spoilage on surplus
-  if(G.food>200){const spoil=Math.floor((G.food-200)*0.05*G.spoilageRate);if(spoil>5){G.food-=spoil;if(spoil>20)addLog(`Spoilage: −${spoil} food wasted.`,0xd4973a);}}
+  if(G.infra.school)G.food-=Math.floor(pop*0.5);if(G.infra.walls)G.energy-=3;
+  G.food-=Math.floor(G.citizens.length*(G.rationMode?G.baseFoodConsume*0.6:G.baseFoodConsume));G.rationMode=false;
+  if(G.food>200){const spoil=Math.floor((G.food-200)*0.05*G.spoilageRate);if(spoil>5){G.food-=spoil;if(spoil>20)addLog(`Spoilage: −${spoil} food.`,0xd4973a);}}
   G.food=Math.max(0,G.food);G.energy=Math.max(0,G.energy);
-
-  // ── CREDITS ──
-  G.credits+=Math.floor(pop*0.8); // slightly lower per-day than before
-
-  // ── BACKGROUND HAZARDS (difficulty-scaled) ──
-  const r=Math.random();
-  const hc=G.baseHazardChance;
-  if(r<hc*0.55){
-    const l=Math.floor(10+Math.random()*35*G.diffScale);G.energy-=l;
-    spawnSmoke(10,0);if(l>18)addLog(`Power failure: −${l} energy`,0xc44a3a);
-  } else if(r<hc){
-    const l=Math.floor(10+Math.random()*30*G.diffScale);G.food-=l;
-    if(l>14)addLog(`Blight: −${l} food lost`,0xd4973a);
-  }
-
-  // ── FOOD MORALE PRESSURE (cross-resource loop) ──
-  if(foodMoralePenalty>0){
-    G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-foodMoralePenalty));
-    if(foodMoralePenalty>=8&&G.day%3===0)addLog('Starvation breaking morale.',0xc44a3a);
-  }
-
-  // ── MORALE CONSEQUENCES (distribution-based triggers) ──
-  // Compassionate colony: faster morale recovery
-  if(G.moralGood>5){G.citizens.forEach(c=>c.morale=Math.min(100,c.morale+1));}
-  // Strike trigger: >30% broken citizens (not average <20)
-  if(md.brokenPct>=0.30&&G.strikeActive<=0&&G.desertionImmune<=0&&Math.random()<0.4){
-    G.strikeActive=4;
-    const pct=Math.round(md.brokenPct*100);
-    addLog(`⚠ ${pct}% of citizens broken — WORKER STRIKE (4 days).`,0xc44a3a);
-    floatPop('⚠ WORKERS STRIKE',0xc44a3a,50,45);
-    notify(`${pct}% BROKEN — STRIKE BEGINS`,0xc44a3a);
-    spawnExplosion(0,0,0xc44030,12);
-  }
-  // Heroic trigger: >50% of citizens have morale >80 (not average ≥85)
-  if(md.heroicPct>=0.50&&G.desertionImmune<=0){
-    G.desertionImmune=3;
-    if(md.heroicPct>=0.65&&Math.random()<0.2){
-      const bonus=15+Math.floor(Math.random()*20);
-      G.credits+=bonus;
-      floatPop(`✦ HEROIC SPIRIT +${bonus}⚙`,0x6abf7a,50,45);
-    }
-  }
-  // Desertion (distribution-based: per-citizen risk when morale very low)
-  if(md.brokenPct>0.15&&G.desertionImmune<=0&&pop>3&&Math.random()<md.desertRisk){
-    const fled=1+Math.floor(Math.random()*3);
-    G.citizens.splice(0,Math.min(fled,G.citizens.length-2));
-    G.totalDeaths+=fled;
-    addLog(`${fled} citizen${fled>1?'s':''} deserted.`,0xc44a3a);
-    floatPop(`${fled} DESERTED`,0xc44a3a,50,50);
-  }
-
-  // ── POPULATION UPDATE (with morale health bonus, school) ──
-  const schoolBonus=G.infra.school?1:0;
-  const popBefore=G.citizens.length;
+  G.credits+=Math.floor(pop*0.8);
+  const r=Math.random();const hc=G.baseHazardChance;
+  if(r<hc*0.55){const l=Math.floor(10+Math.random()*35*G.diffScale);G.energy-=l;if(l>18)addLog(`Power failure: −${l} energy`,0xc44a3a);}
+  else if(r<hc){const l=Math.floor(10+Math.random()*30*G.diffScale);G.food-=l;if(l>14)addLog(`Blight: −${l} food`,0xd4973a);}
+  if(foodMoralePenalty>0)G.citizens.forEach(c=>c.morale=Math.max(0,c.morale-foodMoralePenalty));
+  if(G.moralGood>5)G.citizens.forEach(c=>c.morale=Math.min(100,c.morale+1));
+  if(md.brokenPct>=0.30&&G.strikeActive<=0&&G.desertionImmune<=0&&Math.random()<0.4){G.strikeActive=4;addLog(`⚠ ${Math.round(md.brokenPct*100)}% broken — WORKER STRIKE.`,0xc44a3a);floatPop('⚠ WORKERS STRIKE',0xc44a3a,50,45);notify('STRIKE BEGINS',0xc44a3a);spawnExplosion(0,0,0xc44030,12);}
+  if(md.heroicPct>=0.50&&G.desertionImmune<=0){G.desertionImmune=3;if(md.heroicPct>=0.65&&Math.random()<0.2){const bonus=15+Math.floor(Math.random()*20);G.credits+=bonus;floatPop(`✦ HEROIC SPIRIT +${bonus}⚙`,0x6abf7a,50,45);}}
+  if(md.brokenPct>0.15&&G.desertionImmune<=0&&pop>3&&Math.random()<md.desertRisk){const fled=1+Math.floor(Math.random()*3);G.citizens.splice(0,Math.min(fled,G.citizens.length-2));G.totalDeaths+=fled;addLog(`${fled} deserted.`,0xc44a3a);}
+  const schoolBonus=G.infra.school?1:0;const popBefore=G.citizens.length;
   G.citizens=G.citizens.filter(c=>c.update(G.food,md.healthBonus+schoolBonus));
-  const died=popBefore-G.citizens.length;
-  G.totalDeaths+=died;
-  if(died>0){spawnExplosion(Math.random()*8-4,Math.random()*8-4,0xc44030,5);addLog(`${died} soul${died>1?'s':''} lost today.`,0xc44a3a);}
+  const died=popBefore-G.citizens.length;G.totalDeaths+=died;
+  if(died>0){spawnExplosion(Math.random()*8-4,Math.random()*8-4,0xc44030,5);addLog(`${died} soul${died>1?'s':''} lost.`,0xc44a3a);}
   while(citizenObjs.length>G.citizens.length){const m=citizenObjs.pop();citizenGroup.remove(m);}
-
-  // ── WORLD MEMORY EFFECTS ──
-  // Compassionate history: random aid drops
-  const aidBonus=Math.min(0.3,G.moralGood*0.04);
-  if(G.moralGood>5&&Math.random()<(0.03+aidBonus)){
-    const aid=20+Math.floor(Math.random()*30);
-    G.food+=aid;addLog(`Aid arrived from allied colony. +${aid} food.`,0x6abf7a);
-    floatPop(`✦ AID +${aid} FOOD`,0x6abf7a,50,45);
-  }
-
-  // ── BOSS WAVE (day 55, once) ──
-  if(G.day===55&&!G.endgameTriggered){
-    triggerBossWave();
-    checkAchievements();updateHUD();updateDebug();
-    return;
-  }
-
-  // ── WIN CONDITION — specific modes only ──
-  if(G.goalDay>0&&G.day>=G.goalDay&&G.citizens.length>0&&!G.endgameTriggered){
-    G.endgameTriggered=true;
-    setTimeout(()=>endGame(true),800);
-    return checkAchievements(),updateHUD(),updateDebug();
-  }
-  // Endless: periodic mega-crises but no win state
-  if(G.endlessMode&&G.day>60&&(G.day-60)%25===0){
-    setTimeout(()=>{
-      const boss=EVENTS.find(e=>e.id==='boss_wave');
-      G.pendingEvent=boss;G.paused=true;showEvent(boss);
-      hazardLight.intensity=5;setTimeout(()=>hazardLight.intensity=0,2000);
-    },500);
-  }
-
-  // ── EVENT SELECTION (morale-distribution-weighted, includes chains) ──
+  const aidBonus=Math.min(0.3,G.moralGood*0.04);if(G.moralGood>5&&Math.random()<(0.03+aidBonus)){const aid=20+Math.floor(Math.random()*30);G.food+=aid;addLog(`Aid arrived. +${aid} food.`,0x6abf7a);}
+  if(G.day===55&&!G.endgameTriggered){triggerBossWave();checkAchievements();updateHUD();return;}
+  if(G.goalDay>0&&G.day>=G.goalDay&&G.citizens.length>0&&!G.endgameTriggered){G.endgameTriggered=true;setTimeout(()=>endGame(true),800);return checkAchievements(),updateHUD();}
+  if(G.endlessMode&&G.day>60&&(G.day-60)%25===0){setTimeout(()=>{const boss=EVENTS.find(e=>e.id==='boss_wave');G.pendingEvent=boss;G.paused=true;showEvent(boss);},500);}
   if(G.eventCooldown>0){G.eventCooldown--;}
   else if(!G.pendingEvent&&!activeChain){
     const baseChance=0.16*md.eventFreqMult*G.eventFreqMod;
-
-    // Raid event elevated by wealth
-    if(G.raidPressure>0.5&&Math.random()<G.raidPressure*0.12&&!usedEvtIds.has('raiders_chain')){
-      usedEvtIds.add('raiders_chain');
-      G.eventCooldown=10;
-      startChain('raiders_chain');
-      return checkAchievements(),checkEnd(),updateHUD(),updateDebug();
-    }
-
-    // Drought chain — triggered by harsh diffScale + day > 20
-    if(G.diffScale>1.4&&G.day>20&&!usedEvtIds.has('drought_chain')&&Math.random()<0.12){
-      usedEvtIds.add('drought_chain');
-      G.eventCooldown=12;
-      startChain('drought_chain');
-      return checkAchievements(),checkEnd(),updateHUD(),updateDebug();
-    }
-
-    // Plague chain — any time, moderate chance
-    if(Math.random()<0.08&&!usedEvtIds.has('plague_chain')){
-      usedEvtIds.add('plague_chain');
-      G.eventCooldown=10;
-      startChain('plague_chain');
-      return checkAchievements(),checkEnd(),updateHUD(),updateDebug();
-    }
-
+    if(G.raidPressure>0.5&&Math.random()<G.raidPressure*0.12&&!usedEvtIds.has('drought_chain')){usedEvtIds.add('drought_chain');G.eventCooldown=10;startChain('drought_chain');return checkAchievements(),checkEnd(),updateHUD();}
+    if(Math.random()<0.08&&!usedEvtIds.has('plague_chain')){usedEvtIds.add('plague_chain');G.eventCooldown=10;startChain('plague_chain');return checkAchievements(),checkEnd(),updateHUD();}
     if(Math.random()<baseChance){
-      // Heroic events only when >50% citizens heroic
-      const avail=EVENTS.filter(e=>{
-        if(e.forced||e.id==='raiders')return false;
-        if(e.heroicOnly&&md.heroicPct<0.5)return false;
-        return !usedEvtIds.has(e.id);
-      });
-      const heroicPool=EVENTS.filter(e=>e.heroicOnly&&md.heroicPct>=0.5&&!usedEvtIds.has(e.id));
-      const pool=heroicPool.length>0&&Math.random()<0.45?heroicPool:avail;
+      const avail=EVENTS.filter(e=>!e.forced&&!e.heroicOnly&&!usedEvtIds.has(e.id));
+      const heroicAvail=EVENTS.filter(e=>e.heroicOnly&&md.heroicPct>=0.5&&!usedEvtIds.has(e.id));
+      const pool=heroicAvail.length>0&&Math.random()<0.45?heroicAvail:avail;
       if(pool.length===0){usedEvtIds.clear();}
-      else{
-        const evt=pool[Math.floor(Math.random()*pool.length)];
-        usedEvtIds.add(evt.id);G.eventCooldown=6;G.pendingEvent=evt;G.paused=true;showEvent(evt);
-        hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);
-      }
+      else{const evt=pool[Math.floor(Math.random()*pool.length)];usedEvtIds.add(evt.id);G.eventCooldown=6;G.pendingEvent=evt;G.paused=true;showEvent(evt);hazardLight.intensity=6;setTimeout(()=>hazardLight.intensity=0,2000);}
     }
   }
-
   checkAchievements();checkEnd();updateHUD();updateDebug();
 }
 
-/* ─── ACHIEVEMENTS ─── */
 const ACHS=[
-  // Survival milestones
-  {id:'s10',  icon:'🌙',name:'First Dawn',         fn:g=>g.day>=10},
-  {id:'s20',  icon:'🔥',name:'Second Week',         fn:g=>g.day>=20},
-  {id:'s30',  icon:'⭐',name:'Month of Shadows',    fn:g=>g.day>=30},
-  {id:'s45',  icon:'🌿',name:'The Long Road',       fn:g=>g.day>=45},
-  {id:'s60',  icon:'🏆',name:'Colony Stands',       fn:g=>g.day>=60},
-  {id:'s80',  icon:'♾',name:'Beyond the Horizon',  fn:g=>g.day>=80},
-  {id:'s100', icon:'👁',name:'Century of Survival', fn:g=>g.day>=100},
-  // Population
-  {id:'p30',  icon:'👥',name:'Growing Colony',      fn:g=>g.citizens.length>=30},
-  {id:'p40',  icon:'🏙',name:'The City Breathes',   fn:g=>g.citizens.length>=40},
-  // Credits
-  {id:'c100', icon:'⚙',name:'Resourceful',          fn:g=>g.credits>=100},
-  {id:'c500', icon:'💎',name:'Credit Baron',         fn:g=>g.credits>=500},
-  {id:'c1500',icon:'👑',name:'War Chest',            fn:g=>g.credits>=1500},
-  // Moral extremes
-  {id:'mg5',  icon:'🕊',name:'Shepherd',             fn:g=>g.moralGood>=5},
-  {id:'mg10', icon:'🌿',name:'Saint of the Ruins',   fn:g=>g.moralGood>=10},
-  {id:'mg15', icon:'✨',name:'Beloved',               fn:g=>g.moralGood>=15},
-  {id:'mb5',  icon:'🔪',name:'Iron Fist',             fn:g=>g.moralBad>=5},
-  {id:'mb10', icon:'💀',name:'The Tyrant Endures',   fn:g=>g.moralBad>=10},
-  // Infrastructure
-  {id:'inf1', icon:'🔧',name:'First Foundation',     fn:g=>Object.values(g.infra).filter(Boolean).length>=1},
-  {id:'inf3', icon:'🏗',name:'Builder',               fn:g=>Object.values(g.infra).filter(Boolean).length>=3},
-  {id:'inf5', icon:'🏰',name:'The Architect',         fn:g=>Object.values(g.infra).filter(Boolean).length>=5},
-  // Special
-  {id:'str10',icon:'🔥',name:'On A Roll',             fn:g=>g.streak>=10},
-  {id:'str20',icon:'⚡',name:'Unstoppable',            fn:g=>g.streak>=20},
-  {id:'surv', icon:'💀',name:'From the Ashes',        fn:g=>g.citizens.length<=3&&g.day>=20},
-  {id:'heroic',icon:'✨',name:'Morale of Heroes',     fn:g=>g.citizens.length>0&&getMoraleDist(g.citizens).heroicPct>=0.5},
-  {id:'broker',icon:'🤝',name:'Master Negotiator',    fn:g=>g.moralGood>=5&&g.credits>=400},
-  {id:'tyrant_surv',icon:'⚔',name:'Brutal Efficiency',fn:g=>g.moralBad>=8&&g.citizens.length>=15},
-  {id:'balanced',icon:'⚖',name:'The Middle Path',    fn:g=>Math.abs(g.moralGood-g.moralBad)<=2&&g.day>=40},
-  {id:'comeback',icon:'🌅',name:'Back from the Brink',fn:g=>g.citizens.length>=10&&g.totalDeaths>=15&&g.day>=30},
-  {id:'no_deaths',icon:'🛡',name:'Not One Lost',      fn:g=>g.totalDeaths===0&&g.day>=20},
-  {id:'impossible_win',icon:'💀',name:'Against All Odds',fn:g=>g.difficulty==='impossible'&&g.day>=60},
+  {id:'s10',icon:'🌙',name:'First Dawn',fn:g=>g.day>=10},
+  {id:'s20',icon:'🔥',name:'Second Week',fn:g=>g.day>=20},
+  {id:'s30',icon:'⭐',name:'Month of Shadows',fn:g=>g.day>=30},
+  {id:'s60',icon:'🏆',name:'Colony Stands',fn:g=>g.day>=60},
+  {id:'p30',icon:'👥',name:'Growing Colony',fn:g=>g.citizens.length>=30},
+  {id:'c500',icon:'💎',name:'Credit Baron',fn:g=>g.credits>=500},
+  {id:'mg5',icon:'🕊',name:'Shepherd',fn:g=>g.moralGood>=5},
+  {id:'mb5',icon:'🔪',name:'Iron Fist',fn:g=>g.moralBad>=5},
+  {id:'inf1',icon:'🔧',name:'First Foundation',fn:g=>Object.values(g.infra).filter(Boolean).length>=1},
+  {id:'inf5',icon:'🏰',name:'The Architect',fn:g=>Object.values(g.infra).filter(Boolean).length>=5},
+  {id:'str10',icon:'🔥',name:'On A Roll',fn:g=>g.streak>=10},
+  {id:'heroic',icon:'✨',name:'Morale of Heroes',fn:g=>g.citizens.length>0&&getMoraleDist(g.citizens).heroicPct>=0.5},
+  {id:'no_deaths',icon:'🛡',name:'Not One Lost',fn:g=>g.totalDeaths===0&&g.day>=20},
 ];
 function checkAchievements(){ACHS.forEach(a=>{if(!G.achievements.has(a.id)&&a.fn(G)){G.achievements.add(a.id);showAch(a);G.credits+=50;}});}
-function showAch(a){
-  const layer=document.getElementById('ach-layer');
-  const el=document.createElement('div');
-  el.className='achievement';
-  el.style.top=`${layer.children.length*68}px`;
-  el.innerHTML=`<span class="ach-icon">${a.icon}</span><div><div class="ach-label">ACHIEVEMENT</div><div class="ach-name">${a.name}</div></div>`;
-  layer.appendChild(el);setTimeout(()=>el.remove(),4600);
-}
+function showAch(a){const layer=document.getElementById('ach-layer');const el=document.createElement('div');el.className='achievement';el.style.top=`${layer.children.length*68}px`;el.innerHTML=`<span class="ach-icon">${a.icon}</span><div><div class="ach-label">ACHIEVEMENT</div><div class="ach-name">${a.name}</div></div>`;layer.appendChild(el);setTimeout(()=>el.remove(),4600);}
 
-/* ─── EVENTS ─── */
 function showEvent(evt){
   const p=document.getElementById('evt-panel');
   document.getElementById('etag').textContent=evt.cat;document.getElementById('etag').className=`evt-tag ${evt.cls}`;
@@ -1851,482 +877,127 @@ function showEvent(evt){
   p.classList.add('open');
 }
 
-/* ─── HUD ─── */
 function updateHUD(){
-  const g=G,pop=g.citizens.length;
-  const md=getMoraleDist(g.citizens);
+  const g=G,pop=g.citizens.length;const md=getMoraleDist(g.citizens);
   const avg=pop>0?Math.floor(g.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
-
-  // ── Core resource display ──
   document.getElementById('day-block').textContent=String(g.day).padStart(2,'0');
   document.getElementById('credits-val').textContent=g.credits;
-  document.getElementById('rv-pop').textContent=pop;
-  document.getElementById('rv-food').textContent=Math.floor(g.food);
-  document.getElementById('rv-nrg').textContent=Math.floor(g.energy);
-  document.getElementById('rv-med').textContent=Math.floor(g.medicine);
-
-  // ── Morale bar (average position) + tier badge ──
-  const tierLabel=g.strikeActive>0?'ON STRIKE':md.label;
-  const tierCls=g.strikeActive>0?'tier-strike':`tier-${md.tier}`;
+  document.getElementById('rv-pop').textContent=pop;document.getElementById('rv-food').textContent=Math.floor(g.food);
+  document.getElementById('rv-nrg').textContent=Math.floor(g.energy);document.getElementById('rv-med').textContent=Math.floor(g.medicine);
+  const tierLabel=g.strikeActive>0?'ON STRIKE':md.label;const tierCls=g.strikeActive>0?'tier-strike':`tier-${md.tier}`;
   document.getElementById('mp-val').textContent=`${avg} — ${avg>70?'Resilient':avg>45?'Weary':avg>25?'Desperate':'Breaking'}`;
   document.getElementById('mp-fill').style.width=avg+'%';
-  const tierEl=document.getElementById('morale-tier');
-  tierEl.textContent=tierLabel;tierEl.className=tierCls;
-
-  // ── Distribution bar: broken / low / ok / heroic ──
-  document.getElementById('md-broken').style.width=(md.brokenPct*100)+'%';
-  document.getElementById('md-low').style.width=(md.lowPct*100)+'%';
-  document.getElementById('md-ok').style.width=(md.okPct*100)+'%';
-  document.getElementById('md-heroic').style.width=(md.heroicPct*100)+'%';
-
-  // Strike dims
+  const tierEl=document.getElementById('morale-tier');tierEl.textContent=tierLabel;tierEl.className=tierCls;
+  document.getElementById('md-broken').style.width=(md.brokenPct*100)+'%';document.getElementById('md-low').style.width=(md.lowPct*100)+'%';document.getElementById('md-ok').style.width=(md.okPct*100)+'%';document.getElementById('md-heroic').style.width=(md.heroicPct*100)+'%';
   document.getElementById('game-root').classList.toggle('strike-dim',g.strikeActive>0);
-
-  // ── Cross-resource feedback multipliers ──
-  const energyFoodMult=getEnergyFoodMult(g.energy,pop);
-  const infraProd=getInfraProdMult(g.infra);
+  const energyFoodMult=getEnergyFoodMult(g.energy,pop);const infraProd=getInfraProdMult(g.infra);
   const pPD=Math.floor(pop*3*g.diffScale*infraProd*md.prodMult*energyFoodMult);
   const foodNet=pPD-pop*2-(g.infra.school?Math.floor(pop*0.5):0);
-
-  // Show energy→food penalty inline if active
-  const nrgPenaltyLabel=energyFoodMult<1.0?` ⚡${Math.round((1-energyFoodMult)*100)}%↓`:'';
-  setRI('food',g.food/400,g.food<50?'#c44a3a':g.food<100?'#d4973a':'#6abf7a',
-        `${foodNet>=0?'+':''}${foodNet}/d${nrgPenaltyLabel}`,foodNet>=0?'pos':'neg');
-  setRI('nrg',g.energy/300,g.energy<40?'#c44a3a':g.energy<80?'#d4973a':'#5a8ab0',
-        energyFoodMult<0.9?`LOW — FOOD −${Math.round((1-energyFoodMult)*100)}%`:`+${Math.floor(pPD*0.5)}/d`,
-        energyFoodMult<0.9?'neg':'pos');
-  setRI('pop',pop/30,pop<5?'#c44a3a':pop<10?'#d4973a':'#d4973a',
-        pop>15?'stable':pop>8?'declining':'critical','');
-  setRI('med',g.medicine/80,g.medicine<10?'#c44a3a':g.medicine<20?'#d4973a':'#4a9a8a',
-        g.medicine<15?'scarce':'ok','');
-
-  // ── Situation bar — shows active pressures player needs to act on ──
-  const raidPct=Math.round(g.raidPressure*100);
-  const spoilMult=g.spoilageRate;
-  const tradePenPct=Math.min(50,g.moralBad*5);
-  const infraBonusPct=Math.round((infraProd-1)*100);
-  let anySituation=false;
-
-  // Raid pressure (show when >20%)
-  const sitRaid=document.getElementById('sit-raid');
-  if(g.raidPressure>0.2){
-    sitRaid.style.display='flex';
-    document.getElementById('sit-raid-fill').style.width=raidPct+'%';
-    const rv=document.getElementById('sit-raid-val');
-    rv.textContent=raidPct+'%';
-    rv.className='sit-val '+(raidPct>70?'crit':raidPct>40?'warn':'ok');
-    anySituation=true;
-  } else { sitRaid.style.display='none'; }
-
-  // Spoilage rate (show when >1.1x)
-  const sitSpoil=document.getElementById('sit-spoil');
-  if(spoilMult>1.1){
-    sitSpoil.style.display='flex';
-    document.getElementById('sit-spoil-fill').style.width=Math.min(100,(spoilMult-1)*200)+'%';
-    const sv=document.getElementById('sit-spoil-val');
-    sv.textContent='×'+spoilMult.toFixed(2);
-    sv.className='sit-val '+(spoilMult>1.5?'crit':spoilMult>1.2?'warn':'ok');
-    anySituation=true;
-  } else { sitSpoil.style.display='none'; }
-
-  // Trade penalty (show when moralBad > 1)
-  const sitTrade=document.getElementById('sit-trade');
-  if(g.moralBad>1){
-    sitTrade.style.display='flex';
-    const tv=document.getElementById('sit-trade-val');
-    tv.textContent='−'+tradePenPct+'%';
-    tv.className='sit-val '+(tradePenPct>30?'crit':tradePenPct>15?'warn':'ok');
-    anySituation=true;
-  } else { sitTrade.style.display='none'; }
-
-  // Energy→food penalty (show when active)
-  const sitEnergy=document.getElementById('sit-energy');
-  if(energyFoodMult<1.0){
-    sitEnergy.style.display='flex';
-    const ev=document.getElementById('sit-energy-val');
-    ev.textContent='−'+Math.round((1-energyFoodMult)*100)+'%';
-    ev.className='sit-val '+(energyFoodMult<0.7?'crit':energyFoodMult<0.85?'warn':'ok');
-    anySituation=true;
-  } else { sitEnergy.style.display='none'; }
-
-  // Infra bonus (show when any infra built)
-  const sitInfra=document.getElementById('sit-infra');
-  if(infraBonusPct>0){
-    sitInfra.style.display='flex';
-    document.getElementById('sit-infra-val').textContent='+'+infraBonusPct+'%';
-    document.getElementById('sit-infra-val').className='sit-val ok';
-    anySituation=true;
-  } else { sitInfra.style.display='none'; }
-
-  document.getElementById('situation-bar').classList.toggle('active',anySituation);
-
-  // ── 3D world feedback ──
+  setRI('food',g.food/400,g.food<50?'#c44a3a':g.food<100?'#d4973a':'#6abf7a',`${foodNet>=0?'+':''}${foodNet}/d`,foodNet>=0?'pos':'neg');
+  setRI('nrg',g.energy/300,g.energy<40?'#c44a3a':g.energy<80?'#d4973a':'#5a8ab0',energyFoodMult<0.9?`LOW − FOOD −${Math.round((1-energyFoodMult)*100)}%`:`+${Math.floor(pPD*0.5)}/d`,energyFoodMult<0.9?'neg':'pos');
+  setRI('pop',pop/30,pop<5?'#c44a3a':pop<10?'#d4973a':'#d4973a',pop>15?'stable':pop>8?'declining':'critical','');
+  setRI('med',g.medicine/80,g.medicine<10?'#c44a3a':g.medicine<20?'#d4973a':'#4a9a8a',g.medicine<15?'scarce':'ok','');
+  const raidPct=Math.round(g.raidPressure*100);const spoilMult=g.spoilageRate;const tradePenPct=Math.min(50,g.moralBad*5);const infraBonusPct=Math.round((infraProd-1)*100);
+  let anySit=false;
+  const sitRaid=document.getElementById('sit-raid');if(g.raidPressure>0.2){sitRaid.style.display='flex';document.getElementById('sit-raid-fill').style.width=raidPct+'%';const rv=document.getElementById('sit-raid-val');rv.textContent=raidPct+'%';rv.className='sit-val '+(raidPct>70?'crit':raidPct>40?'warn':'ok');anySit=true;}else sitRaid.style.display='none';
+  const sitSpoil=document.getElementById('sit-spoil');if(spoilMult>1.1){sitSpoil.style.display='flex';document.getElementById('sit-spoil-fill').style.width=Math.min(100,(spoilMult-1)*200)+'%';const sv=document.getElementById('sit-spoil-val');sv.textContent='×'+spoilMult.toFixed(2);sv.className='sit-val '+(spoilMult>1.5?'crit':spoilMult>1.2?'warn':'ok');anySit=true;}else sitSpoil.style.display='none';
+  const sitTrade=document.getElementById('sit-trade');if(g.moralBad>1){sitTrade.style.display='flex';const tv=document.getElementById('sit-trade-val');tv.textContent='−'+tradePenPct+'%';tv.className='sit-val '+(tradePenPct>30?'crit':tradePenPct>15?'warn':'ok');anySit=true;}else sitTrade.style.display='none';
+  const sitEnergy=document.getElementById('sit-energy');if(energyFoodMult<1.0){sitEnergy.style.display='flex';const ev=document.getElementById('sit-energy-val');ev.textContent='−'+Math.round((1-energyFoodMult)*100)+'%';ev.className='sit-val '+(energyFoodMult<0.7?'crit':energyFoodMult<0.85?'warn':'ok');anySit=true;}else sitEnergy.style.display='none';
+  const sitInfra=document.getElementById('sit-infra');if(infraBonusPct>0){sitInfra.style.display='flex';document.getElementById('sit-infra-val').textContent='+'+infraBonusPct+'%';document.getElementById('sit-infra-val').className='sit-val ok';anySit=true;}else sitInfra.style.display='none';
+  document.getElementById('situation-bar').classList.toggle('active',anySit);
   citizenObjs.forEach((m,i)=>{if(i<g.citizens.length){const h=g.citizens[i].health/100;m.children[0].material.color.setRGB(0.15+h*0.1,0.2+h*0.1,0.15+h*0.06);}});
-  // Fire pits: morale-reactive (base + morale fraction)
-  const moraleGlow=0.3+(avg/100)*2.8;
-  firePits.forEach(f=>{f._moraleBase=moraleGlow;});
-  warmFill.intensity=0.6+(avg/100)*1.8;
+  const moraleGlow=0.3+(avg/100)*2.8;firePits.forEach(f=>{f._moraleBase=moraleGlow;});warmFill.intensity=0.6+(avg/100)*1.8;
 }
 function setRI(id,fill,color,delta,cls){
-  const el=document.getElementById(`ri-${id}`);
-  el.style.setProperty('--fill',Math.max(0,Math.min(1,fill)));
-  el.style.setProperty('--ri-color',color);
+  const el=document.getElementById(`ri-${id}`);el.style.setProperty('--fill',Math.max(0,Math.min(1,fill)));el.style.setProperty('--ri-color',color);
   document.getElementById(`rv-${id}`).style.color=fill<0.2?'#c44a3a':fill<0.35?'#d4973a':'#c8d4b8';
   const d=document.getElementById(`rd-${id}`);if(d){d.textContent=delta;d.className=`ri-delta ${cls}`;}
 }
 
-/* ─── LOG / NOTIF / POPUPS ─── */
 const logLines=[];
 function addLog(msg,colorHex){
-  const strip=document.getElementById('log-strip');
-  const hex=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';
+  const strip=document.getElementById('log-strip');const hex=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';
   const el=document.createElement('div');el.className='log-line';
   el.innerHTML=`<span style="--li-color:${hex}">D${String(G.day).padStart(2,'0')}</span> ${msg}`;
   strip.prepend(el);logLines.push(el);if(logLines.length>3){const o=logLines.shift();o.remove();}
 }
-function notify(msg,colorHex){
-  const el=document.createElement('div');el.className='notif';
-  const c=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';
-  el.style.setProperty('--n-color',c);el.textContent=msg;
-  document.getElementById('notif-zone').appendChild(el);setTimeout(()=>el.remove(),3200);
-}
+function notify(msg,colorHex){const el=document.createElement('div');el.className='notif';const c=colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#4a9a8a';el.style.setProperty('--n-color',c);el.textContent=msg;document.getElementById('notif-zone').appendChild(el);setTimeout(()=>el.remove(),3200);}
 function showPop(msg,colorHex){notify(msg,colorHex);}
-function floatPop(msg,colorHex,xPct=50,yPct=50){
-  const layer=document.getElementById('popup-layer');const el=document.createElement('div');
-  el.className='float-pop';
-  el.style.setProperty('--fp-color',colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#fff');
-  el.style.left=`${xPct+Math.random()*8-4}%`;el.style.top=`${yPct+Math.random()*5-2.5}%`;
-  el.textContent=msg;layer.appendChild(el);setTimeout(()=>el.remove(),2400);
-}
+function floatPop(msg,colorHex,xPct=50,yPct=50){const layer=document.getElementById('popup-layer');const el=document.createElement('div');el.className='float-pop';el.style.setProperty('--fp-color',colorHex?'#'+colorHex.toString(16).padStart(6,'0'):'#fff');el.style.left=`${xPct+Math.random()*8-4}%`;el.style.top=`${yPct+Math.random()*5-2.5}%`;el.textContent=msg;layer.appendChild(el);setTimeout(()=>el.remove(),2400);}
 
-/* ─── SPEED ─── */
 function setSpd(s){G.speed=s;G.paused=(s===0);['s0','s1','s2','s3'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===s));}
-
-/* ─── END ─── */
-function checkEnd(){
-  if(G.citizens.length<=0) endGame(false);
-}
-
-function determineEnding(pop,avg,infraCount){
-  const mg=G.moralGood,mb=G.moralBad,bal=Math.abs(mg-mb);
-  const highMoral=mg>=10,ruthless=mb>=8,balanced=bal<=2;
-  const wellFed=G.food>=200,large=pop>=25,small=pop<8;
-
-  if(G.difficulty==='impossible')
-    return {id:'tyrant_conqueror',label:'AGAINST ALL ODDS',color:'var(--red)',
-      title:'The Impossible Tyrant',
-      quote:'"No one believed they could do it. They did it anyway. History will argue about the cost."',
-      badge:'background:rgba(196,74,58,0.2);color:var(--red);border:1px solid rgba(196,74,58,0.4);'};
-
-  if(G.endlessMode&&G.day>=100)
-    return {id:'eternal',label:'ETERNAL WARDEN',color:'var(--blue)',
-      title:'Beyond All Records',
-      quote:'"They stopped counting days. The colony had simply always existed, and always would."',
-      badge:'background:rgba(90,138,176,0.2);color:var(--blue);border:1px solid rgba(90,138,176,0.4);'};
-
-  if(highMoral&&pop>=20&&infraCount>=4)
-    return {id:'ideal',label:'IDEAL LEADER',color:'var(--gold)',
-      title:'The Colony Thrives',
-      quote:'"They kept faith with the people. They built something that would outlast them."',
-      badge:'background:rgba(232,192,96,0.2);color:var(--gold);border:1px solid rgba(232,192,96,0.4);'};
-
-  if(highMoral&&mg>=12)
-    return {id:'beloved',label:'THE BELOVED',color:'var(--green)',
-      title:'The People\'s Governor',
-      quote:'"The colony sang when they heard the news. Not because they were told to."',
-      badge:'background:rgba(106,191,122,0.2);color:var(--green);border:1px solid rgba(106,191,122,0.4);'};
-
-  if(balanced&&pop>=15&&G.day>=60)
-    return {id:'balanced',label:'PERFECTLY BALANCED',color:'var(--teal)',
-      title:'The Pragmatist',
-      quote:'"Neither loved nor feared. But obeyed. The colony survived because someone made the hard calls without losing themselves."',
-      badge:'background:rgba(74,154,138,0.2);color:var(--teal);border:1px solid rgba(74,154,138,0.4);'};
-
-  if(ruthless&&pop>=12)
-    return {id:'diplomatic_tyrant',label:'DIPLOMATIC TYRANT',color:'var(--amber)',
-      title:'Iron and Honey',
-      quote:'"They smiled when it served them and ruled with iron when it didn\'t. The colony endured. The people never fully trusted them again."',
-      badge:'background:rgba(212,151,58,0.2);color:var(--amber);border:1px solid rgba(212,151,58,0.4);'};
-
-  if(mb>=10&&!highMoral)
-    return {id:'unpopular',label:'UNPOPULAR LEADER',color:'var(--orange)',
-      title:'Survived Despite Them',
-      quote:'"The colony made it to the deadline. Barely. Nobody threw a celebration."',
-      badge:'background:rgba(208,112,64,0.2);color:var(--orange);border:1px solid rgba(208,112,64,0.4);'};
-
-  if(G.totalDeaths>=20&&pop>=10)
-    return {id:'costly',label:'AT GREAT COST',color:'var(--amber)',
-      title:'The Weight of Survival',
-      quote:'"They made it. But the names of the dead are carved into the eastern gate, and someone keeps adding to the list."',
-      badge:'background:rgba(212,151,58,0.2);color:var(--amber);border:1px solid rgba(212,151,58,0.4);'};
-
-  if(small&&G.day>=60)
-    return {id:'remnant',label:'THE REMNANT',color:'var(--text2)',
-      title:'A Few Remain',
-      quote:'"The colony that was supposed to hold a hundred held eight. But eight is not zero."',
-      badge:'background:rgba(138,158,122,0.15);color:var(--text2);border:1px solid rgba(138,158,122,0.3);'};
-
-  return {id:'endured',label:'COLONY ENDURES',color:'var(--gold)',
-    title:'Sixty Days',
-    quote:'"They said it couldn\'t be done. It was done. That\'s enough."',
-    badge:'background:rgba(232,192,96,0.15);color:var(--gold);border:1px solid rgba(232,192,96,0.3);'};
-}
+function checkEnd(){if(G.citizens.length<=0)endGame(false);}
 
 function endGame(win){
-  G.alive=false;
-  const pop=G.citizens.length;
-  const md=getMoraleDist(G.citizens);
+  G.alive=false;const pop=G.citizens.length;const md=getMoraleDist(G.citizens);
   const avg=pop>0?Math.floor(G.citizens.reduce((a,c)=>a+c.morale,0)/pop):0;
   const infraCount=Object.values(G.infra).filter(Boolean).length;
-
-  const es=document.getElementById('end-screen');
-  es.innerHTML='';
-
+  const es=document.getElementById('end-screen');es.innerHTML='';
   if(!win){
-    // Death ending
-    es.innerHTML=`
-      <div class="end-h lose">THE SILENCE COMES</div>
-      <div class="end-ending-label" style="color:var(--red)">COLONY EXTINCT</div>
-      <div class="end-quote">"${['The last fire went out before anyone noticed.','History will not record them. The wind already forgot.','It was quiet at the end. No screaming. Just silence.'][Math.floor(Math.random()*3)]}"</div>
-      <div class="end-stat-grid" style="margin-top:10px;">
-        <div>Days Survived</div><div><span>${G.day}</span></div>
-        <div>Final Population</div><div><span>0</span></div>
-        <div>Total Deaths</div><div><span>${G.totalDeaths}</span></div>
-        <div>Infrastructure</div><div><span>${infraCount}/5</span></div>
-        <div>Compassionate</div><div><span>${G.moralGood}</span></div>
-        <div>Ruthless</div><div><span>${G.moralBad}</span></div>
-      </div>
-      <button class="restart-btn" onclick="location.reload()">↺ NEW COLONY</button>`;
-  } else {
-    const ending=determineEnding(pop,avg,infraCount);
-    es.innerHTML=`
-      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--text3);margin-bottom:6px;text-align:center;">COLONY ZERO — FINAL REPORT</div>
-      <div class="end-h win" style="color:${ending.color};text-shadow:0 0 40px ${ending.color}40;">${ending.title.toUpperCase()}</div>
-      <div class="end-ending-label" style="color:${ending.color}">${ending.label}</div>
-      <div class="end-quote">${ending.quote}</div>
-      <div class="end-stat-grid" style="margin-top:12px;">
-        <div>Days Survived</div><div><span>${G.day}</span></div>
-        <div>Survivors</div><div><span>${pop}</span></div>
-        <div>Deaths</div><div><span>${G.totalDeaths}</span></div>
-        <div>Infrastructure</div><div><span>${infraCount}/5</span></div>
-        <div>Colony Morale</div><div><span>${avg}</span></div>
-        <div>Credits Held</div><div><span>${G.credits}</span></div>
-        <div>Compassionate</div><div><span>${G.moralGood}</span></div>
-        <div>Ruthless Acts</div><div><span>${G.moralBad}</span></div>
-        <div>Achievements</div><div><span>${G.achievements.size}/${ACHS.length}</span></div>
-        <div>Difficulty</div><div><span>${G.difficulty.toUpperCase()}</span></div>
-      </div>
-      <span class="end-badge" style="${ending.badge}">${ending.label}</span>
-      ${G.endlessMode?`<div style="color:var(--gold);font-size:11px;margin-top:8px;letter-spacing:2px;">✦ ENDLESS SURVIVOR — ${G.day-60} DAYS BEYOND THRESHOLD</div>`:''}
-      <button class="restart-btn" onclick="location.reload()">↺ NEW COLONY</button>`;
+    es.innerHTML=`<div class="end-h lose">THE SILENCE COMES</div><div class="end-ending-label" style="color:var(--red)">COLONY EXTINCT</div><div class="end-quote">"The last fire went out before anyone noticed."</div><div class="end-stat-grid" style="margin-top:10px;"><div>Days Survived</div><div><span>${G.day}</span></div><div>Total Deaths</div><div><span>${G.totalDeaths}</span></div></div><button class="restart-btn" onclick="location.reload()">↺ NEW COLONY</button>`;
+  }else{
+    const mg=G.moralGood,mb=G.moralBad;let endTitle,endLabel,endQuote;
+    if(mg>=10&&pop>=20&&infraCount>=4){endTitle='The Colony Thrives';endLabel='IDEAL LEADER';endQuote='"They kept faith with the people. They built something that would outlast them."';}
+    else if(mg>=10){endTitle='The People\'s Governor';endLabel='THE BELOVED';endQuote='"The colony sang when they heard the news. Not because they were told to."';}
+    else if(mb>=8&&pop>=12){endTitle='Iron and Honey';endLabel='DIPLOMATIC TYRANT';endQuote='"They ruled with iron when it didn\'t serve them. The colony endured."';}
+    else{endTitle='Sixty Days';endLabel='COLONY ENDURES';endQuote='"They said it couldn\'t be done. It was done. That\'s enough."';}
+    es.innerHTML=`<div class="end-h win">${endTitle.toUpperCase()}</div><div class="end-ending-label">${endLabel}</div><div class="end-quote">${endQuote}</div><div class="end-stat-grid" style="margin-top:12px;"><div>Days Survived</div><div><span>${G.day}</span></div><div>Survivors</div><div><span>${pop}</span></div><div>Deaths</div><div><span>${G.totalDeaths}</span></div><div>Infrastructure</div><div><span>${infraCount}/5</span></div><div>Compassionate</div><div><span>${G.moralGood}</span></div><div>Ruthless Acts</div><div><span>${G.moralBad}</span></div></div><button class="restart-btn" onclick="location.reload()">↺ NEW COLONY</button>`;
   }
   es.classList.add('open');
 }
 
-/* ─── TUTORIAL ─── */
 const STEPS=[
-  {step:'01 / 05',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.\n\nYou are their hope — or their end.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
-  {step:'02 / 05',title:'Morale Is a Multiplier',body:'Colony morale is not just a number — it shapes everything. <strong>High morale</strong> boosts production and unlocks rare heroic events. <strong>Low morale</strong> increases crisis frequency. <strong>Critically low</strong> morale triggers worker strikes or desertion.',tip:'Watch the MORALE TIER badge. HEROIC = +20% production. BREAKING = strikes.',icons:['✨ Heroic','🔵 Stable','🟡 Weary','🔴 Breaking']},
-  {step:'03 / 05',title:'Build and Invest',body:'<strong>Credits ⚙</strong> aren\'t just for trading — use them to build permanent infrastructure.\n\n🔧 Workshop: +12% production forever\n🏰 Walls: raid protection (costs energy)\n📚 School: −health decay (costs food)\n🌾 Granary: less spoilage\n🏥 Hospital: passive medicine',tip:'Infrastructure creates trade-offs. Walls cost energy every day. School costs food. Plan ahead.',icons:['🔧 Workshop','🏰 Walls','📚 School','🏥 Hospital']},
-  {step:'04 / 05',title:'Crisis Events & World Memory',body:'Every few days a <strong>crisis event</strong> interrupts the colony. Your choices are remembered.\n\n<strong>Ruthless play</strong> worsens trade, drives refugees away, risks uprisings. <strong>Compassionate play</strong> earns aid drops and faster morale recovery.',tip:'High credits attract raiders. Large food surplus causes spoilage. Wealth has consequences.',icons:['🌾 Events','⚔ Raiders','🕊 Aid','⚠ Strikes']},
-  {step:'05 / 05',title:'Day 55: The Final Trial',body:'Survive to <strong>Day 55</strong> and a guaranteed mega-crisis arrives — the Collapse Front. Survive it to reach <strong>Day 60</strong>.\n\nBut Day 60 is not the end. It\'s the beginning of <strong>Endless Mode</strong> — accelerated scaling, repeating final disasters, and no finish line.',tip:'Save your game with 💾 SAVE. Press ⚙ TELEMETRY to see hidden multipliers.',icons:['⏸ Pause','💾 Save','⚙ Telemetry','♾ Endless']},
+  {step:'01 / 04',title:'Your Colony Needs You',body:'<strong>Twenty souls</strong> depend on every decision you make. Food runs out. Energy fades. Disease spreads. Each day the world grows harsher.',tip:'Watch the resource bars at the top. When they flash red, citizens start dying.',icons:['👥 Population','🌾 Food','⚡ Energy','💊 Medicine']},
+  {step:'02 / 04',title:'Morale Is a Multiplier',body:'Colony morale shapes everything. <strong>High morale</strong> boosts production. <strong>Low morale</strong> increases crises. <strong>Critically low</strong> triggers worker strikes.',tip:'Watch the MORALE TIER badge. HEROIC = +20% production. BREAKING = strikes begin.',icons:['✨ Heroic','🔵 Stable','🟡 Weary','🔴 Breaking']},
+  {step:'03 / 04',title:'Build and Invest',body:'<strong>Credits ⚙</strong> buy permanent infrastructure:\n\n🔧 Workshop: +12% production\n🏰 Walls: raid protection\n📚 School: less health decay\n🌾 Granary: less spoilage\n🏥 Hospital: passive medicine',tip:'Infrastructure has trade-offs. Walls cost energy daily. School costs food. Plan ahead.',icons:['🔧 Workshop','🏰 Walls','📚 School','🏥 Hospital']},
+  {step:'04 / 04',title:'Day 55: The Final Trial',body:'Survive to <strong>Day 55</strong> and a guaranteed mega-crisis arrives. Survive it to reach <strong>Day 60</strong> and win.\n\nYour choices are remembered: ruthless play worsens trade, compassionate play earns aid.',tip:'Save your game with 💾 SAVE. Press ⚙ TELEMETRY to see hidden multipliers.',icons:['⏸ Pause','💾 Save','⚙ Debug','♾ Endless']},
 ];
 let tutStep=0;
 function renderTut(){
   const s=STEPS[tutStep],isLast=tutStep===STEPS.length-1;
-  document.getElementById('tutorial').innerHTML=`<div class="tut-card">
-    <div class="tut-step">${s.step}</div>
-    <div class="tut-title">${s.title}</div>
-    <div class="tut-body">${s.body.replace(/\n/g,'<br>')}</div>
-    <div class="tut-tip">${s.tip}</div>
-    <div class="tut-icons">${s.icons.map(ic=>`<div class="tut-icon-item"><span>${ic.split(' ')[0]}</span><span>${ic.split(' ').slice(1).join(' ')}</span></div>`).join('')}</div>
-    <div class="tut-nav">
-      <div class="tut-dots">${STEPS.map((_,i)=>`<div class="tut-dot${i===tutStep?' on':''}"></div>`).join('')}</div>
-      <div style="display:flex;gap:8px">${tutStep>0?`<button class="tut-btn" onclick="tutNav(-1)">← BACK</button>`:''}<button class="tut-btn primary" onclick="${isLast?'startGame()':'tutNav(1)'}">${isLast?'▶ BEGIN':'NEXT →'}</button></div>
-    </div>
-  </div>`;
+  document.getElementById('tutorial').innerHTML=`<div class="tut-card"><div class="tut-step">${s.step}</div><div class="tut-title">${s.title}</div><div class="tut-body">${s.body.replace(/\n/g,'<br>')}</div><div class="tut-tip">${s.tip}</div><div class="tut-icons">${s.icons.map(ic=>`<div class="tut-icon-item"><span>${ic.split(' ')[0]}</span><span>${ic.split(' ').slice(1).join(' ')}</span></div>`).join('')}</div><div class="tut-nav"><div class="tut-dots">${STEPS.map((_,i)=>`<div class="tut-dot${i===tutStep?' on':''}"></div>`).join('')}</div><div style="display:flex;gap:8px">${tutStep>0?`<button class="tut-btn" onclick="tutNav(-1)">← BACK</button>`:''}<button class="tut-btn" onclick="${isLast?'startGame()':'tutNav(1)'}">${isLast?'▶ BEGIN':'NEXT →'}</button></div></div></div>`;
 }
 function tutNav(d){tutStep=Math.max(0,Math.min(STEPS.length-1,tutStep+d));renderTut();}
 
 function chooseDiff(mode){
-  document.getElementById('diff-menu').classList.add('hidden');
-  G.difficulty=mode;
-
-  if(mode==='easy'){
-    // Generous: more resources, slow ramp, 60 days
-    G.food=320;G.energy=250;G.medicine=60;G.credits=100;
-    G.diffScale=0.65;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=60000; // 60s per day
-    G.baseDiffInc=0.008; // very slow ramp
-    G.baseFoodConsume=1.5; // cheaper food upkeep
-    G.baseHazardChance=0.12; // fewer random hazards
-    G.eventFreqMod=0.7;
-  } else if(mode==='hard'){
-    // Standard: tight margins, meaningful ramp, 60 days
-    G.food=180;G.energy=130;G.medicine=25;G.credits=30;
-    G.diffScale=1.0;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=60000;
-    G.baseDiffInc=0.018;
-    G.baseFoodConsume=2;
-    G.baseHazardChance=0.22;
-    G.eventFreqMod=1.0;
-  } else if(mode==='impossible'){
-    // Brutal: starts already failing, savage ramp, barely survivable
-    G.food=80;G.energy=55;G.medicine=8;G.credits=0;
-    G.diffScale=1.4;G.goalDay=60;G.endlessMode=false;
-    G.dayMs=60000;
-    G.baseDiffInc=0.032; // 2× hard ramp
-    G.baseFoodConsume=2.5; // 25% more hunger
-    G.baseHazardChance=0.38; // constant disasters
-    G.eventFreqMod=1.6; // crises fire very often
-    // Brutal start: most citizens already broken
-    G.citizens.forEach(c=>{
-      c.morale=8+Math.floor(Math.random()*22);
-      c.health=30+Math.floor(Math.random()*28);
-    });
-    // Start with 4 fewer citizens
-    G.citizens.splice(0,4);
-  } else if(mode==='endless'){
-    G.food=180;G.energy=130;G.medicine=25;G.credits=30;
-    G.diffScale=1.0;G.goalDay=0;G.endlessMode=true;
-    G.dayMs=60000;
-    G.baseDiffInc=0.018;
-    G.baseFoodConsume=2;
-    G.baseHazardChance=0.22;
-    G.eventFreqMod=1.0;
-    document.getElementById('endless-badge').classList.add('show');
-  }
-  document.getElementById('tutorial').style.display='flex';
-  renderTut();
+  document.getElementById('diff-menu').classList.add('hidden');G.difficulty=mode;
+  if(mode==='easy'){G.food=320;G.energy=250;G.medicine=60;G.credits=100;G.diffScale=0.65;G.goalDay=60;G.endlessMode=false;G.baseDiffInc=0.008;G.baseFoodConsume=1.5;G.baseHazardChance=0.12;G.eventFreqMod=0.7;}
+  else if(mode==='hard'){G.food=180;G.energy=130;G.medicine=25;G.credits=30;G.diffScale=1.0;G.goalDay=60;G.endlessMode=false;G.baseDiffInc=0.018;G.baseFoodConsume=2;G.baseHazardChance=0.22;G.eventFreqMod=1.0;}
+  else if(mode==='impossible'){G.food=80;G.energy=55;G.medicine=8;G.credits=0;G.diffScale=1.4;G.goalDay=60;G.endlessMode=false;G.baseDiffInc=0.032;G.baseFoodConsume=2.5;G.baseHazardChance=0.38;G.eventFreqMod=1.6;G.citizens.forEach(c=>{c.morale=8+Math.floor(Math.random()*22);c.health=30+Math.floor(Math.random()*28);});G.citizens.splice(0,4);}
+  else if(mode==='endless'){G.food=180;G.energy=130;G.medicine=25;G.credits=30;G.diffScale=1.0;G.goalDay=0;G.endlessMode=true;G.baseDiffInc=0.018;G.baseFoodConsume=2;G.baseHazardChance=0.22;G.eventFreqMod=1.0;document.getElementById('endless-badge').classList.add('show');}
+  document.getElementById('tutorial').style.display='flex';renderTut();
 }
-
-function startGame(){
-  document.getElementById('tutorial').style.display='none';
-  G.paused=false;
-  addLog('Colony systems online. Stay vigilant.',0x4a9a8a);
-  const modeLabel={easy:'SURVIVOR MODE',hard:'WARDEN MODE',impossible:'TYRANT MODE',endless:'ENDLESS MODE'}[G.difficulty];
-  notify(modeLabel+' — DAY ONE',0x4a9a8a);
-  updateHUD();
-}
+function startGame(){document.getElementById('tutorial').style.display='none';G.paused=false;addLog('Colony systems online.',0x4a9a8a);notify({easy:'SURVIVOR MODE',hard:'WARDEN MODE',impossible:'TYRANT MODE',endless:'ENDLESS MODE'}[G.difficulty]+' — DAY ONE',0x4a9a8a);updateHUD();}
 renderTut();
-// Start with diff menu; tutorial is hidden until diff chosen
 document.getElementById('tutorial').style.display='none';
 
 /* ═══════════════════════ RENDER LOOP ═══════════════════════ */
-let lastT=0;
-// Day/night: SEPARATE from game days. Real-time 60s cycle independent of game speed.
-// t_real = real elapsed ms (not game-speed-scaled)
-let realElapsed=0;
-const DN_PERIOD=60000; // 60 real seconds per full cycle
+let lastT=0,realElapsed=0;
+const DN_PERIOD=60000;
 let riotEmberTO=null;
 
-// Collect all lamp lights so we can switch them on/off
-const lampLights=[]; // populated after scene build (see below)
-// Street lamp light refs stored globally after makeLamp calls
-
 function updateDayNight(t_real_ms){
-  // t = 0..1 through real-time day/night cycle, independent of game speed
   const t=((t_real_ms%DN_PERIOD)/DN_PERIOD);
-  // Phase breakdown: 0=midnight, 0.25=dawn, 0.5=noon, 0.75=dusk, 1=midnight
-  const isNight=t<0.18||t>0.82;
-  const isDawn=t>=0.18&&t<0.32;
-  const isDay=t>=0.32&&t<0.68;
-  const isDusk=t>=0.68&&t<=0.82;
-
-  // ── SKY OVERLAY ──
+  const isNight=t<0.18||t>0.82;const isDawn=t>=0.18&&t<0.32;const isDay=t>=0.32&&t<0.68;const isDusk=t>=0.68&&t<=0.82;
   const dn=document.getElementById('daynight');
-  let skyBg;
-  if(isNight){
-    // Deep night — heavy blue-black overlay
-    const nightDepth=t<0.18?0.18-t:t>0.82?t-0.82:0;
-    const alpha=Math.min(0.75,0.55+nightDepth*1.5);
-    skyBg=`rgba(0,2,18,${alpha.toFixed(2)})`;
-  } else if(isDawn){
-    // Dawn — amber-rose gradient fading in
-    const prog=(t-0.18)/0.14; // 0..1
-    skyBg=`linear-gradient(to bottom, rgba(12,8,40,${(0.5*(1-prog)).toFixed(2)}) 0%, rgba(120,55,10,${(0.35*prog).toFixed(2)}) 60%, rgba(200,100,20,${(0.2*prog).toFixed(2)}) 100%)`;
-  } else if(isDay){
-    // Full day — near-transparent, bright scene shows through
-    const prog=(t-0.32)/0.36; // 0..1 peak at 0.5
-    const noon=1-Math.abs(prog-0.5)*2; // peaks at 1
-    skyBg=`rgba(180,220,255,${(noon*0.04).toFixed(2)})`; // barely-there blue tint
-  } else {
-    // Dusk — deep orange-red
-    const prog=(t-0.68)/0.14;
-    skyBg=`linear-gradient(to bottom, rgba(15,5,30,${(0.4*prog).toFixed(2)}) 0%, rgba(140,50,10,${(0.4*(1-prog)).toFixed(2)}) 60%, rgba(220,90,10,${(0.25*(1-prog)).toFixed(2)}) 100%)`;
-  }
-  dn.style.background=skyBg;
-
-  // ── THREE.JS LIGHTING ──
-  if(isNight){
-    // Dark and gloomy — only point lights visible
-    moon.intensity=0.15+Math.random()*0.02; // moonlight flicker
-    moon.color.setHex(0x8090c8); // cold blue-grey
-    scene.background.setHex(0x050810);
-    scene.fog.color.setHex(0x050810);
-    renderer.toneMappingExposure=0.55;
-    warmFill.intensity=0; // fire pits handle warm light
-  } else if(isDawn){
-    const p=(t-0.18)/0.14;
-    moon.intensity=0.15+p*1.2;
-    moon.color.setHex(0xe09050); // warm amber sunrise
-    scene.background.setHex(0x1a1208);
-    scene.fog.color.setHex(0x1a1208);
-    renderer.toneMappingExposure=0.7+p*0.3;
-  } else if(isDay){
-    const p=(t-0.32)/0.36;
-    const noon=Math.sin(p*Math.PI); // peaks at midday
-    moon.intensity=1.4+noon*1.2; // SUPER BRIGHT at noon
-    moon.color.setHex(0xfff8e8); // warm white sunlight
-    scene.background.setHex(0x2a4030); // bright greenish sky
-    scene.fog.color.setHex(0x2a4030);
-    renderer.toneMappingExposure=1.0+noon*0.5;
-    warmFill.intensity=0.2; // barely needed in daylight
-  } else {
-    const p=(t-0.68)/0.14;
-    moon.intensity=1.4-p*1.2;
-    moon.color.setHex(0xe07030); // orange dusk
-    scene.background.setHex(0x150e08);
-    scene.fog.color.setHex(0x150e08);
-    renderer.toneMappingExposure=1.0-p*0.45;
-  }
-
-  // ── LAMP LIGHTS: ON at night/dusk, OFF at day ──
-  const lampsOn=isNight||isDusk||(isDawn&&(t<0.25));
+  if(isNight){const a=Math.min(0.75,0.55);dn.style.background=`rgba(0,2,18,${a})`;}
+  else if(isDawn){const p=(t-0.18)/0.14;dn.style.background=`rgba(120,55,10,${(0.35*p).toFixed(2)})`;}
+  else if(isDay){dn.style.background='rgba(180,220,255,0.02)';}
+  else{const p=(t-0.68)/0.14;dn.style.background=`rgba(140,50,10,${(0.3*(1-p)).toFixed(2)})`;}
+  if(isNight){moon.intensity=0.15;moon.color.setHex(0x8090c8);scene.background.setHex(0x050810);scene.fog.color.setHex(0x050810);renderer.toneMappingExposure=0.55;}
+  else if(isDawn){const p=(t-0.18)/0.14;moon.intensity=0.15+p*1.2;moon.color.setHex(0xe09050);renderer.toneMappingExposure=0.7+p*0.3;}
+  else if(isDay){const p=(t-0.32)/0.36;const noon=Math.sin(p*Math.PI);moon.intensity=1.4+noon*1.2;moon.color.setHex(0xfff8e8);scene.background.setHex(0x2a4030);scene.fog.color.setHex(0x2a4030);renderer.toneMappingExposure=1.0+noon*0.5;warmFill.intensity=0.2;}
+  else{const p=(t-0.68)/0.14;moon.intensity=1.4-p*1.2;moon.color.setHex(0xe07030);scene.background.setHex(0x150e08);scene.fog.color.setHex(0x150e08);renderer.toneMappingExposure=1.0-p*0.45;}
+  const lampsOn=isNight||isDusk||(isDawn&&t<0.25);
   lampLights.forEach(l=>{l.intensity=lampsOn?(0.8+Math.sin(realElapsed*0.003+l._phase)*0.15):0;});
-
-  // ── FIRE PITS: brighter at night ──
-  const fireBright=isNight?3.5:isDay?1.2:2.0;
-  firePits.forEach(f=>{f._nightBase=fireBright;});
-
-  // ── AMBIENT: very low at night ──
+  const fireBright=isNight?3.5:isDay?1.2:2.0;firePits.forEach(f=>{f._nightBase=fireBright;});
   scene.children.forEach(c=>{if(c.isAmbientLight){c.intensity=isNight?0.08:isDawn||isDusk?0.35:0.7;}});
-
-  // ── RIOT OVERLAY ──
-  const md=getMoraleDist(G.citizens);
-  const riotActive=G.strikeActive>0||md.brokenPct>=0.35;
-  const ro=document.getElementById('riot-overlay');
-  const sv=document.getElementById('smoke-veil');
-  if(riotActive){
-    ro.classList.add('active');sv.classList.add('show');
-    if(!riotEmberTO){
-      const spawnEmbers=()=>{
-        if(!(G.strikeActive>0||getMoraleDist(G.citizens).brokenPct>=0.35)){riotEmberTO=null;return;}
-        const ember=document.createElement('div');ember.className='riot-ember';
-        const size=3+Math.random()*5;
-        ember.style.cssText=`width:${size}px;height:${size}px;left:${10+Math.random()*80}%;top:${40+Math.random()*45}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*2}s;--dx:${(Math.random()-0.5)*80}px;--dy:${-(80+Math.random()*100)}px;`;
-        ro.appendChild(ember);setTimeout(()=>ember.remove(),5000);
-        riotEmberTO=setTimeout(spawnEmbers,150+Math.random()*250);
-      };spawnEmbers();
-    }
-  } else {
-    ro.classList.remove('active');sv.classList.remove('show');
-    if(riotEmberTO){clearTimeout(riotEmberTO);riotEmberTO=null;}
-    ro.querySelectorAll('.riot-ember').forEach(e=>e.remove());
-  }
-  if(riotActive) hazardLight.intensity=2.0+Math.sin(realElapsed*0.008)*1.0;
-  else if(isNight) hazardLight.intensity=0;
-  else hazardLight.intensity=0;
+  const md=getMoraleDist(G.citizens);const riotActive=G.strikeActive>0||md.brokenPct>=0.35;
+  const ro=document.getElementById('riot-overlay');const sv=document.getElementById('smoke-veil');
+  if(riotActive){ro.classList.add('active');sv.classList.add('show');
+    if(!riotEmberTO){const spawnEmbers=()=>{if(!(G.strikeActive>0||getMoraleDist(G.citizens).brokenPct>=0.35)){riotEmberTO=null;return;}const ember=document.createElement('div');ember.className='riot-ember';const size=3+Math.random()*5;ember.style.cssText=`width:${size}px;height:${size}px;left:${10+Math.random()*80}%;top:${40+Math.random()*45}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*2}s;--dx:${(Math.random()-0.5)*80}px;--dy:${-(80+Math.random()*100)}px;`;ro.appendChild(ember);setTimeout(()=>ember.remove(),5000);riotEmberTO=setTimeout(spawnEmbers,200+Math.random()*300);};spawnEmbers();}
+  }else{ro.classList.remove('active');sv.classList.remove('show');if(riotEmberTO){clearTimeout(riotEmberTO);riotEmberTO=null;}ro.querySelectorAll('.riot-ember').forEach(e=>e.remove());}
+  if(riotActive)hazardLight.intensity=2.0+Math.sin(realElapsed*0.008)*1.0;else hazardLight.intensity=0;
 }
 
 function animate(ts){
@@ -2334,100 +1005,33 @@ function animate(ts){
   const dt=Math.min(ts-lastT,80);lastT=ts;
   const sm=[0,1,2,4][G.speed]||1,t=ts*0.001;
   if(G.alive&&!G.paused){G.dayTimer+=dt*sm;if(G.dayTimer>=G.dayMs){G.dayTimer=0;tickDay();}}
-
-  // Day/night uses REAL elapsed time — never affected by game speed
-  if(!G.paused) realElapsed+=dt;
+  if(!G.paused)realElapsed+=dt;
   updateDayNight(realElapsed);
-
-  // Camera
   if(!G.paused)camAngle+=0.0003;
-  camera.position.x=Math.cos(camAngle)*camDist;
-  camera.position.z=Math.sin(camAngle)*camDist;
-  camera.position.y+=(camTargetY-camera.position.y)*0.04;
-  camera.lookAt(0,2,0);
-
-  // Citizens — varied speeds, clustering near fire when morale is low
+  camera.position.x=Math.cos(camAngle)*camDist;camera.position.z=Math.sin(camAngle)*camDist;camera.position.y+=(camTargetY-camera.position.y)*0.04;camera.lookAt(0,2,0);
   const md2=getMoraleDist(G.citizens);
   citizenObjs.forEach((m,i)=>{
-    if(i<G.citizens.length){
-      const u=m.userData;
-      // Low morale → citizens cluster near center (campfires), less active
+    if(i<G.citizens.length){const u=m.userData;
       const activityScale=0.5+md2.heroicPct*0.8+(1-md2.brokenPct)*0.4;
       const radiusMod=md2.brokenPct>0.3?Math.max(2,u.r*0.5):u.r;
       u.angle+=u.speed*0.004*activityScale;
       m.position.x=Math.cos(u.angle+u.offset)*radiusMod+Math.sin(t*0.8+i)*0.2;
       m.position.z=Math.sin(u.angle+u.offset)*radiusMod+Math.cos(t*0.6+i)*0.2;
-      // During riot: erratic movement
-      if(G.strikeActive>0){
-        m.position.x+=Math.sin(t*8+i*1.7)*0.6;
-        m.position.z+=Math.cos(t*7+i*2.3)*0.6;
-      }
-      m.position.y=Math.abs(Math.sin(t*2+u.bobPhase))*0.18*activityScale;
-      m.rotation.y=u.angle+u.offset+Math.PI;
-    }
+      if(G.strikeActive>0){m.position.x+=Math.sin(t*8+i*1.7)*0.6;m.position.z+=Math.cos(t*7+i*2.3)*0.6;}
+      m.position.y=Math.abs(Math.sin(t*2+u.bobPhase))*0.18*activityScale;m.rotation.y=u.angle+u.offset+Math.PI;}
   });
-
-  // Fire pits: brightness scales with night cycle (set by updateDayNight) + morale base
-  firePits.forEach((f,i)=>{
-    const moraleBase=f._moraleBase||1.2;
-    const nightBase=f._nightBase||1.5;
-    const combined=moraleBase*0.5+nightBase*0.5;
-    f.intensity=combined+(Math.sin(t*7+i*2.1)+1)*0.5;
-  });
+  firePits.forEach((f,i)=>{const moraleBase=f._moraleBase||1.2;const nightBase=f._nightBase||1.5;f.intensity=((moraleBase+nightBase)/2)+(Math.sin(t*7+i*2.1)+1)*0.5;});
   warmFill.intensity=(warmFill._moraleBase||0.5)+Math.sin(t*0.9)*0.15;
-
-  // Particles
-  for(let i=particles.length-1;i>=0;i--){
-    const p=particles[i],u=p.userData;
-    p.position.x+=u.vx*0.035;p.position.y+=u.vy*0.035;p.position.z+=u.vz*0.035;
-    u.vy-=0.06;u.life--;
-    const lr=u.life/u.maxLife;
-    p.material.opacity=lr;
-    if(u.smoke){p.scale.setScalar(1+(1-lr)*2.5);}
-    if(u.life<=0){scene.remove(p);p.geometry.dispose();p.material.dispose();particles.splice(i,1);}
-  }
-
-  // Chimney smoke — more smoke during riots/strikes
-  const smokeRate=G.strikeActive>0?0.08:0.03;
-  if(Math.random()<smokeRate){
-    const pos=[{x:-7,z:-5},{x:7,z:-5},{x:0,z:-9},{x:-10,z:0},{x:-14,z:-8},{x:14,z:8}];
-    const p=pos[Math.floor(Math.random()*pos.length)];
-    spawnSmoke(p.x,p.z);
-  }
-
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i],u=p.userData;p.position.x+=u.vx*0.035;p.position.y+=u.vy*0.035;p.position.z+=u.vz*0.035;u.vy-=0.06;u.life--;const lr=u.life/u.maxLife;p.material.opacity=lr;if(u.smoke)p.scale.setScalar(1+(1-lr)*2.5);if(u.life<=0){scene.remove(p);p.geometry.dispose();p.material.dispose();particles.splice(i,1);}}
+  if(Math.random()<0.025){const pos=[{x:-7,z:-5},{x:7,z:-5},{x:0,z:-9},{x:-10,z:0}];const p=pos[Math.floor(Math.random()*pos.length)];spawnSmoke(p.x,p.z);}
   renderer.render(scene,camera);
 }
 animate(0);updateHUD();
-
 window.addEventListener('resize',()=>{camera.aspect=W()/H();camera.updateProjectionMatrix();renderer.setSize(W(),H());});
 
-/* ── Mobile 3D navigation ── */
 let touchStartX=0,touchStartAngle=0,pinchStartDist=0,pinchStartDist2=0;
-window.addEventListener('touchstart',e=>{
-  if(e.touches.length===1){
-    touchStartX=e.touches[0].clientX;
-    touchStartAngle=camAngle;
-  } else if(e.touches.length===2){
-    pinchStartDist=Math.hypot(
-      e.touches[0].clientX-e.touches[1].clientX,
-      e.touches[0].clientY-e.touches[1].clientY
-    );
-    pinchStartDist2=camDist;
-  }
-},{passive:true});
-window.addEventListener('touchmove',e=>{
-  if(e.touches.length===1 && e.target===canvas){
-    const dx=e.touches[0].clientX-touchStartX;
-    camAngle=touchStartAngle-dx*0.004;
-  } else if(e.touches.length===2){
-    const d=Math.hypot(
-      e.touches[0].clientX-e.touches[1].clientX,
-      e.touches[0].clientY-e.touches[1].clientY
-    );
-    const scale=pinchStartDist/d;
-    camDist=Math.max(20,Math.min(80,pinchStartDist2*scale));
-  }
-},{passive:true});
+window.addEventListener('touchstart',e=>{if(e.touches.length===1){touchStartX=e.touches[0].clientX;touchStartAngle=camAngle;}else if(e.touches.length===2){pinchStartDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);pinchStartDist2=camDist;}},{passive:true});
+window.addEventListener('touchmove',e=>{if(e.touches.length===1&&e.target===canvas){camAngle=touchStartAngle-(e.touches[0].clientX-touchStartX)*0.004;}else if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);camDist=Math.max(20,Math.min(80,pinchStartDist2*(pinchStartDist/d)));}},{passive:true});
 </script>
 </body>
 </html>
