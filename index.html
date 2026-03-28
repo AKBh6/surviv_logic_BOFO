@@ -466,15 +466,30 @@ for(let i=0;i<n;i++){const r=150+Math.random()*100,t=Math.random()*Math.PI*2,p=M
 geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
 scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0xaac0b8,size:0.28,sizeAttenuation:true})));}
 
+/* ═══ CHANGE 1: ENHANCED GROUND with shader-based grass/dirt blending ═══ */
 const size=120,segments=128;
 const geo=new THREE.PlaneGeometry(size,size,segments,segments);
 for(let i=0;i<geo.attributes.position.count;i++){
   const x=geo.attributes.position.getX(i),z=geo.attributes.position.getZ(i);
-  const height=Math.sin(x*0.08)*0.8+Math.cos(z*0.06)*0.6+(Math.random()-0.5)*0.3;
+  const height=Math.sin(x*0.08+z*0.05)*0.7+Math.cos(z*0.06+x*0.04)*0.5+(Math.random()-0.5)*0.2;
   geo.attributes.position.setY(i,height);
 }
 geo.computeVertexNormals();
-const ground=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x1a2418,roughness:1}));
+geo.normalizeNormals();
+const groundMat=new THREE.MeshStandardMaterial({roughness:1});
+groundMat.onBeforeCompile=(shader)=>{
+  shader.fragmentShader=shader.fragmentShader.replace(
+    '#include <color_fragment>',
+    `
+    float h=vViewPosition.y;
+    vec3 grass=vec3(0.12,0.22,0.10);
+    vec3 dirt=vec3(0.18,0.14,0.10);
+    float blend=smoothstep(-2.0,2.0,h);
+    diffuseColor.rgb=mix(dirt,grass,blend);
+    `
+  );
+};
+const ground=new THREE.Mesh(geo,groundMat);
 ground.rotation.x=-Math.PI/2;
 ground.receiveShadow=true;
 scene.add(ground);
@@ -540,18 +555,51 @@ const wallMat=new THREE.MeshStandardMaterial({color:0x303828,roughness:0.9});
 [{x:0,z:-23,w:46,h:3.5,d:1.5},{x:0,z:23,w:46,h:3.5,d:1.5},{x:-23,z:0,w:1.5,h:3.5,d:46},{x:23,z:0,w:1.5,h:3.5,d:46}].forEach(s=>{const m=new THREE.Mesh(new THREE.BoxGeometry(s.w,s.h,s.d),wallMat);m.position.set(s.x,s.h/2,s.z);m.castShadow=true;scene.add(m);});
 [[-23,-23],[23,-23],[-23,23],[23,23]].forEach(([x,z])=>makeBuilding({x,z,w:3,h:5,d:3,mat:MAT.stone,roofH:2}));
 
-function makeTree(x,z,h=4){
+/* ═══ CHANGE 2: REPLACED TREE SYSTEM — multi-layer cones + wind animation ═══ */
+const trees=[];
+
+function makeTree(x,z){
   const g=new THREE.Group();
-  const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.3,h*0.35,6),new THREE.MeshStandardMaterial({color:0x1e1610,roughness:1}));
-  trunk.position.y=h*0.35/2;trunk.castShadow=true;g.add(trunk);
-  [[0.5,0.5,h*0.5,0x1a2e18],[0.42,h*0.75,0x1e3520],[0.34,h*0.95,0x223818]].forEach((params,i)=>{
-    const [r,cy,col]=i===0?[0.5,h*0.5,0x1a2e18]:[...params];
-    const c=new THREE.Mesh(new THREE.ConeGeometry(h*(i===0?0.5:params[0]),h*0.45,7),new THREE.MeshStandardMaterial({color:col||params[1],roughness:0.9}));
-    c.position.y=cy||params[0];c.castShadow=true;g.add(c);
-  });
-  g.position.set(x,0,z);scene.add(g);
+  const height=3+Math.random()*4;
+  const trunk=new THREE.Mesh(
+    new THREE.CylinderGeometry(0.15,0.3,height*0.4,8),
+    new THREE.MeshStandardMaterial({color:0x2a1f15,roughness:1})
+  );
+  trunk.position.y=height*0.2;
+  trunk.castShadow=true;
+  g.add(trunk);
+  const layers=3+Math.floor(Math.random()*2);
+  for(let i=0;i<layers;i++){
+    const radius=(height*0.5)*(1-i/layers);
+    const cone=new THREE.Mesh(
+      new THREE.ConeGeometry(radius,height*0.5,8),
+      new THREE.MeshStandardMaterial({
+        color:new THREE.Color().setHSL(0.25+Math.random()*0.05,0.5,0.2+Math.random()*0.1),
+        roughness:0.9
+      })
+    );
+    cone.position.y=height*(0.4+i*0.2);
+    cone.castShadow=true;
+    g.add(cone);
+  }
+  g.rotation.z=(Math.random()-0.5)*0.1;
+  g.rotation.x=(Math.random()-0.5)*0.1;
+  g.position.set(x,0,z);
+  scene.add(g);
+  return g;
 }
-[[-25,-18],[-28,-10],[-27,0],[-26,10],[-24,18],[-20,25],[-10,27],[0,28],[10,27],[20,25],[25,18],[28,10],[27,0],[26,-10],[24,-18],[20,-25],[10,-27],[0,-28],[-10,-27],[-20,-25]].forEach(([x,z])=>makeTree(x,z,3+Math.random()*3));
+
+function animateTrees(time){
+  trees.forEach((t,i)=>{
+    t.rotation.z=Math.sin(time*0.5+i)*0.02;
+    t.rotation.x=Math.cos(time*0.4+i)*0.02;
+  });
+}
+
+[[-25,-18],[-28,-10],[-27,0],[-26,10],[-24,18],[-20,25],[-10,27],[0,28],[10,27],[20,25],[25,18],[28,10],[27,0],[26,-10],[24,-18],[20,-25],[10,-27],[0,-28],[-10,-27],[-20,-25]].forEach(([x,z])=>{
+  const t=makeTree(x,z);
+  trees.push(t);
+});
 
 const lampLights=[];
 function makeLamp(x,z){
@@ -572,19 +620,95 @@ const firePits=[];
   firePits.push(fl);
 });
 
+/* ═══ CHANGE 3: REPLACED CITIZEN SYSTEM — CylinderGeometry→box body, wandering AI ═══ */
 const citizenGroup=new THREE.Group();scene.add(citizenGroup);
 const citizenObjs=[];
+
 function makeCitizen(i){
   const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.22,0.9,6),new THREE.MeshStandardMaterial({color:0x3a4838,roughness:0.8}));
-  body.position.y=0.45;body.castShadow=true;g.add(body);
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),new THREE.MeshStandardMaterial({color:0x6a5540,roughness:0.7}));
-  head.position.y=1.06;head.castShadow=true;g.add(head);
-  const angle=(i/20)*Math.PI*2,r=4+Math.random()*10;
-  g.position.set(Math.cos(angle)*r,0,Math.sin(angle)*r);
-  g.userData={angle,r,speed:0.2+Math.random()*0.3,offset:Math.random()*Math.PI*2,bobPhase:Math.random()*Math.PI*2};
-  citizenGroup.add(g);citizenObjs.push(g);return g;
+  // Body: use Box since CapsuleGeometry isn't in r128
+  const body=new THREE.Mesh(
+    new THREE.BoxGeometry(0.38,0.85,0.28),
+    new THREE.MeshStandardMaterial({
+      color:new THREE.Color().setHSL(Math.random(),0.3,0.4),
+      roughness:0.8
+    })
+  );
+  body.position.y=0.42;
+  body.castShadow=true;
+  const head=new THREE.Mesh(
+    new THREE.SphereGeometry(0.22,12,10),
+    new THREE.MeshStandardMaterial({color:0x6a5540,roughness:0.7})
+  );
+  head.position.y=1.1;
+  head.castShadow=true;
+  g.add(body,head);
+  // Initialize wandering state — no orbit/angle logic
+  g.userData={
+    speed:0.5+Math.random()*0.5,
+    target:new THREE.Vector3((Math.random()-0.5)*30,0,(Math.random()-0.5)*30),
+    state:'idle',
+    timer:Math.random()*4,
+    walkCycle:Math.random()*Math.PI*2
+  };
+  citizenGroup.add(g);
+  citizenObjs.push(g);
+  return g;
 }
+
+function updateCitizen(c,delta){
+  const d=c.userData;
+  d.timer-=delta;
+  if(d.timer<=0){
+    // Pick a new random destination within colony bounds
+    d.target.set((Math.random()-0.5)*30,0,(Math.random()-0.5)*30);
+    d.timer=3+Math.random()*5;
+    d.state='walking';
+  }
+  if(d.state==='walking'){
+    const dir=d.target.clone().sub(c.position);
+    dir.y=0; // keep on ground plane
+    const dist=dir.length();
+    if(dist>0.2){
+      dir.normalize();
+      c.position.addScaledVector(dir,d.speed*delta);
+      c.rotation.y=Math.atan2(dir.x,dir.z);
+    }else{
+      d.state='idle';
+      d.timer=2+Math.random()*3;
+    }
+  }
+}
+
+function animateCitizen(c,delta){
+  const d=c.userData;
+  if(d.state==='walking'){
+    d.walkCycle+=delta*6;
+    const bob=Math.abs(Math.sin(d.walkCycle))*0.08;
+    c.position.y=bob;
+    c.children[0].rotation.z=Math.sin(d.walkCycle)*0.06; // body sway
+  }else{
+    // idle subtle breathing
+    d.walkCycle+=delta*1.5;
+    c.position.y=Math.sin(d.walkCycle)*0.02;
+    c.children[0].rotation.z=0;
+  }
+}
+
+function applySeparation(c){
+  citizenObjs.forEach(other=>{
+    if(c===other)return;
+    const dx=c.position.x-other.position.x;
+    const dz=c.position.z-other.position.z;
+    const distSq=dx*dx+dz*dz;
+    if(distSq<1&&distSq>0.001){
+      const dist=Math.sqrt(distSq);
+      c.position.x+=dx/dist*0.025;
+      c.position.z+=dz/dist*0.025;
+    }
+  });
+}
+
 for(let i=0;i<20;i++) makeCitizen(i);
 
 const particles=[];
@@ -1010,6 +1134,7 @@ function updateDayNight(t_real_ms){
   if(riotActive)hazardLight.intensity=2.0+Math.sin(realElapsed*0.008)*1.0;else hazardLight.intensity=0;
 }
 
+/* ═══ CHANGE 4: MAIN LOOP — added tree animation + citizen wander/animate/separate ═══ */
 function animate(ts){
   requestAnimationFrame(animate);
   const dt=Math.min(ts-lastT,80);lastT=ts;
@@ -1017,18 +1142,28 @@ function animate(ts){
   if(G.alive&&!G.paused){G.dayTimer+=dt*sm;if(G.dayTimer>=G.dayMs){G.dayTimer=0;tickDay();}}
   if(!G.paused)realElapsed+=dt;
   updateDayNight(realElapsed);
+
+  // Tree wind animation
+  animateTrees(t);
+
+  // Citizen wander + animation + separation
+  const delta=Math.min(dt*0.001,0.05); // seconds, capped
+  citizenObjs.forEach(c=>{
+    updateCitizen(c,delta);
+    animateCitizen(c,delta);
+    applySeparation(c);
+  });
+
   if(!G.paused)camAngle+=0.0003;
   camera.position.x=Math.cos(camAngle)*camDist;camera.position.z=Math.sin(camAngle)*camDist;camera.position.y+=(camTargetY-camera.position.y)*0.04;camera.lookAt(0,2,0);
   const md2=getMoraleDist(G.citizens);
+  // Update citizen body colors based on health (via game state)
   citizenObjs.forEach((m,i)=>{
-    if(i<G.citizens.length){const u=m.userData;
-      const activityScale=0.5+md2.heroicPct*0.8+(1-md2.brokenPct)*0.4;
-      const radiusMod=md2.brokenPct>0.3?Math.max(2,u.r*0.5):u.r;
-      u.angle+=u.speed*0.004*activityScale;
-      m.position.x=Math.cos(u.angle+u.offset)*radiusMod+Math.sin(t*0.8+i)*0.2;
-      m.position.z=Math.sin(u.angle+u.offset)*radiusMod+Math.cos(t*0.6+i)*0.2;
-      if(G.strikeActive>0){m.position.x+=Math.sin(t*8+i*1.7)*0.6;m.position.z+=Math.cos(t*7+i*2.3)*0.6;}
-      m.position.y=Math.abs(Math.sin(t*2+u.bobPhase))*0.18*activityScale;m.rotation.y=u.angle+u.offset+Math.PI;}
+    if(i<G.citizens.length){
+      const h=G.citizens[i].health/100;
+      // body is children[0]
+      m.children[0].material.color.setRGB(0.15+h*0.25,0.2+h*0.2,0.15+h*0.12);
+    }
   });
   firePits.forEach((f,i)=>{const moraleBase=f._moraleBase||1.2;const nightBase=f._nightBase||1.5;f.intensity=((moraleBase+nightBase)/2)+(Math.sin(t*7+i*2.1)+1)*0.5;});
   warmFill.intensity=(warmFill._moraleBase||0.5)+Math.sin(t*0.9)*0.15;
