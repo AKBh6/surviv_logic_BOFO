@@ -466,8 +466,18 @@ for(let i=0;i<n;i++){const r=150+Math.random()*100,t=Math.random()*Math.PI*2,p=M
 geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
 scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0xaac0b8,size:0.28,sizeAttenuation:true})));}
 
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:0x1a2418,roughness:1}));
-ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+const size=120,segments=128;
+const geo=new THREE.PlaneGeometry(size,size,segments,segments);
+for(let i=0;i<geo.attributes.position.count;i++){
+  const x=geo.attributes.position.getX(i),z=geo.attributes.position.getZ(i);
+  const height=Math.sin(x*0.08)*0.8+Math.cos(z*0.06)*0.6+(Math.random()-0.5)*0.3;
+  geo.attributes.position.setY(i,height);
+}
+geo.computeVertexNormals();
+const ground=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x1a2418,roughness:1}));
+ground.rotation.x=-Math.PI/2;
+ground.receiveShadow=true;
+scene.add(ground);
 
 function addPath(x1,z1,x2,z2,w=1.8){
   const len=Math.sqrt((x2-x1)**2+(z2-z1)**2);
